@@ -24,32 +24,25 @@ const navLinks: navLinksProps[] = [{
   label: "Dashboard"
 },
 {
-  href: "//orders",
+  href: "/orders",
   label: "Orders"
 },
 {
-  href: "//products",
+  href: "/products",
   label: "Produtos"
 },
 {
-  href: "//customers",
-  label: "Customers"
+  href: "/members",
+  label: "Members"
 },
 {
-  href: "//analytics",
+  href: "/analytics",
   label: "Analytics"
 }]
-interface props {
-  user: {
-    id: string;
-    name: string | null;
-    email: string;
-    avatar: string | null;
-  }
-}
 
 
-export function Header({ user }: props) {
+
+export function Header() {
   const path = usePathname()
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -115,7 +108,7 @@ export function Header({ user }: props) {
             />
           </div>
         </form>
-        <ProfileButton user={user} />
+        <ProfileButton />
       </div>
     </header>)
 }

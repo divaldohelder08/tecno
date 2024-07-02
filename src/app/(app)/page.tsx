@@ -1,15 +1,5 @@
 "use server"
 import {
-  Activity,
-  ArrowUpRight,
-  CreditCard,
-  DollarSign,
-  Users
-} from "lucide-react"
-import Link from "next/link"
-
-import { auth } from '@/auth/auth'
-import {
   Avatar,
   AvatarFallback,
   AvatarImage,
@@ -31,20 +21,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Activity,
+  ArrowUpRight,
+  CreditCard,
+  DollarSign,
+  Users
+} from "lucide-react"
+import Link from "next/link"
 import { CardMetrics } from "./components/card"
-import { Header } from "./components/header"
 
 export default async function Dashboard() {
-  const { user } = await auth()
-
   return (
-    <div className="flex min-h-screen w-full flex-col">
-      <Header user={user} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
           <CardMetrics
             title="Total Revenue"
-            val="$45,231.89"
+            val="$45,231.49"
             balance="+20.1% from last month"
             icon={<DollarSign className="h-4 w-4 text-muted-foreground" />}
           />
@@ -291,6 +284,5 @@ export default async function Dashboard() {
           </Card>
         </div>
       </main>
-    </div>
   )
 }

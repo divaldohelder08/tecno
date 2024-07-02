@@ -1,10 +1,14 @@
 'use server'
+import { getProfile } from '@/http/get-profile'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { getProfile } from '@/http/get-profile'
 
 export async function isAuthenticated() {
   return !!cookies().get('token')?.value
+}
+
+export async function isResting() {
+  return !!cookies().get('reset')?.value
 }
 
 export async function auth() {
@@ -16,7 +20,7 @@ export async function auth() {
   try {
     const res = await getProfile()
     return res
-  } catch {}
+  } catch { }
 
-  redirect('/api/auth/sign-out')
+  //redirect('/api/auth/sign-out')
 }

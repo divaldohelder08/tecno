@@ -1,3 +1,4 @@
+'use server'
 import api from '@/lib/axios'
 
 
@@ -11,7 +12,6 @@ interface GetProfileResponse {
 }
 
 export async function getProfile() {
-  const result = await api.get<GetProfileResponse>('/settings/profile')
-    console.log(result)
+  const result = await api.get<GetProfileResponse>('/profile')
   return result.data
 }

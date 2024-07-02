@@ -1,4 +1,3 @@
-import { cleanCookies } from '@/app/cookies'
 import Axios, { AxiosInstance } from 'axios'
 import { getCookie } from 'cookies-next'
 import { CookiesFn } from 'cookies-next/lib/types'
@@ -44,5 +43,3 @@ api.interceptors.response.use(
 )
 
 export default api
-
-//lg:min-h-[600px] xl:min-h-[800px]
