@@ -1,12 +1,14 @@
 'use server'
 import api from '@/lib/axios'
-import { Role, getPermissionProps, getRoleProps, getRolesProps } from '@/types'
+import { Permission, Role, getRoleProps, getRolesProps } from '@/types'
 import { getErrorMessage } from '@/utils/get-error-message'
 import { revalidatePath } from 'next/cache'
-
+import { redirect } from 'next/navigation'
 
 export async function getPermissions() {
-  const { data } = await api.get<getPermissionProps>('/permissions')
+  const { data } = await api.get<{
+    permissions: Permission[]
+  }>('/permissions')
   return data.permissions
 }
 
@@ -37,12 +39,11 @@ export async function updateRole({ id, name, description }: Role) {
   }
 }
 
-export async function createRole({ name, description }: { name: string, description: string | null }) {
+
+export async function deleteRole(id: number) {
   try {
-    await api.post('/role', {
-      name, description
-    })
-        revalidatePath('/settings/roles/new')
+    await api.delete(`/role/${id}`)
+    revalidatePath('/settings/roles')
   } catch (error) {
     return {
       error: getErrorMessage(error)
@@ -51,3 +52,34 @@ export async function createRole({ name, description }: { name: string, descript
 }
 
 
+export async function createRole({ name, description }: { name: string, description: string | null }) {
+  let resId: number
+  try {
+    const { data } = await api.post<{ role: Role }>('/role', {
+      name, description
+    })
+    resId = data.role.id
+  } catch (error) {
+    return {
+      error: getErrorMessage(error)
+    }
+  }
+  redirect(`/settings/roles/${resId}`)
+}
+
+interface props {
+  roleId: number;
+  permissionId: number;
+  has: boolean;
+}
+
+export async function updateRolePermission({ roleId, ...rest }: props) {
+  try {
+    await api.patch(`/role/${roleId}/permission`, { ...rest })
+    revalidatePath(`/settings/roles/${roleId}`)
+  } catch (error) {
+    return {
+      error: getErrorMessage(error)
+    }
+  }
+}

@@ -13,53 +13,25 @@ import {
   Bell,
   Home,
   LineChart,
-  LucideProps,
   Menu,
   Package,
   Package2,
   ShoppingCart,
   Users
 } from "lucide-react";
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { ForwardRefExoticComponent, PropsWithChildren, RefAttributes } from "react";
+import { PropsWithChildren } from "react";
 import { Nav } from "./components/nav";
 import UserNav from "./components/user-nav";
 
 
-const links: {
-  label: string;
-  icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
-  count?: number;
-  href: string
-}[] = [
-    {
-      label: "Dashboard",
-      icon: Home,
-      href: "/dashboard"
-    }, {
-      label: "Orders",
-      icon: ShoppingCart,
-      count: 6,
-      href: "/dashboard/orders"
-    },
-    {
-      label: "Products",
-      icon: Package,
-      href: "/dashboard/products"
-
-    },
-    {
-      label: "Customers",
-      icon: Users,
-      href: "/dashboard/customers"
-    },
-    {
-      label: "Analytics",
-      icon: LineChart,
-      href: "/dashboard/analytics"
-    }
-  ]
 export default function Page({ children }: PropsWithChildren) {
+  const layout = cookies().get("react-resizable-panels:layout")
+  const collapsed = cookies().get("react-resizable-panels:collapsed")
+
+  const defaultLayout = layout ? JSON.parse(layout.value) : undefined
+  const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined
   return (
     <ScrollArea>
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] overflow-hidden">
@@ -76,7 +48,35 @@ export default function Page({ children }: PropsWithChildren) {
               </Button>
             </div>
             <div className="flex-1">
-              <Nav />
+              <Nav
+                links={[
+                  {
+                    label: "Dashboard",
+                    icon: Home,
+                    href: "/"
+                  }, {
+                    label: "Orders",
+                    icon: ShoppingCart,
+                    count: 6,
+                    href: "/orders"
+                  },
+                  {
+                    label: "Products",
+                    icon: Package,
+                    href: "/products"
+
+                  },
+                  {
+                    icon: Users,
+                    href: "/members",
+                    label: "Members"
+                  },
+                  {
+                    label: "Analytics",
+                    icon: LineChart,
+                    href: "/analytics"
+                  },
+                ]} />
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@ export default function Page({ children }: PropsWithChildren) {
             </Sheet>
             <UserNav />
           </header>
-          <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 h-screen overflow-scroll">
+          <main className="flex flex-1 flex-col gap-4 lg:gap-6 h-screen overflow-scroll">
             {children}
           </main>
         </div>

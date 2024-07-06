@@ -1,55 +1,32 @@
-import type { NextAuthConfig, Session, JWT } from 'next-auth'
-import CredentialsProvider from "next-auth/providers/credentials";
-import api from "@/lib/axios";
+import NextAuth, { NextAuthConfig } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import api from '@/lib/axios';
 
-interface ExtendedJWT extends JWT {
-  user?: {
-    id: string;
-    email: string;
-    name: string;
-    // Adicione outros campos conforme necessário
-  };
-}
-
-interface ExtendedSession extends Session {
-  user?: {
-    id: string;
-    email: string;
-    name: string;
-    // Adicione outros campos conforme necessário
-  };
-}
-
-export const authConfig: NextAuthConfig = {
+const authConfig: NextAuthConfig = {
   providers: [
     CredentialsProvider({
-      // Nome do provider, pode ser qualquer nome
-      name: "credentials",
+      name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        email: { label: 'Email', type: 'text', placeholder: 'email@example.com' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        // Lógica para autorizar o usuário
-        // Por exemplo, chamar a API para autenticar o usuário e retornar o usuário
-        // ou retornar null se a autenticação falhar.
-
-          const result = await api.post("/auth", {
-            email: credentials?.email,
-            password: credentials?.password,
+        try {
+          const response = await api.post('/auth', {
+            email: credentials.email,
+            password: credentials.password,
           });
 
-          if (result && result.status === 200) {
-            return {
-              id: result.data.user.id,
-              email: result.data.user.email,
-              name: result.data.user.name,
-            };
+          if (response.status === 201 && response.data) {
+          const { token, user:{ ...user } }=response.data
+            return { token, ...user };
+          } else {
+            throw new Error('Failed to authenticate');
           }
-
+        } catch (error) {
+          console.error('Authentication error:', error);
           return null;
-        
-        
+        }
       },
     }),
   ],
@@ -58,36 +35,20 @@ export const authConfig: NextAuthConfig = {
     error: '/auth/error',
   },
   session: {
-    strategy: 'jwt',
+    jwt: true,
   },
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
     async session({ session, token }) {
       session.user = token.user;
       return session;
     },
-    async jwt({ token, user }) {
-      if (user) {
-        token.user = {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        };
-      }
-      return token;
-    }
   },
-  authorized({ req, token }) {
-    const isOnPublicPage = req.nextUrl.pathname.startsWith('/auth');
-    const isLoggedIn = !!token?.user;
+};
 
-    if (isOnPublicPage && isLoggedIn) {
-      return Response.redirect(new URL('/', req.nextUrl));
-    }
-
-    if (!isOnPublicPage && !isLoggedIn) {
-      return Response.redirect(new URL('/auth/sign-in', req.nextUrl));
-    }
-
-    return true;
-  }
-} satisfies NextAuthConfig;
+export default authConfig;

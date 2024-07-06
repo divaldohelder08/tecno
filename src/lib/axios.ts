@@ -1,5 +1,5 @@
+import { auth } from '@/services/auth'
 import Axios, { AxiosInstance } from 'axios'
-import { getCookie } from 'cookies-next'
 import { CookiesFn } from 'cookies-next/lib/types'
 
 const api: AxiosInstance = Axios.create({
@@ -8,17 +8,9 @@ const api: AxiosInstance = Axios.create({
 })
 
 api.interceptors.request.use(async (config) => {
-  let cookieStore: CookiesFn | undefined
-
-  if (typeof window === 'undefined') {
-    const { cookies: serverCookies } = await import('next/headers')
-
-    cookieStore = serverCookies
-  }
-  const token = getCookie('token', { cookies: cookieStore })
-
-  if (token) {
-    config.headers.set('Authorization', `Bearer ${token}`)
+  const session = await auth();
+  if (session?.user) {
+    config.headers.Authorization = `Bearer ${session.user.token}`;
   }
 
   return config

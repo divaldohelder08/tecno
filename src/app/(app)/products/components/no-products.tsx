@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function NotProducts() {
   return (
     <div
-      className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm" x-chunk="dashboard-02-chunk-1"
+      className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm  p-4 lg:p-8"
     >
       <div className="flex flex-col items-center gap-1 text-center">
         <h3 className="text-2xl font-bold tracking-tight">

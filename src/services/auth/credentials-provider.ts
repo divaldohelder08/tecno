@@ -18,9 +18,6 @@ export const credentialsProvider = CredentialsProvider({
     },
   },
   async authorize(credentials) {
-
-    console.log(credentials,'ola mundo')
-
     const user = await api.post("/auth", {
       email: credentials?.email,
       password: credentials?.password,

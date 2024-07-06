@@ -8,7 +8,8 @@ import {
   Package,
   ShoppingCart,
   Users,
-  Settings
+  Settings,
+  LucideIcon
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion"
 import { AccordionItem } from "@radix-ui/react-accordion"
@@ -48,7 +49,18 @@ const links: {
       href: "/analytics"
     },
   ]
-export function Nav() {
+
+  interface NavProps {
+    isCollapsed: boolean
+    links: {
+      label: string
+      icon: LucideIcon
+      count?: number
+      href: string
+    }[]
+  }
+  
+export function Nav({ links, isCollapsed }: NavProps) {
   const path = usePathname()
   return (
     <div className="flex-1">

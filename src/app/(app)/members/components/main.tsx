@@ -1,19 +1,15 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import {
   File,
   ListFilter,
-  MoreHorizontal,
   MoreVertical,
-  PlusCircle,
   Search
 } from "lucide-react"
-import Image from "next/image"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
-  CardContent,
   CardFooter
 } from "@/components/ui/card"
 import {
@@ -33,13 +29,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { cn } from "@/lib/utils"
-import Link from "next/link"
 export default function Products() {
   return (
     <main className="grid flex-1 items-start gap-4 md:gap-6 px-4">
       <div className="flex items-center">
-      <div className="relative flex-1 md:grow-0">
+        <div className="relative flex-1 md:grow-0">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
@@ -78,7 +72,6 @@ export default function Products() {
         </div>
       </div>
       <div>
-        <CardContent className="p-0">
           <Table>
             <TableHeader>
               <TableRow>
@@ -101,13 +94,12 @@ export default function Products() {
             <TableBody>
               <TableRow>
                 <TableCell className="hidden sm:table-cell">
-              <Avatar>
+                  <Avatar>
                     <AvatarImage alt="Product image"
-                    className="aspect-square rounded-md object-cover"
-                    src="/placeholder.png"
+                      className="aspect-square rounded-md object-cover"
+                      src="/placeholder.png"
                     />
                     <AvatarFallback>AvatarFallback</AvatarFallback>
-                  />
                   </Avatar>
                 </TableCell>
                 <TableCell className="font-medium">
@@ -115,6 +107,9 @@ export default function Products() {
                 </TableCell>
                 <TableCell>
                   <Badge variant="outline">Draft</Badge>
+
+
+                  
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   25
@@ -144,13 +139,12 @@ export default function Products() {
               </TableRow>
               <TableRow>
                 <TableCell className="hidden sm:table-cell">
-                   <Avatar>
+                  <Avatar>
                     <AvatarImage alt="Product image"
-                    className="aspect-square rounded-md object-cover"
-                    src="/placeholder.png"
+                      className="aspect-square rounded-md object-cover"
+                      src="/placeholder.png"
                     />
                     <AvatarFallback>AvatarFallback</AvatarFallback>
-                  />
                   </Avatar>
                 </TableCell>
                 <TableCell className="font-medium">
@@ -187,13 +181,12 @@ export default function Products() {
               </TableRow>
               <TableRow>
                 <TableCell className="hidden sm:table-cell">
-                 <Avatar>
+                  <Avatar>
                     <AvatarImage alt="Product image"
-                    className="aspect-square rounded-md object-cover"
-                    src="/placeholder.png"
+                      className="aspect-square rounded-md object-cover"
+                      src="/placeholder.png"
                     />
                     <AvatarFallback>AvatarFallback</AvatarFallback>
-                  />
                   </Avatar>
                 </TableCell>
                 <TableCell className="font-medium">
@@ -230,13 +223,12 @@ export default function Products() {
               </TableRow>
               <TableRow>
                 <TableCell className="hidden sm:table-cell">
-                <Avatar>
+                  <Avatar>
                     <AvatarImage alt="Product image"
-                    className="aspect-square rounded-md object-cover"
-                    src="/placeholder.png"
+                      className="aspect-square rounded-md object-cover"
+                      src="/placeholder.png"
                     />
                     <AvatarFallback>AvatarFallback</AvatarFallback>
-                  />
                   </Avatar>
                 </TableCell>
                 <TableCell className="font-medium">
@@ -273,13 +265,12 @@ export default function Products() {
               </TableRow>
               <TableRow>
                 <TableCell className="hidden sm:table-cell">
-                <Avatar>
+                  <Avatar>
                     <AvatarImage alt="Product image"
-                    className="aspect-square rounded-md object-cover"
-                    src="/placeholder.png"
+                      className="aspect-square rounded-md object-cover"
+                      src="/placeholder.png"
                     />
                     <AvatarFallback>AvatarFallback</AvatarFallback>
-                  />
                   </Avatar>
                 </TableCell>
                 <TableCell className="font-medium">
@@ -316,7 +307,6 @@ export default function Products() {
               </TableRow>
             </TableBody>
           </Table>
-        </CardContent>
         <CardFooter className="px-2 pt-4">
           <div className="text-xs text-muted-foreground">
             Showing <strong>1-10</strong> of <strong>32</strong>{" "}

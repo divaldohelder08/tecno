@@ -8,10 +8,11 @@ export interface categoriesProps {
   }[]
 }
 
-export interface permissionProps {
+export interface Permission {
   id: number,
   slug: string,
   description: string
+  perfis: number,
 }
 
 
@@ -23,16 +24,29 @@ export interface Role{
 
 
 
-interface getPermissionProps {
-  permissions: permissionProps
-}
-
 interface getRolesProps {
-  roles: Role[]
+  roles: {
+  id: number,
+  name: string
+  description?: string
+  permissions: number,
+  users: number
+}[]
 }
 
 
 interface getRoleProps {
   role: Role,
   permissions: permissionProps[]
+}
+
+
+export interface member {
+  id: number,
+  name: string,
+  email: string
+  avatar?: string,
+  status: boolean,
+  createdAt: Date,
+  profiles: number;
 }

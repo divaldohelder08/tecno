@@ -6,34 +6,37 @@ import { Textarea } from "@/components/ui/textarea";
 import { createRole } from "@/http/roles";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleDashed } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-
 const formSchema = z.object({
   name: z.string(),
-  description: z.string().optional()
-})
+  description: z.string().nullable(),
+});
 
-type formData = z.infer<typeof formSchema>
+type FormData = z.infer<typeof formSchema>;
 
 export default function Role() {
-
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<formData>({
+  const router = useRouter()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting }
+  } = useForm<FormData>({
     resolver: zodResolver(formSchema),
+  });
 
-  })
-
-  async function send(data: formData) {
-    const result = await createRole(data)
+  async function send(data: FormData) {
+    const result = await createRole(data);
     if (result?.error) {
-      toast.error(result.error)
+      toast.error(result.error);
     }
   }
+
   return (
-    <div
-      className="relative flex-col items-start gap-8">
+    <div className="relative flex-col items-start gap-8">
       <form className="grid w-full items-start gap-6" onSubmit={handleSubmit(send)}>
         <fieldset className="grid gap-6 rounded-lg border p-4">
           <legend className="-ml-1 px-1 text-sm font-medium">
@@ -61,15 +64,15 @@ export default function Role() {
               </p>
             )}
           </div>
-          <Button type="submit" size="sm" className="ml-auto gap-1.5 flex" disabled={isSubmitting} >
+          <Button type="submit" size="sm" className="ml-auto gap-1.5 flex" disabled={isSubmitting}>
             {isSubmitting ? (
               <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
             ) :
-              'Salver'
+              'Salvar'
             }
           </Button>
         </fieldset>
       </form>
     </div>
-  )
+  );
 }

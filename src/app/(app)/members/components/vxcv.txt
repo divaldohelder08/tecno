@@ -1,13 +1,14 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import {
   File,
   ListFilter,
-  MoreHorizontal,
-  PlusCircle
+  MoreVertical,
+  Search
 } from "lucide-react"
-import Image from "next/image"
 
-import { Badge } from "@/components/ui/badge"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
   CardContent,
   CardFooter
@@ -29,12 +30,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { cn } from "@/lib/utils"
-import Link from "next/link"
 export default function Products() {
   return (
-    <main className="grid flex-1 items-start gap-4 md:gap-8 px-4 lg:px-8">
+    <main className="grid flex-1 items-start gap-4 md:gap-6 px-4">
       <div className="flex items-center">
+        <div className="relative flex-1 md:grow-0">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+          />
+        </div>
         <div className="ml-auto flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -63,32 +70,18 @@ export default function Products() {
               Export
             </span>
           </Button>
-          <Link href="products/new"
-            className={cn(buttonVariants({
-              variant: "default",
-              size: "sm",
-            }), "h-8 gap-1")}
-          >
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Product
-            </span>
-          </Link>
         </div>
       </div>
-      <div x-chunk="dashboard-06-chunk-0">
-        <CardContent className="p-0" >
+      <div>
+        <CardContent className="p-0">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="hidden w-[100px] sm:table-cell">
                   <span className="sr-only">Image</span>
                 </TableHead>
-                <TableHead>Name</TableHead>
+                <TableHead>Usuario</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="hidden md:table-cell">
-                  Price
-                </TableHead>
                 <TableHead className="hidden md:table-cell">
                   Total Sales
                 </TableHead>
@@ -103,22 +96,19 @@ export default function Products() {
             <TableBody>
               <TableRow>
                 <TableCell className="hidden sm:table-cell">
-                  <Image
-                    alt="Product image"
-                    className="aspect-square rounded-md object-cover"
-                    height="64"
-                    src="/placeholder.png"
-                    width="64"
-                  />
+                  <Avatar>
+                    <AvatarImage alt="Product image"
+                      className="aspect-square rounded-md object-cover"
+                      src="/placeholder.png"
+                    />
+                    <AvatarFallback>AvatarFallback</AvatarFallback>
+                  </Avatar>
                 </TableCell>
                 <TableCell className="font-medium">
                   Laser Lemonade Machine
                 </TableCell>
                 <TableCell>
                   <Badge variant="outline">Draft</Badge>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  $499.99
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   25
@@ -134,7 +124,7 @@ export default function Products() {
                         size="icon"
                         variant="ghost"
                       >
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreVertical className="h-4 w-4" />
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </DropdownMenuTrigger>
@@ -148,22 +138,19 @@ export default function Products() {
               </TableRow>
               <TableRow>
                 <TableCell className="hidden sm:table-cell">
-                  <Image
-                    alt="Product image"
-                    className="aspect-square rounded-md object-cover"
-                    height="64"
-                    src="/placeholder.png"
-                    width="64"
-                  />
+                  <Avatar>
+                    <AvatarImage alt="Product image"
+                      className="aspect-square rounded-md object-cover"
+                      src="/placeholder.png"
+                    />
+                    <AvatarFallback>AvatarFallback</AvatarFallback>
+                  </Avatar>
                 </TableCell>
                 <TableCell className="font-medium">
                   Hypernova Headphones
                 </TableCell>
                 <TableCell>
                   <Badge variant="outline">Active</Badge>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  $129.99
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   100
@@ -179,7 +166,7 @@ export default function Products() {
                         size="icon"
                         variant="ghost"
                       >
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreVertical className="h-4 w-4" />
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </DropdownMenuTrigger>
@@ -193,22 +180,19 @@ export default function Products() {
               </TableRow>
               <TableRow>
                 <TableCell className="hidden sm:table-cell">
-                  <Image
-                    alt="Product image"
-                    className="aspect-square rounded-md object-cover"
-                    height="64"
-                    src="/placeholder.png"
-                    width="64"
-                  />
+                  <Avatar>
+                    <AvatarImage alt="Product image"
+                      className="aspect-square rounded-md object-cover"
+                      src="/placeholder.png"
+                    />
+                    <AvatarFallback>AvatarFallback</AvatarFallback>
+                  </Avatar>
                 </TableCell>
                 <TableCell className="font-medium">
                   AeroGlow Desk Lamp
                 </TableCell>
                 <TableCell>
                   <Badge variant="outline">Active</Badge>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  $39.99
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   50
@@ -224,7 +208,7 @@ export default function Products() {
                         size="icon"
                         variant="ghost"
                       >
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreVertical className="h-4 w-4" />
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </DropdownMenuTrigger>
@@ -238,22 +222,19 @@ export default function Products() {
               </TableRow>
               <TableRow>
                 <TableCell className="hidden sm:table-cell">
-                  <Image
-                    alt="Product image"
-                    className="aspect-square rounded-md object-cover"
-                    height="64"
-                    src="/placeholder.png"
-                    width="64"
-                  />
+                  <Avatar>
+                    <AvatarImage alt="Product image"
+                      className="aspect-square rounded-md object-cover"
+                      src="/placeholder.png"
+                    />
+                    <AvatarFallback>AvatarFallback</AvatarFallback>
+                  </Avatar>
                 </TableCell>
                 <TableCell className="font-medium">
                   TechTonic Energy Drink
                 </TableCell>
                 <TableCell>
                   <Badge variant="secondary">Draft</Badge>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  $2.99
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   0
@@ -269,7 +250,7 @@ export default function Products() {
                         size="icon"
                         variant="ghost"
                       >
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreVertical className="h-4 w-4" />
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </DropdownMenuTrigger>
@@ -283,22 +264,19 @@ export default function Products() {
               </TableRow>
               <TableRow>
                 <TableCell className="hidden sm:table-cell">
-                  <Image
-                    alt="Product image"
-                    className="aspect-square rounded-md object-cover"
-                    height="64"
-                    src="/placeholder.png"
-                    width="64"
-                  />
+                  <Avatar>
+                    <AvatarImage alt="Product image"
+                      className="aspect-square rounded-md object-cover"
+                      src="/placeholder.png"
+                    />
+                    <AvatarFallback>AvatarFallback</AvatarFallback>
+                  </Avatar>
                 </TableCell>
                 <TableCell className="font-medium">
                   Gamer Gear Pro Controller
                 </TableCell>
                 <TableCell>
                   <Badge variant="outline">Active</Badge>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  $59.99
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   75
@@ -314,52 +292,7 @@ export default function Products() {
                         size="icon"
                         variant="ghost"
                       >
-                        <MoreHorizontal className="h-4 w-4" />
-                        <span className="sr-only">Toggle menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="hidden sm:table-cell">
-                  <Image
-                    alt="Product image"
-                    className="aspect-square rounded-md object-cover"
-                    height="64"
-                    src="/placeholder.png"
-                    width="64"
-                  />
-                </TableCell>
-                <TableCell className="font-medium">
-                  Luminous VR Headset
-                </TableCell>
-                <TableCell>
-                  <Badge variant="outline">Active</Badge>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  $199.99
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  30
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  2024-02-14 02:14 PM
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        aria-haspopup="true"
-                        size="icon"
-                        variant="ghost"
-                      >
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreVertical className="h-4 w-4" />
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </DropdownMenuTrigger>
@@ -374,7 +307,7 @@ export default function Products() {
             </TableBody>
           </Table>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="px-2 pt-4">
           <div className="text-xs text-muted-foreground">
             Showing <strong>1-10</strong> of <strong>32</strong>{" "}
             products

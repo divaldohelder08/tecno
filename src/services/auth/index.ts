@@ -2,7 +2,7 @@ import './next-auth-extend.d'
 
 import NextAuth from 'next-auth'
 
-import { authConfig } from './auth.config'
+import authConfig  from './auth.config'
 
 export type { Session, User } from 'next-auth'
 
@@ -11,5 +11,5 @@ export const {
   signIn,
   signOut,
   unstable_update: update,
-  handlers,
+ handlers: { GET, POST },
 } = NextAuth(authConfig)

@@ -1,9 +1,14 @@
-import { NextRequest } from 'next/server'
-
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+import { getURL } from "./utils/get-url";
 const PRIVATE_PATHS = ['/orders', '/products', '/settings']
 
 export function middleware(request: NextRequest) {
-/*  const token = request.cookies.get('token')
+  const token =
+    process.env.VERCEL_ENV === "production" ?
+      request.cookies.get("__Secure-authjs.session-token")
+      : request.cookies.get("authjs.session-token");
+
+
   const { pathname } = request.nextUrl
   if (pathname === '/auth/sign-in' && token) {
     return NextResponse.redirect(new URL(getURL('/')))
@@ -17,7 +22,7 @@ export function middleware(request: NextRequest) {
 if (pathname === '/' && !token) {
     return NextResponse.redirect(new URL(getURL('/auth/sign-in')))
   }
-  */
+  
 }
 export const config = {
   matcher: [
