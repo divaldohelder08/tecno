@@ -1,4 +1,4 @@
-import Breadcrumbs from "./ola"
+import Breadcrumbs from "../../../components/breadcrumbs"
 import Link from "next/link"
 import { PropsWithChildren } from "react"
 export default function Settings({ children }: PropsWithChildren) {

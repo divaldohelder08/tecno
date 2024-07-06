@@ -19,19 +19,15 @@ import {
   ShoppingCart,
   Users
 } from "lucide-react";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 import { Nav } from "./components/nav";
 import UserNav from "./components/user-nav";
+import NavSheet from "./components/nav-sheet";
 
 
 export default function Page({ children }: PropsWithChildren) {
-  const layout = cookies().get("react-resizable-panels:layout")
-  const collapsed = cookies().get("react-resizable-panels:collapsed")
 
-  const defaultLayout = layout ? JSON.parse(layout.value) : undefined
-  const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined
   return (
     <ScrollArea>
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] overflow-hidden">
@@ -48,35 +44,7 @@ export default function Page({ children }: PropsWithChildren) {
               </Button>
             </div>
             <div className="flex-1">
-              <Nav
-                links={[
-                  {
-                    label: "Dashboard",
-                    icon: Home,
-                    href: "/"
-                  }, {
-                    label: "Orders",
-                    icon: ShoppingCart,
-                    count: 6,
-                    href: "/orders"
-                  },
-                  {
-                    label: "Products",
-                    icon: Package,
-                    href: "/products"
-
-                  },
-                  {
-                    icon: Users,
-                    href: "/members",
-                    label: "Members"
-                  },
-                  {
-                    label: "Analytics",
-                    icon: LineChart,
-                    href: "/analytics"
-                  },
-                ]} />
+              <Nav />
             </div>
           </div>
         </div>
@@ -94,69 +62,7 @@ export default function Page({ children }: PropsWithChildren) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="flex flex-col">
-                <nav className="grid gap-2 text-lg font-medium">
-                  <Link
-                    href="#"
-                    className="flex items-center gap-2 text-lg font-semibold"
-                  >
-                    <Package2 className="h-6 w-6" />
-                    <span className="sr-only">{process.env.COMPANY}</span>
-                  </Link>
-                  <Link
-                    href="/dashboard"
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                  >
-                    <Home className="h-5 w-5" />
-                    Dashboard
-                  </Link>
-                  <Link
-                    href="#"
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-                  >
-                    <ShoppingCart className="h-5 w-5" />
-                    Orders
-                    <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                      6
-                    </Badge>
-                  </Link>
-                  <Link
-                    href="#"
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                  >
-                    <Package className="h-5 w-5" />
-                    Products
-                  </Link>
-                  <Link
-                    href="#"
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                  >
-                    <Users className="h-5 w-5" />
-                    Customers
-                  </Link>
-                  <Link
-                    href="#"
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                  >
-                    <LineChart className="h-5 w-5" />
-                    Analytics
-                  </Link>
-                </nav>
-                <div className="mt-auto">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Upgrade to Pro</CardTitle>
-                      <CardDescription>
-                        Unlock all features and get unlimited access to our
-                        support team.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <Button size="sm" className="w-full">
-                        Upgrade
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
+                <NavSheet />
               </SheetContent>
             </Sheet>
             <UserNav />

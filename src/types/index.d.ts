@@ -16,7 +16,7 @@ export interface Permission {
 }
 
 
-export interface Role{
+export interface Role {
   id: number,
   name: string
   description?: string
@@ -26,12 +26,12 @@ export interface Role{
 
 interface getRolesProps {
   roles: {
-  id: number,
-  name: string
-  description?: string
-  permissions: number,
-  users: number
-}[]
+    id: number,
+    name: string
+    description?: string
+    permissions: number,
+    users: number
+  }[]
 }
 
 
@@ -49,4 +49,24 @@ export interface member {
   status: boolean,
   createdAt: Date,
   profiles: number;
+}
+
+export interface Cliente {
+  id: number,
+  entidadeId: number,
+  countryId: number,
+  telefone: string,
+  telefone2: string | null,
+  whatsapp: string | null,
+  endereco: string | null,
+  email: string | null,
+  subAccountId: number,
+  tipoDesconto: 'COMERCIAL' | 'FINANCEIRO' | 'DIVERSO' | 'NENHUM',
+  valorDesconto: number | null,
+  percentagemDesconto: number | null,
+  efectuaRetencao: boolean,
+  saldo: number,
+  limiteSaldo: number,
+  limiteCredito: number,
+  estado: 'ACTIVO' | 'REMOVIDO'
 }

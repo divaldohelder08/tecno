@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTableHeader } from "./data-header";
-import { DataTablePagination } from "../../../../components/data-pagination";
+import { DataTablePagination } from "./data-pagination";
 
 
 interface props<TData, TValue> {
@@ -62,7 +62,7 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div className="w-full">
+    <main className="grid flex-1 items-start space-y-4 px-4 lg:px-8">
       <DataTableHeader table={table} />
       <div className="rounded-md border">
         <Table>
@@ -115,7 +115,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} />
-    </div>
+    </main>
   )
 }
 

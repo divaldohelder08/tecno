@@ -1,66 +1,79 @@
 "use client"
+import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { AccordionItem } from "@radix-ui/react-accordion";
 import {
+  GitFork,
   Home,
   LineChart,
-  LucideProps,
   Package,
-  ShoppingCart,
-  Users,
   Settings,
-  LucideIcon
+  ShoppingCart,
+  Users
 } from "lucide-react";
-import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion"
-import { AccordionItem } from "@radix-ui/react-accordion"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ForwardRefExoticComponent, RefAttributes } from "react";
-const links: {
-  label: string;
-  icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
-  count?: number;
-  href: string
-}[] = [
-    {
-      label: "Dashboard",
-      icon: Home,
-      href: "/"
-    }, {
-      label: "Orders",
-      icon: ShoppingCart,
-      count: 6,
-      href: "/orders"
-    },
-    {
-      label: "Products",
-      icon: Package,
-      href: "/products"
 
-    },
-    {
-      icon: Users,
-      href: "/members",
-      label: "Members"
-    },
-    {
-      label: "Analytics",
-      icon: LineChart,
-      href: "/analytics"
-    },
-  ]
+const links = [
+  {
+    label: "Dashboard",
+    icon: Home,
+    href: "/"
+  }, {
+    label: "Orders",
+    icon: ShoppingCart,
+    count: 6,
+    href: "/orders"
+  },
+  {
+    label: "Products",
+    icon: Package,
+    href: "/products"
 
-  interface NavProps {
-    isCollapsed: boolean
-    links: {
-      label: string
-      icon: LucideIcon
-      count?: number
-      href: string
-    }[]
+  },
+  {
+    icon: Users,
+    href: "/members",
+    label: "Members"
+  },
+  {
+    label: "Analytics",
+    icon: LineChart,
+    href: "/analytics"
+  },
+]
+
+
+
+const SettingLinks = [
+  {
+    label: "Roles",
+    icon: LineChart,
+    href: "/roles"
+  },
+  {
+    label: "Permissions",
+    icon: LineChart,
+    href: "/permissions"
   }
-  
-export function Nav({ links, isCollapsed }: NavProps) {
+]
+
+
+const entidadeLinks = [
+  {
+    label: "Clientes",
+    icon: LineChart,
+    href: "/cliente"
+  },
+  {
+    label: "Fornecedor",
+    icon: LineChart,
+    href: "/fornecedor"
+  }
+]
+
+export function Nav() {
   const path = usePathname()
   return (
     <div className="flex-1">
@@ -87,7 +100,37 @@ export function Nav({ links, isCollapsed }: NavProps) {
           </Link>
           )
         }
-
+        <Accordion type="single" collapsible>
+          <AccordionItem value='entidades'
+            className={cn("gap-3 rounded-lg px-3 ext-muted-foreground transition-all",
+              path.includes("/entidade") &&
+              (path === "/entidade" || path.includes("entidade")) &&
+              "bg-muted text-primary")}>
+            <AccordionTrigger className="py-2">
+              <Link
+                href='/entidade'
+                className={cn("flex items-center gap-3 text-muted-foreground transition-all hover:text-primary",
+                  path.includes("/entidade") &&
+                  (path === "/entidade" || (path.includes("entidade"))) &&
+                  "text-primary")}
+              >
+                <GitFork className="h-4 w-4" />
+                Entidades
+              </Link>
+            </AccordionTrigger>
+            <AccordionContent className="text-muted-foreground pl-4 bg-card py-1.5 h-46 gap-2 grid h-full ml-[0.50rem] border-l border-primary">
+              {
+                entidadeLinks.map((e, i) => <Link
+                  key={i}
+                  href={`/entidade/${e.href}`}
+                  className={cn("transition-all hover:text-primary",
+                    path.includes(e.href) && "text-primary")
+                  }>{e.label}</Link>
+                )
+              }
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
         <Accordion type="single" collapsible>
           <AccordionItem value='settings'
             className={cn("gap-3 rounded-lg px-3 ext-muted-foreground transition-all",
@@ -107,18 +150,15 @@ export function Nav({ links, isCollapsed }: NavProps) {
               </Link>
             </AccordionTrigger>
             <AccordionContent className="text-muted-foreground pl-4 bg-card py-1.5 h-46 gap-2 grid h-full ml-[0.50rem] border-l border-primary">
-              <Link
-                href="/settings/roles"
-                className={cn("transition-all hover:text-primary",
-                  path.includes("/roles") && "text-primary")
-                }>Roles</Link>
-              <Link href="/settings/permissions"
-                className={cn("transition-all hover:text-primary",
-                  path.includes("/permissions") && "text-primary")
-                }
-              >Permissions</Link>
-              <Link href="/settings/organizations">Organizations</Link>
-              <Link href="/settings">Advanced</Link>
+              {
+                SettingLinks.map((e, i) => <Link
+                  key={i}
+                  href={`/settings/${e.href}`}
+                  className={cn("transition-all hover:text-primary",
+                    path.includes(e.href) && "text-primary")
+                  }>{e.label}</Link>
+                )
+              }
             </AccordionContent>
           </AccordionItem>
         </Accordion>

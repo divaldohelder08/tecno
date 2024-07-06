@@ -11,7 +11,7 @@ export function Provider({ children }: PropsWithChildren) {
       enableSystem
       disableTransitionOnChange
     >
-      <TooltipProvider>
+      <TooltipProvider delayDuration={0}>
         {children}
         <Sonner richColors />
       </TooltipProvider>
