@@ -1,17 +1,17 @@
 "use client"
-import Link from "next/link";
-import React from "react";
-import { usePathname } from "next/navigation";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbSeparator,
   BreadcrumbPage,
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
 
-const Breadcrumbs = () => {
+export default function Breadcrumbs() {
   const pathname = usePathname();
   const pathArray = pathname.split("/").filter((p) => p);
 
@@ -45,4 +45,3 @@ const Breadcrumbs = () => {
   );
 };
 
-export default Breadcrumbs;

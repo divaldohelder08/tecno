@@ -12,6 +12,10 @@ import { HeaderCards } from "./components/card-header"
 import NotProducts from "./components/no-products"
 import { columns } from "./components/table/columns"
 import { DataTable } from "./components/table/data-table"
+import Chart from "./chart"
+
+
+
 export default async function Members() {
   const users = await getMembers()
   return (
@@ -52,7 +56,22 @@ export default async function Members() {
           <div className="grid h-12 w-12 bg-card rounded-sm text-center items-center">olas</div>
         </Card> */}
         <HeaderCards.full Icon={User} title="CardDescription" description="Validade" extra="01.12.2023" type="1">
-          <div className="grid h-12 w-12 bg-card rounded-sm text-center items-center">olas</div>
+          <div className="grid h-12 w-12 bg-card rounded-sm text-center items-center">
+          
+
+
+    <Chart />
+
+
+
+
+
+
+
+
+          
+          
+          </div>
         </HeaderCards.full>
 
         {/* <Card className="bg-transparent flex flex-col  justify-between items-center p-4 rounded-md col-span-1 md:col-span-2">

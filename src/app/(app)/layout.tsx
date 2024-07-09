@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
+import Image from 'next/image'
+ 
 import { Nav } from "./components/nav";
 import UserNav from "./components/user-nav";
 import NavSheet from "./components/nav-sheet";
@@ -32,10 +34,10 @@ export default function Page({ children }: PropsWithChildren) {
     <ScrollArea>
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] overflow-hidden">
         <div className="hidden border-r bg-muted/40 md:block">
-          <div className="flex h-full max-h-screen flex-col gap-2">
+          <div className="flex h-full max-h-screen flex-col">
             <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
               <Link href="/" className="flex items-center gap-2 font-semibold">
-                <Package2 className="h-6 w-6" />
+                <Image width={36} height={36}  alt="logo" src="/Tcn_Bantu_Modelo.png" className="h-9 w-9" />
                 <span>{process.env.COMPANY}</span>
               </Link>
               <Button variant="outline" size="icon" className="ml-auto h-8 w-8">

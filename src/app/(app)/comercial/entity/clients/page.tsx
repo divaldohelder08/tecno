@@ -1,18 +1,17 @@
+import NotThing from "@/components/no-thing"
 import { buttonVariants } from "@/components/ui/button"
 import {
   Card,
   CardHeader
 } from "@/components/ui/card"
-import { getMembers } from "@/http/members"
+import { getClientes } from "@/http/cliente"
 import { cn } from "@/lib/utils"
 import { PlusIcon } from "@radix-ui/react-icons"
 import { Clock, Shield, User } from "lucide-react"
 import Link from "next/link"
 import { HeaderCards } from "./components/card-header"
-import NotProducts from "./components/no-clientes"
 import { columns } from "./components/table/columns"
 import { DataTable } from "./components/table/data-table"
-import { getClientes } from "@/http/cliente"
 export default async function Cliente() {
   const clientes = await getClientes()
   return (
@@ -44,33 +43,16 @@ export default async function Cliente() {
           </CardHeader>
           <div className="grid h-12 w-12 bg-card rounded-sm text-center items-center">olas</div>
         </Card>
-        {/* <Card className="bg-transparent flex justify-between items-center p-4 rounded-md col-span-3">
-          <CardHeader className="p-0 gap-1.5">
-            <CardDescription className="text-sm inline-flex gap-1 items-center">
-              <Shield className="w-4" /> CardDescription</CardDescription>
-            <CardDescription className="text-sm text-muted-foreground">Validade: <b>01.12.2023</b></CardDescription>
-          </CardHeader>
-          <div className="grid h-12 w-12 bg-card rounded-sm text-center items-center">olas</div>
-        </Card> */}
         <HeaderCards.full Icon={User} title="CardDescription" description="Validade" extra="01.12.2023" type="1">
           <div className="grid h-12 w-12 bg-card rounded-sm text-center items-center">olas</div>
         </HeaderCards.full>
-
-        {/* <Card className="bg-transparent flex flex-col  justify-between items-center p-4 rounded-md col-span-1 md:col-span-2">
-          <div className="p-0 items-center">12</div>
-          <CardDescription className="p-0 items-center">Convites pendentes</CardDescription>
-        </Card>
-        <Card className="bg-transparent flex flex-col justify-between items-center p-4 rounded-md col-span-1 md:col-span-2">
-          <div className="p-0 items-center">12</div>
-          <CardDescription className="p-0 items-center">Convites pendentes</CardDescription>
-        </Card> */}
         <HeaderCards.simple Icon={Clock} title="12" description="Lores sdf" />
         <HeaderCards.simple Icon={Shield} title="63" description="Convites pendentes" />
       </div>
       {
         clientes[0] ?
           <DataTable columns={columns} data={clientes} />
-          : <NotProducts />
+          : <NotThing title="Cliente" href="client/new" />
       }
     </>
   )

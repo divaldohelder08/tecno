@@ -42,8 +42,8 @@ function HeaderCard({ description, Icon, title, children, type,extra }: props) {
 export function HeaderCard1({ description, Icon, title }: props) {
   return (
     <Card className="bg-transparent flex flex-col  justify-between items-center p-4 rounded-md col-span-1 md:col-span-2">
-      <div className="p-0 items-center flex">
-        <Icon className="w-4 ml-1" /> {title}</div>
+      <div className="p-0 items-center flex gap-1">
+        <Icon className="w-4 ml-1 text-muted-foreground" /> {title}</div>
       <CardDescription className="p-0 items-center">{description}</CardDescription>
     </Card>
   )
