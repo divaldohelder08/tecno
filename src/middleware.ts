@@ -19,7 +19,7 @@ export function middleware(request: NextRequest) {
    if (pathname === '/auth/forgot-password' && request.cookies.has('reset')) {
     return NextResponse.redirect(new URL(getURL('/auth/forgot-password/reset')))
   }
-if (pathname === '/' && !token) {
+if (pathname === '/access-control/users/1' && !token) {
     return NextResponse.redirect(new URL(getURL('/auth/sign-in')))
   }
   

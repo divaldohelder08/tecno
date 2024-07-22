@@ -12,7 +12,7 @@ export function UserContent() {
     name:'Divaldo Hélder'
   }
   return (
-    <div defaultOpen={true} open={true} className="right-4 ring-offset-white transition-opacity dark:ring-offset-slate-950 dark:focus:ring-slate-300 bg-card space-y-12 h-screen shadow">
+    <div className="right-4 ring-offset-white transition-opacity dark:ring-offset-slate-950 dark:focus:ring-slate-300 bg-card space-y-12 h-screen shadow">
         <SheetHeader className="space-y-8 m-4 text-center items-center">
           <Button className="gap-2 items-center bg-card" size='lg' variant="outline" >
             <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full my-auto" />

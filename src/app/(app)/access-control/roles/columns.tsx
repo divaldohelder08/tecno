@@ -3,19 +3,18 @@ import {
   ColumnDef
 } from "@tanstack/react-table";
 import { ArrowUpDown, KeySquare, User } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import DropdownMenu from "./components/drop-down-menu";
 
-export type Role = {
-  id: number
-  name: string
-  description: string
-  permissions: number,
-  users: number
-}
+export type Roles = {
+  id: number;
+  name: string;
+  description?: string;
+  permissions: number;
+  users: number;
+};
 
-export const columns: ColumnDef<Role>[] = [
+export const columns: ColumnDef<Roles>[] = [
   {
     id: "select",
     header: () => <p className="text-primary">#</p>,
@@ -27,68 +26,47 @@ export const columns: ColumnDef<Role>[] = [
     accessorKey: "name",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          className="px-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <p className="text-center hover:bg-accent inline-flex gap-2 items-center">
           Nome
-          <ArrowUpDown className="ml-2 h-3 w-3" />
-        </Button>
-      )
+        </p>
+      );
     },
-    cell: ({ row }) => <p className="lowercase">{row.getValue("name")}</p>,
+    cell: ({ row }) => <p>{row.getValue("name")}</p>,
   },
   {
     accessorKey: "description",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="px-0"
-        >
-          Descrição
-        </Button>
-      )
-    },
+    header: ({ column }) => <p>Descrição</p>,
     cell: ({ row }) => <p className="lowercase text-muted-foreground">{row.getValue("description") ?? "null"}</p>,
   },
-
   {
     accessorKey: "users",
-    header: ({ column }) => { },
-    cell: ({ row }) =>
-      <Button
-        variant="ghost"
-        className="gap-2"
-      >
-        <span className="sr-only">usuarios</span>
+    header: ({ column }) => <p>Usuários</p>,
+    cell: ({ row }) => (
+      <Button variant="ghost" className="gap-2">
+        <span className="sr-only">Usuários</span>
         {row.original.users}  
         <User className="h-4 w-4" />
       </Button>
-
+    ),
   },
-
   {
     accessorKey: "members-with-role",
-    header: ({ column }) => { },
-    cell: ({ row }) =>
-      <Button
-        variant="ghost"
-        className="gap-2"
-      >
+    header: ({ column }) => <p>Permissões</p>,
+    cell: ({ row }) => (
+      <Button variant="ghost" className="gap-2">
         <span className="sr-only">Permissões</span>
         {row.original.permissions}  
         <KeySquare className=" h-4 w-4" />
       </Button>
+    ),
   },
   {
     id: "actions",
     enableHiding: false,
+    header: ({ column }) => <p>Opções</p>,
     cell: ({ row }) => {
-      const role = row.original
-
-      return <DropdownMenu id={role.id} name={role.name} />
+      const role = row.original;
+      return <DropdownMenu id={role.id} name={role.name} />;
     },
   },
-]
+];

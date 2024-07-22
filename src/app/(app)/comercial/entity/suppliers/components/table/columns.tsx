@@ -8,9 +8,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import DropdownMenu from ".././drop-down-menu";
-import { buttonVariants } from "@/components/ui/button";
+import { Pen, Trash } from "lucide-react"
 interface props {
   id: number,
   entidadeId: number,
@@ -36,12 +37,12 @@ export const columns: ColumnDef<props>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    cell: ({ row: { original } }) => <p>{original.entidade.identificacao}</p>
+    accessorKey: "Entidade",
+    cell: ({ row }) => <p className="capitalize">{row.original.entidade.name}</p>,
   },
   {
-    accessorKey: "Name",
-    cell: ({ row }) => <p className="capitalize">{row.original.entidade.name}</p>,
+    accessorKey: "Identificação",
+    cell: ({ row: { original } }) => <p>{original.entidade.identificacao}</p>
   },
   {
     accessorKey: "Estado",
@@ -55,8 +56,13 @@ export const columns: ColumnDef<props>[] = [
     accessorKey: "Saldo",
     cell: ({ row }) => <p className="hidden md:table-cell">{row.original.saldo}</p>
   },
+ {
+    accessorKey: "Tipo Desconto",
+    cell: ({ row }) => <p className="hidden md:table-cell">{row.original.tipoDesconto}</p>
+  },
   {
     id: "Pais",
+    accessorKey: "Pais",
     enableHiding: false,
     cell: ({ row: { original: { country } } }) =>
       <Tooltip>
@@ -69,8 +75,19 @@ export const columns: ColumnDef<props>[] = [
     {
     id: "actions",
     enableHiding: false,
+    accessorKey: "Opções",
     cell: ({ row: { original }  }) => {
-      return <DropdownMenu id={original.id} name={original.entidade.name} />
+      return <>
+        <Button  variant="outline" className="border-muted-foreground">
+            <Trash className="text-muted-foreground w-3.5 h-3.5"/>
+        </Button>
+        <Button  variant="outline" className="border-blue-500 hover:bg-blue-500/5">
+            <Pen className="text-blue-500 w-3.5 h-3.5"/>
+        </Button>
+        <Button variant="outline" className="border-destructive text-destructive shadow-sm hover:bg-destructive/5">
+            <Trash className="w-4 h-4 text-destructive"/>
+        </Button>
+    </>
     },
   },
 ]

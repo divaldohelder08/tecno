@@ -18,10 +18,10 @@ export default async function Cliente() {
     <>
       <div className="flex items-center justify-between p-4 lg:p-8">
         <div>
-          <h1 className="text-base font-semibold md:text-2xl">Inventory</h1>
+          <h1 className="text-base font-semibold md:text-2xl">Fornecedores</h1>
           <p className='text-sm text-muted-foreground'>Gerencie as pessoas que estão utilizando as licenças do contrato</p>
         </div>
-        <Link href="cliente/new"
+        <Link href="suppliers/new"
           className={cn(buttonVariants({
             variant: "default",
             size: "default",

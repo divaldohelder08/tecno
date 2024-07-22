@@ -1,5 +1,5 @@
 "use client"
-import { Eye, Loader2, MoreHorizontal, Trash } from "lucide-react";
+import { Eye, Loader2, MoreVertical, Trash, Copy } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -35,21 +35,22 @@ export default function DropdownMenu({ id, name }: props) {
         <Drop.DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
             <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
+            <MoreVertical className="h-4 w-4" />
           </Button>
         </Drop.DropdownMenuTrigger>
         <Drop.DropdownMenuContent align="end">
-          <Drop.DropdownMenuLabel>Actions</Drop.DropdownMenuLabel>
+          <Drop.DropdownMenuLabel>Opções</Drop.DropdownMenuLabel>
+          <Drop.DropdownMenuSeparator />
           <Drop.DropdownMenuItem
             onClick={() => navigator.clipboard.writeText(id.toString())}
           >
-            Copy payment ID
+              <Copy className="mr-2 h-4 w-4" />
+            Copiar ID
           </Drop.DropdownMenuItem>
-          <Drop.DropdownMenuSeparator />
           <Drop.DropdownMenuItem>
             <Link href={`roles/${id}`} className="flex items-center">
               <Eye className="mr-2 h-4 w-4" />
-              View customer
+              Pesquizar perfil
             </Link>
           </Drop.DropdownMenuItem>
           <Drop.DropdownMenuItem onClick={() => { setOpn(true) }}>

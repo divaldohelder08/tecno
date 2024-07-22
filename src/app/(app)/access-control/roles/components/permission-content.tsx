@@ -1,5 +1,5 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { permissionProps } from "@/types";
+import { Permission as permissionProps } from "@/types";
 import Permission from "./permission";
 
 interface params { 

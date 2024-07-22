@@ -13,7 +13,15 @@ import {
   Tag, Layers, Truck, SlidersVertical, Warehouse, Dock, Landmark, Store, Clock
 } from "lucide-react";
 
-const navItems = [
+// Define an interface for the nav item structure
+interface NavItem {
+  label: string;
+  icon: React.ElementType;
+  href: string;
+  subLinks?: NavItem[];
+}
+
+const navItems: NavItem[] = [
   { label: "Dashboard", icon: Home, href: "/" },
   { label: "Empresa", icon: Building, href: "/company" },
   {
@@ -21,7 +29,6 @@ const navItems = [
     subLinks: [
       { label: "Perfis", href: "/roles", icon: UserCheck },
       { label: "Utilizadores", href: "/users", icon: Users },
-      { label: "Permissões", href: "/permissions", icon: ShieldCheck }
     ],
   },
   {
@@ -36,7 +43,7 @@ const navItems = [
   }
 ];
 
-const comercialNavItems = [
+const comercialNavItems: NavItem[] = [
   {
     label: "Terceiros", icon: KeyRound, href: "/comercial/entity",
     subLinks: [
@@ -59,8 +66,8 @@ const comercialNavItems = [
   }
 ];
 
-const rhNavItems = [
-  { label: "Funcionários", icon: Home, href: "/human-recours/employee" },
+const rhNavItems: NavItem[] = [
+  { label: "Funcionários", icon: Users, href: "/human-recours/employee" },
   {
     label: "Parametrização", icon: SlidersVertical, href: "/human-recours/parameterization",
     subLinks: [
@@ -75,7 +82,18 @@ const rhNavItems = [
   }
 ];
 
-const getTabValue = (prefix) => {
+// Define an interface for the NavLink props
+interface NavLinkProps {
+  href: string;
+  label: string;
+  icon: React.ElementType;
+  count?: number;
+  currentPath: string;
+  basePath: string;
+  isInAccordion?: boolean;
+}
+
+const getTabValue = (prefix: string) => {
   switch (prefix) {
     case 'human-recours': return 'RH';
     case 'comercial': return 'CM';
@@ -83,10 +101,9 @@ const getTabValue = (prefix) => {
   }
 };
 
-const NavLink = ({ href, label, icon: Icon, count, currentPath, basePath, isInAccordion }) => {
+const NavLink = ({ href, label, icon: Icon, count, currentPath, basePath, isInAccordion }: NavLinkProps) => {
   const isActive = currentPath === href;
   const iconClass = isInAccordion && isActive ? "text-primary" : "";
-
   return (
     <Link
       href={`${basePath}${href}`}
@@ -106,12 +123,12 @@ const NavLink = ({ href, label, icon: Icon, count, currentPath, basePath, isInAc
   );
 };
 
-const AccordionNav = ({ title, icon: Icon, subLinks, currentPath, basePath }) => {
+const AccordionNav = ({ label, icon: Icon, subLinks, currentPath, basePath, href }: NavItem & { currentPath: string, basePath: string }) => {
   const isActive = currentPath.startsWith(basePath);
   return (
     <Accordion type="single" collapsible>
       <AccordionItem
-        value={title.toLowerCase()}
+        value={label.toLowerCase()}
         className={cn(
           "gap-3 rounded-lg px-3 text-muted-foreground transition-all",
           isActive && "bg-muted text-primary"
@@ -125,11 +142,11 @@ const AccordionNav = ({ title, icon: Icon, subLinks, currentPath, basePath }) =>
             )}
           >
             <Icon className="h-4 w-4" aria-hidden="true" />
-            <span>{title}</span>
+            <span>{label}</span>
           </div>
         </AccordionTrigger>
         <AccordionContent className="text-muted-foreground bg-card gap-1 grid h-full ml-[0.50rem] border-l border-primary pb-0 mb-2">
-          {subLinks.map((link, index) => (
+          {subLinks?.map((link, index) => (
             <NavLink key={index} {...link} currentPath={currentPath} basePath={basePath} isInAccordion />
           ))}
         </AccordionContent>
@@ -147,15 +164,16 @@ export function Nav() {
     setDef(getTabValue(prefix));
   }, [prefix]);
 
-  const renderNavItems = (items, currentPath) => items.map((item, index) =>
+  const renderNavItems = (items: NavItem[], currentPath: string) => items.map((item, index) =>
     item.subLinks ? (
       <AccordionNav
         key={index}
-        title={item.label}
+        label={item.label}
         icon={item.icon}
         subLinks={item.subLinks}
         currentPath={currentPath}
         basePath={item.href}
+        href={item.href}
       />
     ) : (
       <NavLink key={index} {...item} currentPath={currentPath} basePath={item.href} />
@@ -165,24 +183,24 @@ export function Nav() {
   return (
     <div className="flex-1">
       <Tabs value={def} onValueChange={setDef} className="w-full max-w-md">
-        <TabsList className="grid w-full grid-cols-3 p-0 px-2 rounded-none">
+        <TabsList className="grid w-full grid-cols-3 p-0 px-1 rounded-none">
           <TabsTrigger value="START">Inicio</TabsTrigger>
           <TabsTrigger value="CM">Comercial</TabsTrigger>
           <TabsTrigger value="RH">RH</TabsTrigger>
         </TabsList>
 
         <TabsContent value="START">
-          <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+          <nav className="grid items-start text-sm font-medium lg:px-4">
             {renderNavItems(navItems, path)}
           </nav>
         </TabsContent>
         <TabsContent value="CM">
-          <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+          <nav className="grid items-start text-sm font-medium lg:px-4">
             {renderNavItems(comercialNavItems, path)}
           </nav>
         </TabsContent>
         <TabsContent value="RH">
-          <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+          <nav className="grid items-start text-sm font-medium lg:px-4">
             {renderNavItems(rhNavItems, path)}
           </nav>
         </TabsContent>

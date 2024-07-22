@@ -1,8 +1,7 @@
-// CardComponentizado.tsx
 import React from 'react';
 import { CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge} from '@/components/ui/badge';
-
+import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
 
 interface CardProps {
   avatarSrc: string;
@@ -11,12 +10,11 @@ interface CardProps {
   buttonText: string;
 }
 
-
-export function CardLicensiados({ avatarSrc, title, description, buttonText }:CardProps) {
+export function CardLicenciados({ avatarSrc, title, description, buttonText }: CardProps) {
   return (
     <>
       <div className="relative size-fit col-span-2">
-        <span className="flex justify-center items-center flex-shrink-0 bg-purpleseat-base text-white select-none w-[45px] h-[45px]" style={{ clipPath: 'url(#avatarMask)' }}>
+        <span className="flex justify-center items-center flex-shrink-0 bg-purple-500 text-base text-white select-none w-[45px] h-[45px]" style={{ clipPath: 'url(#avatarMask)' }}>
           <svg width="0" height="0">
             <defs>
               <clipPath id="avatarMask" clipPathUnits="objectBoundingBox">
@@ -24,7 +22,13 @@ export function CardLicensiados({ avatarSrc, title, description, buttonText }:Ca
               </clipPath>
             </defs>
           </svg>
-          <img className="h-full w-full rounded-[inherit] object-cover" src={avatarSrc} alt="Avatar" />
+          <Image
+            className="h-full w-full rounded-[inherit] object-cover"
+            src={avatarSrc}
+            alt="Avatar"
+            width={45} // Propriedade width adicionada
+            height={45} // Propriedade height adicionada
+          />
         </span>
       </div>
       <CardHeader className="grid col-span-4 p-0">
@@ -38,4 +42,4 @@ export function CardLicensiados({ avatarSrc, title, description, buttonText }:Ca
   );
 };
 
-export default CardLicensiados;
+export default CardLicenciados;
