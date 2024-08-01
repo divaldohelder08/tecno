@@ -31,8 +31,10 @@ export default function RoleForm({ id, name, description }: formData) {
 
   async function send(data: formData) {
     const result = await updateRole(data)
-    if (result?.error) {
-      toast.error(result.error)
+    if (result && result.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Perfil atualizado com sucesso")
     }
   }
   return (
@@ -42,7 +44,7 @@ export default function RoleForm({ id, name, description }: formData) {
           Perfil {name}
         </legend>
         <div className="grid gap-3">
-          <Label htmlFor="role">Role</Label>
+          <Label htmlFor="role">Perfil</Label>
           <Input placeholder="Informe o nome da role" required {...register('name')} />
           {errors.name && (
             <p className="text-sm font-medium text-red-500 dark:text-red-400">
@@ -63,14 +65,20 @@ export default function RoleForm({ id, name, description }: formData) {
             </p>
           )}
         </div>
+        <div className="w-full h-full flex gap-4">
+          <Button type="submit" size="sm" className="ml-auto gap-1.5 flex" disabled={isSubmitting} >
+Button
+        </Button>
         <Button type="submit" size="sm" className="ml-auto gap-1.5 flex" disabled={isSubmitting} >
 
           {isSubmitting ? (
             <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
           ) :
-            'Save'
+            'Salvar'
           }
         </Button>
+        </div>
+        
       </fieldset>
     </form>
   )

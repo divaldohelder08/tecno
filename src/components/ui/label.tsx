@@ -18,7 +18,7 @@ const Label = React.forwardRef<
 >(({ className, isReq, ...props }, ref) => (
   <LabelPrimitive.Root
     ref={ref}
-    className={cn(labelVariants(), className, { 'after:content-["*"] after:ml-0.5 after:text-red-500': isReq })}
+    className={cn(labelVariants(), className, !isReq && 'after:content-["*"] after:ml-0.5 after:text-red-500')}
     {...props}
   />
 ));

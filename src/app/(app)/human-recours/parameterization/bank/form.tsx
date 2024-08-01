@@ -1,12 +1,12 @@
 "use client"
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createBanco } from "@/http/banks";
+import { createBank } from "@/http/banks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleDashed, Sparkles } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -32,7 +32,7 @@ export default function Form() {
   });
 
   async function send(data: FormData) {
-    const result = await createBanco(data);
+    const result = await createBank(data);
     if (result?.error) {
       toast.error(result.error);
     }
@@ -42,7 +42,7 @@ export default function Form() {
 
   const gerarSigla = () => {
     const nomeCompleto = getValues("nome_banco")
-    const palavrasIgnoradas = ['de', 'do', 'da', 'dos', 'das', 'a', 'e','i','o','u'];
+    const palavrasIgnoradas = ['de', 'do', 'da', 'dos', 'das', 'a', 'e', 'i', 'o', 'u'];
     const palavras = nomeCompleto.split(' ');
     const palavrasFiltradas = palavras.filter(palavra => !palavrasIgnoradas.includes(palavra.toLowerCase()));
     const sigla = palavrasFiltradas.map(palavra => palavra.charAt(0).toUpperCase()).join('');
@@ -69,10 +69,10 @@ export default function Form() {
             <div className="grid gap-2 relative">
               <Label htmlFor="sigla">Sigla</Label>
               <div className="relative">
-                  <Input id="sigla" placeholder="Sigla" required {...register('sigla')} />
-                  <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-1/2 -translate-y-1/2" onClick={gerarSigla}>
-                    <Sparkles className="h-4 w-4" />
-                  </Button>
+                <Input id="sigla" placeholder="Sigla" required {...register('sigla')} />
+                <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-1/2 -translate-y-1/2" onClick={gerarSigla}>
+                  <Sparkles className="h-4 w-4" />
+                </Button>
               </div>
               {errors.sigla && (
                 <p className="text-sm font-medium text-red-500 dark:text-red-400">
@@ -120,7 +120,7 @@ export function DrawerForm() {
   });
 
   async function send(data: FormData) {
-    const result = await createBanco(data);
+    const result = await createBank(data);
     if (result?.error) {
       toast.error(result.error);
     }
@@ -163,11 +163,11 @@ export function DrawerForm() {
                 <div className="grid gap-2 relative">
                   <Label htmlFor="sigla">Sigla</Label>
                   <div className="relative">
-                      <Input id="sigla" placeholder="Informe a sigla" required {...register('sigla')}/>
-                      <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-1/2 -translate-y-1/2" onClick={gerarSigla}>
-                        <Sparkles className="h-4 w-4" />
-                      </Button>
-                      </div>
+                    <Input id="sigla" placeholder="Informe a sigla" required {...register('sigla')} />
+                    <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-1/2 -translate-y-1/2" onClick={gerarSigla}>
+                      <Sparkles className="h-4 w-4" />
+                    </Button>
+                  </div>
                   {errors.sigla && (
                     <p className="text-sm font-medium text-red-500 dark:text-red-400">
                       {errors.sigla.message}

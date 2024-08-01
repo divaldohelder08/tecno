@@ -1,24 +1,26 @@
 "use client"
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PlusIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Form from "./form"
 
 interface props<TData> {
   table: Table<TData>
+  funcio: { id: number, name: string }[]
 }
 
 export function DataTableHeader<TData>({
   table,
+  funcio
 }: props<TData>) {
   const router = useRouter()
   return (
     <div className="flex items-end py-4">
       <div>
-        <h1 className="text-xl font-semibold md:text-2xl">Departamentos já cadastrados</h1>
+        <h1 className="text-xl font-semibold md:text-2xl">Departamentos</h1>
       </div>
 
       <div className="flex items-center gap-2 ml-auto">
@@ -31,7 +33,7 @@ export function DataTableHeader<TData>({
           }
           className="max-w-sm"
         />
-        <Button> <PlusIcon className="mr-2"/>Novo Departamento </Button>
+        <Form funcio={funcio}/>
       </div>
     </div>
   )

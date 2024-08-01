@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Departamento } from '@/types'
 import { getNameInitials } from "@/utils/get-name-initials";
 import { Badge } from "@/components/ui/badge";
+import Option from "./options";
 import {
   HoverCard,
   HoverCardContent,
@@ -99,19 +100,10 @@ export const columns: ColumnDef<Loja>[] = [
         </p>
       )
     },
-    cell: ({ row }) =>    <>
-              <Button variant="ghost" size="icon">
-                <EyeIcon className="h-4 w-4" />
-                <span className="sr-only">Visualizar</span>
-              </Button>
-        <Button variant="ghost" size="icon">
-                <FilePenIcon className="h-4 w-4" />
-                <span className="sr-only">Editar</span>
-              </Button>
-               <Button variant="ghost" size="icon">
-                <TrashIcon className="h-4 w-4" />
-                <span className="sr-only">Excluir</span>
-              </Button>
-              </>
+    cell: ({ row }) => {
+        const val=row.original
+        return <Option id={val.id} name={val.name}/>
+    }
+    
   }
 ];

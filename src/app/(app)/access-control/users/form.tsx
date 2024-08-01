@@ -1,34 +1,33 @@
 "use client"
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogTrigger,
   DialogClose,
   DialogContent,
-  DialogHeader,
   DialogFooter,
+  DialogHeader,
   DialogTitle,
-  DialogDescription,
+  DialogTrigger
 } from "@/components/ui/dialog";
-import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createBanco } from "@/http/banks";
+import { createUser } from "@/http/members";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleDashed, Sparkles, Eye, EyeOff } from "lucide-react";
+import { PlusIcon } from "@radix-ui/react-icons";
+import { CircleDashed, Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { PlusIcon } from "@radix-ui/react-icons"
-import { createUser  } from "@/http/members"
 
 const formSchema = z.object({
   name: z.string(),
   email: z.string(),
-  isSuperAdmin: z.boolean(),
   password: z.string(),
   ConfirmPassword: z.string(),
+}).refine((data) => data.password === data.ConfirmPassword, {
+  message: "As senhas não coincidem",
+  path: ["ConfirmPassword"],
 });
 
 export type createUserData = z.infer<typeof formSchema>;
@@ -41,18 +40,21 @@ export default function Form() {
     reset,
     register,
     handleSubmit,
-    setValue,
     formState: { errors, isSubmitting }
   } = useForm<createUserData>({
     resolver: zodResolver(formSchema),
   });
 
-  async function send({ name, email, isSuperAdmin, password }: createUserData) {
-   
-    const result = await createUser({ name, email, isSuperAdmin, password })
-      if (result?.error) {
+  async function send({ name, email, password }: createUserData) {
+
+    const result = await createUser({ name, email, password })
+    if (result?.error) {
       toast.error(result.error);
+    } else {
+      toast.success("Usuario cadastrado com sucesso");
     }
+    setOpn(false)
+    reset()
   }
 
   return (
@@ -89,7 +91,7 @@ export default function Form() {
                 </p>
               )}
             </div>
-            <div className="grid grid-cols-2 gap-2 items-center">
+            <div className="grid grid-cols-2 gap-2 items-baseline">
               <div className="grid gap-2 relative">
                 <Label htmlFor="password">Senha</Label>
                 <div className="relative">
@@ -146,16 +148,6 @@ export default function Form() {
                   </p>
                 )}
               </div>
-            </div>
-            <div className="ml-auto flex gap-2">
-              <Label htmlFor="isSuperAdmin">isSuperAdmin</Label>
-              <Switch
-                onCheckedChange={(checked: boolean) => {
-                  setValue("isSuperAdmin", checked)
-                }}
-                disabled={isSubmitting}
-                {...register("isSuperAdmin")}
-              />
             </div>
             <DialogFooter className="w-full gap-2">
               <DialogClose asChild>

@@ -43,14 +43,11 @@ export default function FormComponent() {
 
   async function login(data: FormData) {
     const { email, password } = data;
-    console.log("Tentativa de login com:", { email, password });
-
     const result = await signIn("credentials", {
       email,
       password,
       redirect: false,
     });
-
     console.log("Resultado do signIn:", result);
       router.push("/");
       toast({

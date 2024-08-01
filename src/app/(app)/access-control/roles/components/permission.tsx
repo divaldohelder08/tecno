@@ -33,10 +33,13 @@ export default function Permission({ id, slug, description, val, roleId }: props
 
   async function send(data: formData) {
       const result = await updateRolePermission(data)
-      if (result && result.error) {
-        toast.error(result.error);
-      }
-      setValue("has",data.has)
+      if (result && result.error) toast.error(result.error)
+      else {
+         setValue("has",data.has)
+         data.has 
+         ? toast.success("Permissão adicionada com sucesso")
+         : toast.success("Permissão removida com sucesso")      
+    }
   }
 
   const handleChange = (checked: boolean) => {

@@ -4,20 +4,20 @@ import { Cliente, Role } from '@/types'
 import { getErrorMessage } from '@/utils/get-error-message'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-
+import { clienteData } from '@/app/(app)/comercial/entity/clients/new/form'
 interface props {
-  id: number,
-  entidadeId: number,
-  tipoDesconto: 'COMERCIAL' | 'FINANCEIRO' | 'DIVERSO' | 'NENHUM',
-  saldo: number,
-  estado: 'ACTIVO' | 'REMOVIDO',
+  id: number
+  entidadeId: number
+  tipoDesconto: 'COMERCIAL' | 'FINANCEIRO' | 'DIVERSO' | 'NENHUM'
+  saldo: number
+  estado: 'ACTIVO' | 'REMOVIDO'
   country: {
-    code: string,
+    code: string
     name: string
-  },
+  }
   entidade: {
-    name: string,
-    identificacao: string,
+    name: string
+    identificacao: string
     tipodeIdentificacao: string
   }
 }
@@ -30,61 +30,46 @@ export async function getCliente(id: string) {
   const { data } = await api.get<Cliente>(`/cliente/${id}`)
   return data
 }
-/*
-export async function updateRole({ id, name, description }: Role) {
+
+export async function createCliente(data: clienteData) {
   try {
-    await api.patch(`/role/${id}`, {
-      name, description
-    })
-    revalidatePath(`/settings/roles/${id}`)
+    await api.post('/cliente-and-entidade', data)
   } catch (error) {
     return {
-      error: getErrorMessage(error)
+      error: getErrorMessage(error),
     }
   }
-}*/
-
+  redirect('/comercial/entity/clients/new')
+}
 
 export async function deleteCliente(id: number) {
   try {
     await api.delete(`/cliente/${id}`)
     revalidatePath('/entidade/cliente')
   } catch (error) {
-    return {
-      error: getErrorMessage(error)
-    }
+    revalidatePath('/entidade/cliente')
+    throw new Error(getErrorMessage(error))
   }
 }
 
-
-export async function createClienteWithEntidadeId({ name, description }: { name: string, description: string | null }) {
+export async function createClienteWithEntidadeId({
+  name,
+  description,
+}: {
+  name: string
+  description: string | null
+}) {
   let resId: number
   try {
     const { data } = await api.post<{ role: Role }>('/role', {
-      name, description
+      name,
+      description,
     })
     resId = data.role.id
   } catch (error) {
     return {
-      error: getErrorMessage(error)
+      error: getErrorMessage(error),
     }
   }
   redirect(`/settings/roles/${resId}`)
-}
-
-interface props {
-  roleId: number;
-  permissionId: number;
-  has: boolean;
-}
-
-export async function updateRolePermission({ roleId, ...rest }: props) {
-  try {
-    await api.patch(`/role/${roleId}/permission`, { ...rest })
-    revalidatePath(`/settings/roles/${roleId}`)
-  } catch (error) {
-    return {
-      error: getErrorMessage(error)
-    }
-  }
 }

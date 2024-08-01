@@ -61,7 +61,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full">
-      <DataTableHeader table={table} />
+      <DataTableHeader table={table}/>
       <div className="rounded-md border">
         <Table>
           <TableHeader table={table} />

@@ -42,7 +42,7 @@ export function DataTableHeader<TData>({
       <h1 className="text-xl font-semibold md:text-2xl">Carreiras</h1>
       <div className="flex items-center gap-2 ml-auto">
         <Input
-          placeholder="Filtrar departamento"
+          placeholder="Filtrar carreira pelo nome"
           value={(table.getColumn("nome_carreira")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("nome_carreira")?.setFilterValue(event.target.value)
@@ -75,6 +75,7 @@ function DrawerForm() {
     if (result?.error) {
       toast.error(result.error);
     }
+    setOpn(false)
     reset();
   }
 

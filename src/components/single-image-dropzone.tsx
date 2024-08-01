@@ -1,7 +1,7 @@
 'use client';
 
+import { formatFileSize } from '@edgestore/react/utils';
 import { UploadCloudIcon, X } from 'lucide-react';
-import Image from 'next/image';
 import * as React from 'react';
 import { useDropzone, type DropzoneOptions } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
@@ -29,28 +29,27 @@ type InputProps = {
 
 const ERROR_MESSAGES = {
   fileTooLarge(maxSize: number) {
-    return `The file is too large. Max size is ${formatFileSize(maxSize)}.`;
+    return `O arquivo é muito grande. O tamanho máximo é ${formatFileSize(maxSize)}.`;
   },
   fileInvalidType() {
-    return 'Invalid file type.';
+    return 'Tipo de arquivo inválido.';
   },
   tooManyFiles(maxFiles: number) {
-    return `You can only add ${maxFiles} file(s).`;
+    return `Você só pode adicionar arquivo(s)  ${maxFiles} file(s).`;
   },
   fileNotSupported() {
-    return 'The file is not supported.';
+    return 'O arquivo não é suportado.';
   },
 };
 
 const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    { dropzoneOptions, value, width, height, className, disabled, onChange },
-
+    { dropzoneOptions, width, height, value, className, disabled, onChange },
     ref,
   ) => {
     const imageUrl = React.useMemo(() => {
       if (typeof value === 'string') {
-        // in case a url is passed in, use it to display the image
+        // in case an url is passed in, use it to display the image
         return value;
       } else if (value) {
         // in case a file is passed in, create a base64 url to display the image
@@ -120,7 +119,7 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
       }
       return undefined;
     }, [fileRejections, dropzoneOptions]);
-// 'flex aspect-square w-full items-center justify-center rounded-md border-2 border-dashed transition-all shadow-sm hover:bg-secondary/80'
+
     return (
       <div>
         <div
@@ -137,25 +136,22 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
 
           {imageUrl ? (
             // Image Preview
-            <Image
+            <img
               className="h-full w-full rounded-md object-cover"
               src={imageUrl}
               alt={acceptedFiles[0]?.name}
-              width={width}
-              height={height}
             />
           ) : (
             // Upload Icon
-            <div className="flex flex-col items-center justify-center text-xs text-gray-400 aspect-square w-full
-            ">
-              <UploadCloudIcon className="mb-2 h-4 w-4" />
-              <div className="text-gray-400">drag & drop to upload</div>
+            <div className="flex flex-col items-center justify-center text-xs text-gray-400">
+              <UploadCloudIcon className="mb-2 h-7 w-7" />
+              <div className="text-gray-400">Arraste e solte uma imagem</div>
               <div className="mt-3">
-                <Button disabled={disabled} type="button">select</Button>
+                <Button type="button" disabled={disabled}>
+                  selecionar
+                </Button>
               </div>
             </div>
-             // className="flex rounded-md border-2 border-dashed transition-all shadow-sm hover:bg-secondary/80">
-              //<Upload className="h-4 w-4 text-muted-foreground" />
           )}
 
           {/* Remove Image Icon */}
@@ -207,20 +203,5 @@ const Button = React.forwardRef<
   );
 });
 Button.displayName = 'Button';
-
-function formatFileSize(bytes?: number) {
-  if (!bytes) {
-    return '0 Bytes';
-  }
-  bytes = Number(bytes);
-  if (bytes === 0) {
-    return '0 Bytes';
-  }
-  const k = 1024;
-  const dm = 2;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-}
 
 export { SingleImageDropzone };

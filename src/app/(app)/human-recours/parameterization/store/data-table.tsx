@@ -66,7 +66,12 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full">
       <DataTableHeader table={table} prov={prov} filter={filter} set={setFilter}/>
-      <div className="rounded-md border">
+
+
+
+
+  { data[0] ? <>
+        <div className="rounded-md border">
         <Table>
           <TableHeader table={table} />
           <TableBody>
@@ -100,6 +105,24 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} />
+  </>
+            : <div
+              className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm  p-4 md:p-6"
+            >
+              <div className="flex flex-col items-center gap-1 text-center">
+                <h3 className="text-2xl font-bold tracking-tight">
+                  Não encontramos nenhuma loja
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Começe por criar novas lojas 
+                </p>
+              
+              </div>
+            </div>
+        }
+
+      
+
     </div>
   )
 }

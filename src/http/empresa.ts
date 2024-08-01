@@ -1,3 +1,4 @@
+'use server'
 import { empresaData } from '@/app/(app)/(start)/company/form'
 import api from '@/lib/axios'
 import { getErrorMessage } from '@/utils/get-error-message'
@@ -8,34 +9,17 @@ export async function getEmpresa() {
     return { data: response.data, error: null }
   } catch (err) {
     return {
-      data: undefined,
+      data: null,
       error: getErrorMessage(err),
     }
   }
 }
 export async function upsertEmpresa(data: empresaData) {
   try {
-    const response = await api.get<empresaData>('/empresa')
-    return response.data
+    await api.post<empresaData>('/empresa', data)
   } catch (err) {
     return {
       error: getErrorMessage(err),
     }
   }
 }
-
-/*
-export async function upsertEmpresa({
-  name,
-  domain,
-  shouldAttachUsersByDomain,
-}: CreateOrganizationRequest): Promise<CreateOrganizationResponse> {
-  await api.post('organizations', {
-    json: {
-      name,
-      domain,
-      shouldAttachUsersByDomain,
-    },
-  })
-}
-*/

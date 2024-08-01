@@ -1,28 +1,38 @@
-import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
-import { getURL } from "./utils/get-url";
-const PRIVATE_PATHS = ['/orders', '/products', '/settings']
+import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
+import { getURL } from './utils/get-url'
+const SINGLE_PATHS = ['/', '/company']
 
 export function middleware(request: NextRequest) {
   const token =
-    process.env.VERCEL_ENV === "production" ?
-      request.cookies.get("__Secure-authjs.session-token")
-      : request.cookies.get("authjs.session-token");
-
+    process.env.VERCEL_ENV === 'production'
+      ? request.cookies.get('__Secure-authjs.session-token')
+      : request.cookies.get('authjs.session-token')
 
   const { pathname } = request.nextUrl
   if (pathname === '/auth/sign-in' && token) {
     return NextResponse.redirect(new URL(getURL('/')))
   }
-  if (pathname === '/auth/forgot-password/reset' && !request.cookies.has('reset')) {
+  if (
+    pathname === '/auth/forgot-password/reset' &&
+    !request.cookies.has('reset')
+  ) {
     return NextResponse.redirect(new URL(getURL('/auth/sign-in')))
   }
-   if (pathname === '/auth/forgot-password' && request.cookies.has('reset')) {
+  if (pathname === '/auth/forgot-password' && request.cookies.has('reset')) {
     return NextResponse.redirect(new URL(getURL('/auth/forgot-password/reset')))
   }
-if (pathname === '/access-control/users/1' && !token) {
+  if (pathname.startsWith('/human-recours') && !token) {
     return NextResponse.redirect(new URL(getURL('/auth/sign-in')))
   }
-  
+  if (pathname.startsWith('/comercial') && !token) {
+    return NextResponse.redirect(new URL(getURL('/auth/sign-in')))
+  }
+  if (pathname === '/' && !token) {
+    return NextResponse.redirect(new URL(getURL('/auth/sign-in')))
+  }
+  if (pathname === '/company' && !token) {
+    return NextResponse.redirect(new URL(getURL('/auth/sign-in')))
+  }
 }
 export const config = {
   matcher: [

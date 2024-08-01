@@ -5,9 +5,9 @@ import {
 import { ArrowUpDown, KeySquare, User, CalendarDaysIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import DropdownMenu from "./components/drop-down-menu";
 import { Departamento } from '@/types'
 import { getNameInitials } from "@/utils/get-name-initials";
+import Option from "./options";
 import {
   HoverCard,
   HoverCardContent,
@@ -116,9 +116,8 @@ export const columns: ColumnDef<Departamento>[] = [
     enableHiding: false,
     header: ({ column }) => <p>Opções</p>,
     cell: ({ row }) => {
-      const role = row.original
-
-      return <DropdownMenu id={role.id} name={role.nome_departamento} />
+      const dep = row.original
+     return <Option id={dep.id} name={dep.nome_departamento} />
     },
   },
 ];

@@ -42,7 +42,7 @@ export function DataTableHeader<TData>({
       <h1 className="text-xl font-semibold md:text-2xl">Lojas</h1>
       <div className="flex items-center gap-2 ml-auto">
         <Input
-          placeholder="Filtrar departamento"
+          placeholder="Filtrar loja"
            value={filter}
            onChange={(e) => set(e.target.value)}
           className="max-w-sm"

@@ -33,14 +33,20 @@ export default function Form() {
     formState: { errors, isSubmitting }
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    defaultValues:{
+        regime:'geral'
+    }
   });
 
   async function send(data: FormData) {
     const result = await createCareer(data);
     if (result?.error) {
       toast.error(result.error);
+    }else{
+      toast.success('Carreira criada com sucesso');
     }
     reset();
+    setValue('regime',data.regime)
   }
 
 
@@ -52,8 +58,8 @@ export default function Form() {
             Nova Carreira
           </legend>
           <div className="grid gap-3">
-            <Label htmlFor="nome_banco">Nome</Label>
-            <Input placeholder="Informe o nome do banco" required {...register('nome_carreira')} />
+            <Label htmlFor="nome_carreira">Nome</Label>
+            <Input placeholder="Informe o nome da carreira" required {...register('nome_carreira')} />
             {errors.nome_carreira && (
               <p className="text-sm font-medium text-red-500 dark:text-red-400">
                 {errors.nome_carreira.message}
@@ -62,10 +68,9 @@ export default function Form() {
           </div>
           <div className="grid gap-3">
             <Label htmlFor="regime">Regime</Label>
-            <Select onValueChange={(val: 'geral' | 'especial') => setValue('regime', val)}>
+            <Select defaultValue='geral' onValueChange={(val: 'geral' | 'especial') => setValue('regime', val)}>
               <SelectTrigger
                 className=""
-                aria-label="Select a value"
               >
                 <SelectValue placeholder="Informe o regime" />
               </SelectTrigger>

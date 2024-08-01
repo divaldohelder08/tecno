@@ -28,10 +28,9 @@ export async function ResetPasswordVerifyingEmail(email: string) {
       path: '/',
       maxAge: 60 * 5, // 5 Min
     })
-
   } catch (error) {
     return {
-      error: getErrorMessage(error)
+      error: getErrorMessage(error),
     }
   }
   const token = cookies().get('reset')?.value
@@ -39,7 +38,6 @@ export async function ResetPasswordVerifyingEmail(email: string) {
     redirect('/auth/forgot-password/reset')
   }
 }
-
 
 export async function signInWithPassword({
   email,
@@ -49,22 +47,23 @@ export async function signInWithPassword({
     email,
     password,
   })
-    console.log(result)
+  console.log(result)
   return result
 }
 
-
-
-export async function resetRequest({ code, password }: {
-  password: string, code: string
+export async function resetRequest({
+  code,
+  password,
+}: {
+  password: string
+  code: string
 }) {
-
   try {
     const { data } = await api.post<SignInWithPasswordResponse>('/reset', {
       code,
-      password
+      password,
     })
-    
+
     cookies().set('token', data.token, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 7 days
@@ -74,6 +73,4 @@ export async function resetRequest({ code, password }: {
 
     return { error: getErrorMessage(error) }
   }
-
-
 }

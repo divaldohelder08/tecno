@@ -30,20 +30,20 @@ export interface Departamento {
     id: number
     nome_completo: string
     avatar: string
-  createdAt: date
-    
+    createdAt: date
+
     Funcao: {
-        nome_funcao: string 
+      nome_funcao: string
     }
   }
   funcionario_supervisor: {
     id: number
     nome_completo: string
     avatar: string
-  createdAt: date
-    
+    createdAt: date
+
     Funcao: {
-        nome_funcao: string 
+      nome_funcao: string
     }
   }
   createdAt: date
@@ -60,7 +60,7 @@ interface getRolesProps {
   roles: {
     id: number
     name: string
-    description?: string
+    description: string | null
     permissions: number
     users: number
   }[]
@@ -78,6 +78,7 @@ export interface member {
   avatar?: string
   status: boolean
   isSuperAdmin: boolean
+  resetSentAt: boolean
   createdAt: Date
   profiles: number
 }
@@ -111,4 +112,14 @@ export interface Country {
   name: string
   code: string
   provincias: provincia[]
+}
+
+export interface Armazem {
+  id: number
+  name: string
+  lojaId: number
+  description: string | null
+  localidade: string | null
+  bloqueioEntrada: boolean
+  bloqueioSaida: boolean
 }

@@ -1,7 +1,6 @@
 'use server'
 import api from '@/lib/axios'
 
-
 interface GetProfileResponse {
   user: {
     id: string

@@ -25,12 +25,14 @@ import { DataTablePagination } from "@/components/data-pagination";
 
 interface props<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  data: TData[],
+  funcio: { id: number, name: string }[]
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  funcio
 }: props<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -61,7 +63,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full">
-      <DataTableHeader table={table} />
+      <DataTableHeader table={table} funcio={funcio}/>
       <div className="rounded-md border">
         <Table>
           <TableHeader table={table} />

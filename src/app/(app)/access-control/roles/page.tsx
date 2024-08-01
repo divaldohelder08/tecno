@@ -1,10 +1,10 @@
 "use server"
-import { getRules } from "@/http/roles";
-import { columns } from "./columns";
-import { DataTable } from "./data-table";
+import { getRoles } from "@/http/roles";
+import { columns } from "./components/columns";
+import { DataTable } from "./components/data-table";
 
 export default async function Roles() {
-  const roles = await getRules();
+  const roles = await getRoles();
   return (
     <div className="p-4 lg:p-8">
       <DataTable columns={columns} data={roles} />

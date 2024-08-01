@@ -66,11 +66,7 @@ function DeleteContainer({ id, name, set, isOpn }: props1) {
     const result = await deleteRole(id)
     setLoad(false)
     set(false)
-    if (result?.error) {
-      toast.error(result.error);
-      return
-    }
-      toast.success('Role apagada com sucesso');
+    toast.success('Role apagada com sucesso');
   }
   return (
     <AlertDialog open={isOpn} onOpenChange={set} >
@@ -101,9 +97,6 @@ function DeleteContainer({ id, name, set, isOpn }: props1) {
               <Loader2 className="motion-reduce:hidden animate-spin" size="20" />
             ) :
               'Apagar'
-
-
-              
             }
         </Button>
         </AlertDialogFooter>

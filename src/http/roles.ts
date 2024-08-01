@@ -3,7 +3,6 @@ import api from '@/lib/axios'
 import { Permission, Role, getRoleProps, getRolesProps } from '@/types'
 import { getErrorMessage } from '@/utils/get-error-message'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 
 export async function getPermissions() {
   const { data } = await api.get<{
@@ -12,14 +11,10 @@ export async function getPermissions() {
   return data.permissions
 }
 
-
-
-export async function getRules() {
+export async function getRoles() {
   const { data } = await api.get<getRolesProps>('/roles')
   return data.roles
 }
-
-
 
 export async function getRole(id: string) {
   const { data } = await api.get<getRoleProps>(`/role/${id}`)
@@ -29,57 +24,60 @@ export async function getRole(id: string) {
 export async function updateRole({ id, name, description }: Role) {
   try {
     await api.patch(`/role/${id}`, {
-      name, description
+      name,
+      description,
     })
-    revalidatePath(`/settings/roles/${id}`)
+    revalidatePath(`/access-control/roles/${id}`)
   } catch (error) {
     return {
-      error: getErrorMessage(error)
+      error: getErrorMessage(error),
     }
   }
 }
-
 
 export async function deleteRole(id: number) {
   try {
     await api.delete(`/role/${id}`)
-    revalidatePath('/settings/roles')
+    revalidatePath('/access-control/roles')
   } catch (error) {
-    return {
-      error: getErrorMessage(error)
-    }
+    revalidatePath('/access-control/roles')
+    throw new Error(getErrorMessage(error))
   }
 }
 
-
-export async function createRole({ name, description }: { name: string, description: string | null }) {
-  let resId: number
+export async function createRole({
+  name,
+  description,
+}: {
+  name: string
+  description: string | null
+}) {
   try {
-    const { data } = await api.post<{ role: Role }>('/role', {
-      name, description
+    await api.post<{ role: Role }>('/role', {
+      name,
+      description,
     })
-    resId = data.role.id
   } catch (error) {
     return {
-      error: getErrorMessage(error)
+      error: getErrorMessage(error),
     }
   }
-  redirect(`/settings/roles/${resId}`)
+  revalidatePath('/access-control/roles')
 }
 
 interface props {
-  roleId: number;
-  permissionId: number;
-  has: boolean;
+  roleId: number
+  permissionId: number
+  has: boolean
 }
 
 export async function updateRolePermission({ roleId, ...rest }: props) {
   try {
     await api.patch(`/role/${roleId}/permission`, { ...rest })
-    revalidatePath(`/settings/roles/${roleId}`)
+    revalidatePath(`/access-control/roles${roleId}`)
   } catch (error) {
     return {
-      error: getErrorMessage(error)
+      error: getErrorMessage(error),
     }
   }
 }

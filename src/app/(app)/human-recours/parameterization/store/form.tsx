@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
-import { CircleDashed, Sparkles, Eye, EyeOff } from "lucide-react";
+import { CircleDashed, Sparkles, Eye, EyeOff, FilePenIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -94,7 +94,7 @@ export default function Form({ prov }: Props) {
         <Button size="sm" className="gap-1">
           <PlusIcon className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Novo Utilizador
+            Nova Loja
           </span>
         </Button>
       </DialogTrigger>
@@ -105,7 +105,7 @@ export default function Form({ prov }: Props) {
         </DialogHeader>
         <form className="grid gap-4" onSubmit={handleSubmit(send)}>
           <div className="grid gap-2">
-            <Label htmlFor="name" isReq>Nome</Label>
+            <Label htmlFor="name">Nome</Label>
             <Input id="name" placeholder="Digite o nome da loja" {...register("name")} />
             {errors.name && <p className="text-red-500">{errors.name.message}</p>}
           </div>
@@ -142,7 +142,7 @@ export default function Form({ prov }: Props) {
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="telefone2">Telefone 2</Label>
+              <Label htmlFor="telefone2" isReq>Telefone 2</Label>
               <Input id="telefone2" type="tel" placeholder="(00) 0000-0000" {...register("telefone2")} />
               {errors.telefone2 && <p className="text-red-500">{errors.telefone2.message}</p>}
             </div>
@@ -165,3 +165,37 @@ export default function Form({ prov }: Props) {
     </Dialog>
   );
 }
+
+
+interface atualizarForm extends Props{
+    id:number
+}
+export function EditForm({ prov, id }: atualizarForm) {
+  const [opn, setOpn] = useState<boolean>(false);
+
+  const {
+    reset,
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitting }
+  } = useForm<createLojaData>({
+    resolver: zodResolver(formSchema),
+  });
+
+  /*async function send(data: createLojaData) {
+    const result = await editarLoja(data);
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Loja atualizada com sucesso!");
+      reset();
+      setOpn(false);
+    }
+  }*/
+
+  return (
+    <>afsdf</>
+  );
+}
+

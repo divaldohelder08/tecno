@@ -5,7 +5,7 @@ import {
 import { ArrowUpDown, KeySquare, User, CalendarDaysIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import DropdownMenu from "./components/drop-down-menu";
+import Option from "./options";
 import { Departamento } from '@/types'
 import { getNameInitials } from "@/utils/get-name-initials";
 import { Badge } from "@/components/ui/badge";
@@ -65,8 +65,7 @@ export const columns: ColumnDef<Carrer>[] = [
     header: ({ column }) => <p>Opções</p>,
     cell: ({ row }) => {
       const career = row.original
-
-      return <DropdownMenu id={career.id} name={career.nome_carreira} regime={career.regime} />
+      return <Option id={career.id} name={career.nome_carreira} regime={career.regime} />
     },
   },
 ];

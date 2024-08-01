@@ -18,7 +18,7 @@ export function PermissionContent({ permissions, has, roleId }: params) {
     <ScrollArea>
       <div className="grid w-full h-96 overflow-scroll gap-2">
         {/* Renderiza permissões que já existem (has) */}
-        {has.sort().map((e) => (
+        {has.map((e) => (
           <Permission 
             description={e.description} 
             slug={e.slug} 
@@ -29,7 +29,7 @@ export function PermissionContent({ permissions, has, roleId }: params) {
           />
         ))}
         {/* Renderiza permissões únicas do array permissions */}
-        {uniquePermissions.sort().map((e) => (
+        {uniquePermissions.map((e) => (
           <Permission 
             description={e.description} 
             slug={e.slug} 

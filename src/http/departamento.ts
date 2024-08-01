@@ -1,65 +1,36 @@
 'use server'
 import api from '@/lib/axios'
-import { Permission, Role, getRoleProps, getRolesProps, Departamento } from '@/types'
+import { Departamento } from '@/types'
 import { getErrorMessage } from '@/utils/get-error-message'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 
 export async function getDepartamento() {
   const { data } = await api.get<Departamento[]>('/departamentos')
   return data
 }
 
-export async function updateRole({ id, name, description }: Role) {
+export async function deleteDepartamento(id: number) {
   try {
-    await api.patch(`/role/${id}`, {
-      name, description
-    })
-    revalidatePath(`/settings/roles/${id}`)
+    await api.delete(`/departamento/${id}`)
+    revalidatePath('/human-recours/parameterization/department')
   } catch (error) {
     return {
-      error: getErrorMessage(error)
+      error: getErrorMessage(error),
     }
   }
 }
 
-
-export async function deleteRole(id: number) {
+export async function createDepartamento(data: {
+  nome_departamento: string
+  Id_funcionario_chefe: number
+  Id_funcionario_supervisor: number
+}) {
   try {
-    await api.delete(`/role/${id}`)
-    revalidatePath('/settings/roles')
+    await api.post('/departamento', data)
+    revalidatePath('/human-recours/parameterization/department')
   } catch (error) {
     return {
-      error: getErrorMessage(error)
-    }
-  }
-}
-
-
-export async function createBanco(data: { nome_banco: string, sigla: string,  codigo: string  }) {
-  try {
-    await api.post('/banco',data)
-    revalidatePath('/human-recours/parameterization/bank')
-  } catch (error) {
-    return {
-      error: getErrorMessage(error)
-    }
-  }
-}
-
-interface props {
-  roleId: number;
-  permissionId: number;
-  has: boolean;
-}
-
-export async function updateRolePermission({ roleId, ...rest }: props) {
-  try {
-    await api.patch(`/role/${roleId}/permission`, { ...rest })
-    revalidatePath(`/settings/roles/${roleId}`)
-  } catch (error) {
-    return {
-      error: getErrorMessage(error)
+      error: getErrorMessage(error),
     }
   }
 }

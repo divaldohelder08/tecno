@@ -1,69 +1,123 @@
 'use server'
-
-import api from "@/lib/axios";
-import { member } from "@/types";
-import { createUserData } from "./app/(app)/access-control/users/form"
+import { editUserData } from '@/app/(app)/access-control/users/components/edit-user'
+import api from '@/lib/axios'
+import { member } from '@/types'
 import { getErrorMessage } from '@/utils/get-error-message'
-import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 
-
-interface role{
-    id: number,
-    name: string,
-    description: string | null,
+interface role {
+  id: number
+  name: string
+  description: string | null
 }
 
-
-export interface user{
-    id: number,
-    name: string,
-    email: string,
-    emailVerifiedAt: Date | null,
-    avatar:string | null,
-    active: boolean,
-    isSuperAdmin: boolean,
-    prazoSenha: null,
-    resetSentAt: Date | false,
-    createdAt: Date,
-    updatedAt: Date
+export interface user {
+  id: number
+  name: string
+  email: string
+  emailVerifiedAt: Date | null
+  avatar: string | null
+  active: boolean
+  isSuperAdmin: boolean
+  prazoSenha: null
+  resetSentAt: Date | false
+  createdAt: Date
+  updatedAt: Date
 }
-
-
-
-
-
-
-
-
-
-
-
 
 export async function getMembers() {
-  const { data } = await api.get<{
-    members: member[]
-  }>('/users')
+  const { data } = await api.get<{ members: member[] }>('/users')
   return data.members
 }
 
-
-export async function getMember(id:string) {
-  const { data } = await api.get<{ roles: role[], user: user }>(`/user/${id}`)
-  return data
+export async function getMember(id: string) {
+  try {
+    const { data } = await api.get<{ roles: role[]; user: user }>(`/user/${id}`)
+    return data
+  } catch (error) {
+    console.error(getErrorMessage(error))
+    return null
+  }
 }
 
-
-
-export async function createUser(data: createUserData) {
-  let resId: number
- try {
-    const response = await api.post('/user', data)
-    console.log(response)
-    resId = response.data.id
+export async function getUserMember(id: string) {
+  try {
+    const { data } = await api.get<role[]>(`/user/${id}`)
+    return data
   } catch (error) {
     return {
-      error: getErrorMessage(error)
+      error: getErrorMessage(error),
     }
   }
-  redirect(`/access-control/users/${resId}`)
+}
+
+interface props {
+  roleId: number
+  userId: number
+  value: boolean
+}
+
+export async function updateUserRole({ userId, ...rest }: props) {
+  try {
+    await api.patch(`/user/${userId}`, { ...rest })
+    revalidatePath(`/access-control/users/${userId}/roles`)
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    }
+  }
+}
+
+export async function createUser(data: {
+  name: string
+  email: string
+  password: string
+}) {
+  try {
+    await api.post('/user', data)
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    }
+  }
+  revalidatePath(`/access-control/users`)
+}
+
+export async function editUser({ id, ...rest }: editUserData) {
+  try {
+    await api.patch(`/user/${id}/edit`, { ...rest })
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    }
+  }
+  revalidatePath(`/access-control/users`)
+}
+
+export async function deleteUser(id: number) {
+  try {
+    await api.delete(`/user/${id}`)
+    revalidatePath('/access-control/users')
+  } catch (error) {
+    revalidatePath('/access-control/users')
+    throw new Error(getErrorMessage(error))
+  }
+}
+
+export async function updateUserStatus({
+  id,
+  value,
+}: {
+  id: number
+  value: boolean
+}) {
+  try {
+    await api.patch(`/user/${id}/status`, {
+      value,
+    })
+    revalidatePath('/access-control/users')
+  } catch (error) {
+    revalidatePath('/access-control/users')
+    throw new Error(getErrorMessage(error))
+  }
 }

@@ -10,7 +10,7 @@ import { AccordionItem } from "@radix-ui/react-accordion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Home, Building, KeyRound, Settings, UserCheck, Users, ShieldCheck, FileText, CalendarDays, Award, Lock,
-  Tag, Layers, Truck, SlidersVertical, Warehouse, Dock, Landmark, Store, Clock
+  Tag, Layers, Truck, SlidersVertical, Warehouse, Dock, Landmark, Store, Clock, Group
 } from "lucide-react";
 
 // Define an interface for the nav item structure
@@ -27,41 +27,41 @@ const navItems: NavItem[] = [
   {
     label: "Controle de Acesso", icon: KeyRound, href: "/access-control",
     subLinks: [
-      { label: "Perfis", href: "/roles", icon: UserCheck },
-      { label: "Utilizadores", href: "/users", icon: Users },
+      { label: "Perfis", href: "roles", icon: UserCheck },
+      { label: "Utilizadores", href: "users", icon: Users },
     ],
   },
   {
     label: "Sistema", icon: Settings, href: "/settings",
     subLinks: [
-      { label: "Turno", href: "/shift", icon: Clock },
-      { label: "Registro de logs", href: "/log-recording", icon: FileText },
-      { label: "Registro Eventos", href: "/event-recording", icon: CalendarDays },
-      { label: "Licenças", href: "/licenses", icon: Award },
-      { label: "Troca de senha", href: "/change-password", icon: Lock }
+      { label: "Turno", href: "shift", icon: Clock },
+      { label: "Registro de logs", href: "log-recording", icon: FileText },
+      { label: "Registro Eventos", href: "event-recording", icon: CalendarDays },
+      { label: "Licenças", href: "licenses", icon: Award },
+      { label: "Troca de senha", href: "change-password", icon: Lock }
     ],
   }
 ];
 
 const comercialNavItems: NavItem[] = [
   {
-    label: "Terceiros", icon: KeyRound, href: "/comercial/entity",
+    label: "Terceiros", icon: Group, href: "/comercial/entity",
     subLinks: [
-      { label: "Clientes", href: "/clients", icon: UserCheck },
-      { label: "Fornecedores", href: "/suppliers", icon: Truck }
+      { label: "Clientes", href: "clients", icon: UserCheck },
+      { label: "Fornecedores", href: "suppliers", icon: Truck }
     ],
   },
   {
     label: "Parametrização", icon: SlidersVertical, href: "/comercial/parameterization",
     subLinks: [
-      { label: "Turno", href: "/shift", icon: Clock },
-      { label: "Unidade", href: "/unit", icon: FileText },
-      { label: "Categoria", href: "/category", icon: Tag },
-      { label: "Sub-categoria", href: "/sub-category", icon: Layers },
-      { label: "Tipo de imposto", href: "/tax-type", icon: FileText },
-      { label: "Taxa de imposto", href: "/tax-rate", icon: Lock },
-      { label: "Classe", href: "/class", icon: Lock },
-      { label: "Conta", href: "/account", icon: Dock }
+      { label: "Turno", href: "shift", icon: Clock },
+      { label: "Unidade", href: "unit", icon: FileText },
+      { label: "Categoria", href: "category", icon: Tag },
+      { label: "Sub-categoria", href: "sub-category", icon: Layers },
+      { label: "Tipo de imposto", href: "tax-type", icon: FileText },
+      { label: "Taxa de imposto", href: "tax-rate", icon: Lock },
+      { label: "Classe", href: "class", icon: Lock },
+      { label: "Conta", href: "account", icon: Dock }
     ],
   }
 ];
@@ -71,13 +71,13 @@ const rhNavItems: NavItem[] = [
   {
     label: "Parametrização", icon: SlidersVertical, href: "/human-recours/parameterization",
     subLinks: [
-      { label: "Ano Fiscal", href: "/fiscal-year", icon: CalendarDays },
-      { label: "Departamento", href: "/department", icon: Tag },
-      { label: "Função", href: "/function", icon: Layers },
-      { label: "Banco", href: "/bank", icon: Landmark },
-      { label: "Carreira", href: "/career", icon: Lock },
-      { label: "Loja", href: "/store", icon: Store },
-      { label: "Armazem", href: "/storage", icon: Warehouse }
+      { label: "Ano Fiscal", href: "fiscal-year", icon: CalendarDays },
+      { label: "Departamento", href: "department", icon: Tag },
+      { label: "Função", href: "function", icon: Layers },
+      { label: "Banco", href: "bank", icon: Landmark },
+      { label: "Carreira", href: "career", icon: Lock },
+      { label: "Loja", href: "store", icon: Store },
+      { label: "Armazem", href: "storage", icon: Warehouse }
     ],
   }
 ];
@@ -89,7 +89,6 @@ interface NavLinkProps {
   icon: React.ElementType;
   count?: number;
   currentPath: string;
-  basePath: string;
   isInAccordion?: boolean;
 }
 
@@ -101,12 +100,12 @@ const getTabValue = (prefix: string) => {
   }
 };
 
-const NavLink = ({ href, label, icon: Icon, count, currentPath, basePath, isInAccordion }: NavLinkProps) => {
+const NavLink = ({ href, label, icon: Icon, count, currentPath, isInAccordion }: NavLinkProps) => {
   const isActive = currentPath === href;
   const iconClass = isInAccordion && isActive ? "text-primary" : "";
   return (
     <Link
-      href={`${basePath}${href}`}
+      href={href}
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
         isActive && !isInAccordion && "bg-muted text-primary"
@@ -123,8 +122,8 @@ const NavLink = ({ href, label, icon: Icon, count, currentPath, basePath, isInAc
   );
 };
 
-const AccordionNav = ({ label, icon: Icon, subLinks, currentPath, basePath, href }: NavItem & { currentPath: string, basePath: string }) => {
-  const isActive = currentPath.startsWith(basePath);
+const AccordionNav = ({ label, icon: Icon, subLinks, currentPath, href }: NavItem & { currentPath: string }) => {
+  const isActive = currentPath.startsWith(href);
   return (
     <Accordion type="single" collapsible>
       <AccordionItem
@@ -147,7 +146,7 @@ const AccordionNav = ({ label, icon: Icon, subLinks, currentPath, basePath, href
         </AccordionTrigger>
         <AccordionContent className="text-muted-foreground bg-card gap-1 grid h-full ml-[0.50rem] border-l border-primary pb-0 mb-2">
           {subLinks?.map((link, index) => (
-            <NavLink key={index} {...link} currentPath={currentPath} basePath={basePath} isInAccordion />
+            <NavLink key={index} {...link} currentPath={currentPath} href={`${href}/${link.href}`} isInAccordion />
           ))}
         </AccordionContent>
       </AccordionItem>
@@ -172,11 +171,10 @@ export function Nav() {
         icon={item.icon}
         subLinks={item.subLinks}
         currentPath={currentPath}
-        basePath={item.href}
         href={item.href}
       />
     ) : (
-      <NavLink key={index} {...item} currentPath={currentPath} basePath={item.href} />
+      <NavLink key={index} {...item} currentPath={currentPath} href={item.href} />
     )
   );
 

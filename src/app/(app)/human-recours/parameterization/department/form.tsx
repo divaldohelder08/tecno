@@ -1,78 +1,152 @@
-"use client"
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { createRole } from "@/http/roles";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleDashed } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { createDepartamento } from "@/http/departamento";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { CircleDashed } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { PlusIcon } from "@radix-ui/react-icons";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { useState } from "react";
 
 const formSchema = z.object({
-  name: z.string(),
-  description: z.string().nullable(),
+  nome_departamento: z.string(),
+  Id_funcionario_chefe: z.number(),
+  Id_funcionario_supervisor: z.number(),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function Form() {
-  const router = useRouter()
+interface Props {
+  funcio: { id: number; name: string }[];
+}
+
+export default function Form({ funcio }: Props) {
+  const [opn, setOpn] = useState<boolean>(false);
+
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting }
+    setValue,
+    watch,
+    reset,
+    formState: { isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
 
+  const Id_funcionario_chefe = watch("Id_funcionario_chefe");
+  const Id_funcionario_supervisor = watch("Id_funcionario_supervisor");
+
+  const chefeName = funcio.find((e) => e.id === Id_funcionario_chefe)?.name || "Selecione o chefe";
+  const supervisorName = funcio.find((e) => e.id === Id_funcionario_supervisor)?.name || "Selecione o supervisor";
+
   async function send(data: FormData) {
-    const result = await createRole(data);
-    if (result?.error) {
+     const result = await createDepartamento(data);
+     if (result?.error) {
       toast.error(result.error);
-    }
+     }else{
+      toast.success("Departamento criado com sucesso");
+     }
+     setOpn(false)
+     reset()
   }
 
   return (
-    <div className="relative flex-col items-start gap-8">
-      <form className="grid w-full items-start gap-6" onSubmit={handleSubmit(send)}>
-        <fieldset className="grid gap-6 rounded-lg border p-4">
-          <legend className="-ml-1 px-1 text-sm font-medium">
-            Novo Perfil
-          </legend>
-          <div className="grid gap-3">
-            <Label htmlFor="role">Role</Label>
-            <Input placeholder="Informe o nome da role" required {...register('name')} />
-            {errors.name && (
-              <p className="text-sm font-medium text-red-500 dark:text-red-400">
-                {errors.name.message}
-              </p>
-            )}
+    <Dialog open={opn} onOpenChange={setOpn}>
+      <DialogTrigger asChild>
+        <Button>
+          <PlusIcon className="mr-2" />
+          Novo Departamento
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Criar Novo Departamento</DialogTitle>
+          <DialogDescription>
+            Preencha o formulário para criar um novo departamento.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(send)}>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="nome_departamento">Nome do Departamento</Label>
+              <Input
+                id="nome_departamento"
+                placeholder="Digite o nome do departamento"
+                {...register("nome_departamento")}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="Id_funcionario_chefe">Chefe do Departamento</Label>
+              <Select
+                onValueChange={(val) => setValue("Id_funcionario_chefe", Number(val))}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={chefeName} />
+                </SelectTrigger>
+                <SelectContent>
+                  {funcio.map((e) => (
+                    <SelectItem key={e.id} value={e.id.toString()}>
+                      {e.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="Id_funcionario_supervisor">Supervisor do Departamento</Label>
+              <Select
+                onValueChange={(val) => setValue("Id_funcionario_supervisor", Number(val))}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={supervisorName} />
+                </SelectTrigger>
+                <SelectContent>
+                  {funcio.map((e) => (
+                    <SelectItem key={e.id} value={e.id.toString()}>
+                      {e.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-          <div className="grid gap-3">
-            <Label htmlFor="description">Descrição</Label>
-            <Textarea
-              {...register("description")}
-              placeholder="Descrição da role"
-              className="min-h-[9.5rem]"
-            />
-            {errors.description && (
-              <p className="text-sm font-medium text-red-500 dark:text-red-400">
-                {errors.description.message}
-              </p>
-            )}
-          </div>
-          <Button type="submit" size="sm" className="ml-auto gap-1.5 flex" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
-            ) :
-              'Salvar'
-            }
-          </Button>
-        </fieldset>
-      </form>
-    </div>
+          <DialogFooter className="pt-6">
+            <Button    className="w-full gap-1.5 flex"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
+                ) : 'Salvar'}
+            </Button>
+            <Button variant="outline">Cancelar</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

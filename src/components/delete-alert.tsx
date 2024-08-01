@@ -1,38 +1,37 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { getErrorMessage } from "@/utils/get-error-message";
+import { ReactNode, useState, type Dispatch, type SetStateAction } from "react";
+import { toast } from "sonner";
 import {
   AlertDialog,
-  AlertDialogTrigger,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
 } from "./ui/alert-dialog";
-import { toast } from "sonner";
-import { getErrorMessage } from "@/utils/get-error-message";
-import { type Dispatch, type SetStateAction } from "react";
 
 interface DeleteAlertProps {
-  id: string;
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  id: number;
   title: string; // Nome do conteúdo a ser apagado
   successMessage: string;
-  deleteFunction: (id: string) => Promise<void>;
+  deleteFunction: (id: number) => Promise<void>;
+  children: ReactNode
 }
 
 export default function DeleteAlert({
   id,
-  open,
-  setOpen,
   title,
+  children,
   successMessage,
-  deleteFunction
+  deleteFunction,
 }: DeleteAlertProps) {
-  const handleDelete = async (id: string) => {
+  const [open, setOpen] = useState<boolean>()
+  const handleDelete = async (id: number) => {
     toast.promise(deleteFunction(id), {
       loading: "Deletando...",
       error(error) {
@@ -46,18 +45,18 @@ export default function DeleteAlert({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive">Delete</Button>
+        {children}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogTitle>Tens a certeza?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the {title}.
+            Essa acção não pode ser desfeita. Isso ira apagar permanentemente: <b>{title}</b>.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => handleDelete(id)}>Delete</AlertDialogAction>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={() => handleDelete(id)}>Continuar</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
