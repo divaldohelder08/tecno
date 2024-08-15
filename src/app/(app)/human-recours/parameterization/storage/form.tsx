@@ -1,6 +1,8 @@
-"use client"
+"use client";
+
+import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea"
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,34 +18,20 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
-import { CircleDashed, Sparkles, Eye, EyeOff, FilePenIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { PlusIcon, CheckIcon } from "@radix-ui/react-icons";
+import { useForm, useWatch } from "react-hook-form"; // Importar useWatch
 import { toast } from "sonner";
 import { z } from "zod";
-import { PlusIcon } from "@radix-ui/react-icons"
-import { createLoja } from "@/http/loja"
-import { cn } from "@/lib/utils"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { createArmazem } from "@/http/armazem";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList
-} from "@/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+  CommandList,
+} from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const formSchema = z.object({
   name: z.string().min(2, "Nome é obrigatório"),
@@ -54,41 +42,59 @@ const formSchema = z.object({
   bloqueioSaida: z.boolean(),
 });
 
-
 export type createLojaData = z.infer<typeof formSchema>;
 
 interface Props {
   lojas: {
-    id: number,
-    name: string
-  }[]
+    id: number;
+    name: string;
+  }[];
 }
+
 export default function Form({ lojas: before }: Props) {
   const [opn, setOpn] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
+  const [selectedLoja, setSelectedLoja] = useState<{ id: number | null; name: string } | null>(null);
+
   const lojas = before.map((loja) => ({
     value: loja.id,
     label: loja.name,
-  }))
+  }));
 
   const {
     reset,
     register,
     handleSubmit,
     setValue,
-    formState: { errors, isSubmitting }
+    watch, // Adicionar watch
+    formState: { errors, isSubmitting },
   } = useForm<createLojaData>({
     resolver: zodResolver(formSchema),
+    defaultValues:{
+        bloqueioEntrada: false,
+  bloqueioSaida: false,
+    }
   });
 
+  const bloqueioEntrada = watch("bloqueioEntrada"); // Obter valor atual do campo
+  const bloqueioSaida = watch("bloqueioSaida"); // Obter valor atual do campo
+
   async function send(data: createLojaData) {
-    // const result = await createLoja(data);
-    // if (result?.error) {
-    //   toast.error(result.error);
-    // } else {
-    //   toast.success("Loja criada com sucesso!");
-    //   reset();
-    //   setOpn(false);
-    // }
+    const formattedData = {
+      ...data,
+      description: data.description?.trim() === "" ? null : data.description,
+      localidade: data.localidade?.trim() === "" ? null : data.localidade,
+    };
+console.log(formattedData)
+    const result = await createArmazem(formattedData);
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Armazem criada com sucesso!");
+      reset();
+      setSelectedLoja(null);
+      setOpn(false);
+    }
   }
 
   return (
@@ -104,108 +110,142 @@ export default function Form({ lojas: before }: Props) {
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Cadastrar Armazem</DialogTitle>
-          <DialogDescription>Preencha os campos abaixo para adicionar uma nova loja.</DialogDescription>
+          <DialogDescription>
+            Preencha os campos abaixo para adicionar uma nova loja.
+          </DialogDescription>
         </DialogHeader>
-        {/* <form className="grid gap-4" onSubmit={handleSubmit(send)}>
+        <form className="grid gap-4" onSubmit={handleSubmit(send)}>
           <div className="grid gap-2">
             <Label htmlFor="name">Nome</Label>
-            <Input id="name" placeholder="Digite o nome da loja" {...register("name")} />
-            {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+            <Input
+              id="name"
+              placeholder="Digite o nome da loja"
+              {...register("name")}
+            />
+            {errors.name && (
+              <p className="text-red-500">{errors.name.message}</p>
+            )}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="lojaId">Loja</Label>
-            <Select {...register("lojaId")} onValueChange={(val) => setValue('lojaId', val)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione a Loja" />
-              </SelectTrigger>
-              <SelectContent>
-                {lojas.map((p) => (
-                  <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
-                ))}
-                <SelectItem value={null}>Sede</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.lojaId && <p className="text-red-500">{errors.lojaId.message}</p>}
+            <Popover modal={true} open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-between"
+                  aria-expanded={open}
+                >
+                  {selectedLoja ? selectedLoja.name : "Selecione a Loja"}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="p-0">
+                <Command>
+                  <CommandInput placeholder="Procurar loja..." />
+                  <CommandList>
+                    <CommandEmpty>Nenhuma loja encontrada.</CommandEmpty>
+                    <CommandGroup>
+                      {lojas.map((loja) => (
+                        <CommandItem
+                          key={loja.value}
+                          onSelect={() => {
+                            if (selectedLoja?.id === loja.value) {
+                              setValue("lojaId", null);
+                              setSelectedLoja(null);
+                            } else {
+                              setValue("lojaId", loja.value);
+                              setSelectedLoja({ id: loja.value, name: loja.label });
+                            }
+                            setOpen(false);
+                          }}
+                        >
+                          {loja.label}
+                          {selectedLoja?.id === loja.value && (
+                            <CheckIcon className="ml-auto h-4 w-4" />
+                          )}
+                        </CommandItem>
+                      ))}
+                      <CommandItem
+                        onSelect={() => {
+                          if (selectedLoja?.id === null) {
+                            setValue("lojaId", null);
+                            setSelectedLoja(null);
+                          } else {
+                            setValue("lojaId", null);
+                            setSelectedLoja({ id: null, name: "Sede" });
+                          }
+                          setOpen(false);
+                        }}
+                      >
+                        Sede
+                        {selectedLoja?.id === null && (
+                          <CheckIcon className="ml-auto h-4 w-4" />
+                        )}
+                      </CommandItem>
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+            {errors.lojaId && (
+              <p className="text-red-500">{errors.lojaId.message}</p>
+            )}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="description" isReq={true}>Description</Label>
-            <Textarea placeholder="Digite a identificação da loja" {...register("description")} />
-            {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+            <Label htmlFor="description" isReq>Descrição</Label>
+            <Textarea
+              placeholder="Digite a identificação da loja"
+              {...register("description")}
+            />
+            {errors.description && (
+              <p className="text-red-500">{errors.description.message}</p>
+            )}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="localidade" isReq={true}>localidade</Label>
-            <Textarea placeholder="Digite o endereço da loja" className="min-h-[100px]" {...register("localidade")} />
-            {errors.localidade && <p className="text-red-500">{errors.localidade.message}</p>}
+            <Label htmlFor="localidade" isReq>Localidade</Label>
+            <Textarea
+              placeholder="Digite o endereço da loja"
+              className="min-h-[100px]"
+              {...register("localidade")}
+            />
+            {errors.localidade && (
+              <p className="text-red-500">{errors.localidade.message}</p>
+            )}
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-2 items-center">
-              <Label htmlFor="bloqueioEntrada">bloqueio Entrada</Label>
+              <Label htmlFor="bloqueioEntrada">Bloqueio Entrada</Label>
               <Switch
                 className="flex"
+                checked={bloqueioEntrada} // Atualizar para usar o valor do watch
                 onCheckedChange={(checked: boolean) => {
-                  setValue("bloqueioEntrada", checked)
+                  setValue("bloqueioEntrada", checked);
                 }}
                 disabled={isSubmitting}
-                {...register("bloqueioEntrada")}
               />
             </div>
             <div className="space-y-2 items-center">
-              <Label htmlFor="bloqueioSaida">bloqueio Saida</Label>
+              <Label htmlFor="bloqueioSaida">Bloqueio Saída</Label>
               <Switch
                 className="flex"
+                checked={bloqueioSaida} // Atualizar para usar o valor do watch
                 onCheckedChange={(checked: boolean) => {
-                  setValue("bloqueioSaida", checked)
+                  setValue("bloqueioSaida", checked);
                 }}
                 disabled={isSubmitting}
-                {...register("bloqueioSaida")}
               />
             </div>
-
           </div>
           <DialogFooter>
             <Button variant="outline" className="mr-auto" onClick={() => setOpn(false)}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} onClick={() => console.log(errors)}>
               {isSubmitting ? "Salvando..." : "Salvar"}
             </Button>
           </DialogFooter>
-        </form> */}
+        </form>
       </DialogContent>
     </Dialog>
   );
 }
-
-
-// interface atualizarForm extends Props {
-//   id: number
-// }
-// export function EditForm({ prov, id }: atualizarForm) {
-//   const [opn, setOpn] = useState<boolean>(false);
-
-//   const {
-//     reset,
-//     register,
-//     handleSubmit,
-//     setValue,
-//     formState: { errors, isSubmitting }
-//   } = useForm<createLojaData>({
-//     resolver: zodResolver(formSchema),
-//   });
-
-//   /*async function send(data: createLojaData) {
-//     const result = await editarLoja(data);
-//     if (result?.error) {
-//       toast.error(result.error);
-//     } else {
-//       toast.success("Loja atualizada com sucesso!");
-//       reset();
-//       setOpn(false);
-//     }
-//   }*/
-
-//   return (
-//     <>afsdf</>
-//   );
-// }
-

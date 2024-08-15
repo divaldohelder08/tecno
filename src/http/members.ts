@@ -57,9 +57,9 @@ interface props {
   value: boolean
 }
 
-export async function updateUserRole({ userId, ...rest }: props) {
+export async function updateUserRole({ userId, value, roleId: id }: props) {
   try {
-    await api.patch(`/user/${userId}`, { ...rest })
+    await api.patch(`/user/${userId}`, { value, id })
     revalidatePath(`/access-control/users/${userId}/roles`)
   } catch (error) {
     return {

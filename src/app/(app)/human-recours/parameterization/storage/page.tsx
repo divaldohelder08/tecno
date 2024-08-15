@@ -14,7 +14,6 @@ import { getLoja } from "@/http/loja"
 export default async function Component() {
   const data = await getArmazens()
   const lojas = await getLoja()
-
   return (
     <div className="p-4 lg:p-8">
       <DataTable columns={columns} lojas={lojas} data={data} />

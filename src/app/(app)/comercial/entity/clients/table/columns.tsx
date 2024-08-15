@@ -14,6 +14,7 @@ import { Trash, FilePen, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DeleteAlert from "@/components/delete-alert";
 import { deleteCliente } from "@/http/cliente";
+import Option from "./options";
 
 interface props {
   id: number,
@@ -73,42 +74,29 @@ export const columns: ColumnDef<props>[] = [
   {
     accessorKey: "opções",
     enableHiding: false,
-    cell: ({ row: { original } }) => {
-      return <>
-        <Button
-          size="icon"
-          variant="ghost"
-        >
-          <Upload className="h-4 w-4" />
-          <span className="sr-only">Editar cliente</span>
-        </Button>
-        <Button
-          size="icon"
-          variant="ghost"
-          className="!text-emerald-600 hover:border-emerald-600 hover:bg-emerald-600/10"
-        >
-
-          <FilePen className="h-4 w-4" />
-          <span className="sr-only">Editar cliente</span>
-        </Button>
-        <DeleteAlert
-          id={original.id}
-          title={original.entidade.name}
-          deleteFunction={deleteCliente}
-          successMessage="Cliente deletado com sucesso"
-        >
-          <Button
-            size="icon"
-            variant="ghost"
-            className="!text-red-600 hover:border-red-600 hover:bg-red-600/10"
-          >
-
-            <Trash className="h-4 w-4" />
-            <span className="sr-only">Apagar cliente</span>
-          </Button>
-        </DeleteAlert>
-
-      </>
+    cell: ({ row }) => {
+      const forn = row.original;
+      return (
+        <Option 
+          id={forn.id}
+          name={forn.entidade.name}
+          entidadeId={forn.entidadeId}
+          isFornecedor={forn.entidade.isFornecedor}
+        />
+      );
     },
   },
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+

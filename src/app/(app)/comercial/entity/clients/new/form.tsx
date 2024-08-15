@@ -72,7 +72,6 @@ const clienteSchema = z.object({
   saldo: z.number(),
   limiteSaldo: z.number(),
   limiteCredito: z.number(),
-  estado: z.enum(['ACTIVO', 'REMOVIDO']),
 })
 
 export type clienteData = z.infer<typeof clienteSchema>
@@ -82,9 +81,9 @@ interface props {
 }
 export default function Form({ countries: before, subAccounts: subBefore }: props) {
   const countries = before.map((country) => ({
-      value: country.id,
-      label: country.name,
-    }))
+    value: country.id,
+    label: country.name,
+  }))
 
   const subAccounts = subBefore.map((sub) => ({
     id: sub.id,
@@ -98,7 +97,6 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
   const {
     register,
     handleSubmit,
-    getValues,
     setValue: set,
     formState: { errors, isSubmitting }
   } = useForm<clienteData>({
@@ -109,7 +107,7 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
     const result = await createCliente(data);
     if (result?.error) {
       toast.error(result.error);
-    }else{
+    } else {
       toast.success('Cliente cadastrado com sucesso');
     }
   }
@@ -117,42 +115,6 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
   return (
     <form onSubmit={handleSubmit(send)}>
       <div className="grid gap-4 grid-cols-2" >
-        <div className="space-y-2">
-          <Label htmlFor="name">Nome</Label>
-          <Input {...register('entidade.name')} required id="name" placeholder="Digite o nome da entidade." />
-        
-        </div>
-        <div className="grid grid-cols-2 space-x-2 w-full">
-          <div className="space-y-2">
-            <Label htmlFor="identificacao">Identificacao</Label>
-            <Input {...register('entidade.identificacao')} placeholder="Digite a identificação" required/>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="tipodeIdentificacao">Tipo de identificação</Label>
-            <Select onValueChange={(val: "BI" | "NIF" | "PASSAPORTE" | "CARTAO_DE_RESIDENTE") => set('entidade.tipodeIdentificacao', val)} >
-              <SelectTrigger
-                className=""
-                aria-label="Select a value"
-              >
-                <SelectValue placeholder="Informe o escopo da empresa" />
-              </SelectTrigger>
-              <SelectContent className="">
-                <SelectItem value="BI" className="rounded-lg">
-                  BI
-                </SelectItem>
-                <SelectItem value="NIF" className="rounded-lg">
-                  NIF
-                </SelectItem>
-                <SelectItem value="PASSAPORTE" className="rounded-lg">
-                  PASSAPORTE
-                </SelectItem>
-                <SelectItem value="CARTAO_DE_RESIDENTE" className="rounded-lg">
-                  CARTÂO DE RESIDENTE
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
         <div className="space-y-2">
           <Label htmlFor="type">Tipo</Label>
           <Select onValueChange={(val: 'SINGULAR' | 'COLECTIVO') => set('entidade.tipo', val)} required>
@@ -169,6 +131,42 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
             </SelectContent>
           </Select>
         </div>
+        <div className="grid grid-cols-2 space-x-2 w-full">
+          <div className="space-y-2">
+            <Label htmlFor="tipodeIdentificacao">Tipo de identificação</Label>
+            <Select onValueChange={(val: "BI" | "NIF" | "PASSAPORTE" | "CARTAO_DE_RESIDENTE") => set('entidade.tipodeIdentificacao', val)} >
+              <SelectTrigger
+                className=""
+                aria-label="Select a value"
+              >
+                <SelectValue placeholder="Selecione o tipo de identificação" />
+              </SelectTrigger>
+              <SelectContent className="">
+                <SelectItem value="BI" className="rounded-lg">
+                  BI
+                </SelectItem>
+                <SelectItem value="NIF" className="rounded-lg">
+                  NIF
+                </SelectItem>
+                <SelectItem value="PASSAPORTE" className="rounded-lg">
+                  PASSAPORTE
+                </SelectItem>
+                <SelectItem value="CARTAO_DE_RESIDENTE" className="rounded-lg">
+                  CARTÃO DE RESIDENTE
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="identificacao">Identificacao</Label>
+            <Input {...register('entidade.identificacao')} placeholder="Digite a identificação" required />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="name">Nome</Label>
+          <Input {...register('entidade.name')} required id="name" placeholder="Digite o nome da entidade." />
+        </div>
+
         <div className="space-y-2">
           <Label htmlFor="Pais">Pais</Label>
           <Popover open={open} onOpenChange={setOpen}>
@@ -197,13 +195,13 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
                         key={country.value}
                         value={country.value.toString()}
                         onSelect={(currentValue) => {
-                            if(Number(currentValue) === value){
-                                setValue(null)
-                                set('countryId', 0)
-                            }else{
-                                setValue(Number(currentValue))
-                                set('countryId', Number(currentValue))
-                            }
+                          if (Number(currentValue) === value) {
+                            setValue(null)
+                            set('countryId', 0)
+                          } else {
+                            setValue(Number(currentValue))
+                            set('countryId', Number(currentValue))
+                          }
                           setOpen(false)
                         }}
                       >
@@ -241,7 +239,7 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
         <div className="space-y-2">
           <Label htmlFor="email" isReq={true}>Email</Label>
           <Input {...register('email')} type="email" placeholder="Digite o endereço de email." />
-          <Fr.error error={errors.email?.message}/>
+          <Fr.error error={errors.email?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="subValue">sub-conta</Label>
@@ -264,20 +262,20 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
             <PopoverContent className="w-full p-0">
               <Command>
                 <CommandInput placeholder="Pesquise a sub conta..." className="h-9" />
-                  <CommandEmpty>sub-conta encontrada.</CommandEmpty>
-                  <CommandGroup className="w-full">
-                <CommandList>
+                <CommandEmpty>sub-conta encontrada.</CommandEmpty>
+                <CommandGroup className="w-full">
+                  <CommandList>
                     {subAccounts.map((sub) => (
                       <CommandItem
                         key={sub.id}
                         value={sub.id.toString()}
                         onSelect={(currentValue) => {
-                          if(Number(currentValue) === subValue){
+                          if (Number(currentValue) === subValue) {
                             setSubValue(null)
                             set('subAccountId', 0)
-                          }else{
+                          } else {
                             setSubValue(Number(currentValue))
-                            set('subAccountId',Number(currentValue))
+                            set('subAccountId', Number(currentValue))
                           }
                           setOpen1(false)
                         }}
@@ -291,8 +289,8 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
                         />
                       </CommandItem>
                     ))}
-                </CommandList>
-                  </CommandGroup>
+                  </CommandList>
+                </CommandGroup>
               </Command>
             </PopoverContent>
           </Popover>
@@ -338,24 +336,6 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
         <div className="space-y-2">
           <Label htmlFor="limiteCredito">limite de crédito</Label>
           <Input {...register('limiteCredito', { valueAsNumber: true })} type="number" required placeholder="Digite o crédito limite." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="estado">Estado</Label>
-          <Select
-            onValueChange={(val: 'ACTIVO' | 'REMOVIDO') => set('estado', val)}
-            required >
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione o estado" />
-            </SelectTrigger>
-            <SelectContent className="">
-              <SelectItem value="ACTIVO" className="rounded-lg">
-                ACTIVO
-              </SelectItem>
-              <SelectItem value="REMOVIDO" className="rounded-lg">
-                REMOVIDO
-              </SelectItem>
-            </SelectContent>
-          </Select>
         </div>
         <div className="space-y-2 items-center">
           <Label htmlFor="isSuperAdmin">Efectuar Retenção</Label>

@@ -1,9 +1,16 @@
 'use server'
 import { fornecedorData } from '@/app/(app)/comercial/entity/suppliers/new/form'
+import { formData } from '@/app/(app)/comercial/entity/suppliers/table/form'
+
 import api from '@/lib/axios'
 import { Cliente } from '@/types'
 import { getErrorMessage } from '@/utils/get-error-message'
 import { revalidatePath } from 'next/cache'
+
+interface transformData extends formData{
+  id: number
+  entidadeId: number
+}
 
 interface props {
   id: number
@@ -15,9 +22,11 @@ interface props {
     name: string
   }
   entidade: {
+    id: number;
     name: string
     identificacao: string
     tipodeIdentificacao: string
+    isCliente: boolean
   }
 }
 
@@ -53,3 +62,34 @@ export async function createFornecedor(data: fornecedorData) {
     }
   }
 }
+
+
+export async function transformToCliente({ id, ...data }: transformData) {
+  try {
+    await api.post(`/fornecedor/${id}/transform`, {...data })
+    revalidatePath('/comercial/entity/suppliers')
+  } catch (error) {
+    revalidatePath('/comercial/entity/suppliers')
+    return {
+      error: getErrorMessage(error),
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

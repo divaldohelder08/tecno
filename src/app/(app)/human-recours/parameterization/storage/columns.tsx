@@ -5,7 +5,13 @@ import {
 } from "@tanstack/react-table";
 import { Armazem } from '@/types'
 import Option from "./options";
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const columns: ColumnDef<Armazem>[] = [
   {
@@ -27,52 +33,72 @@ export const columns: ColumnDef<Armazem>[] = [
     cell: ({ row }) => <p>{row.getValue("name")}</p>,
   },
   {
-    accessorKey: "identificacao",
+    accessorKey: "loja",
     header: ({ column }) => {
       return (
         <p className="text-center hover:bg-accent inline-flex gap-2 items-center">
-          Identificação
+          Loja
         </p>
       )
     },
-    cell: ({ row }) => <p>{row.getValue("identificacao")}</p>,
+    cell: ({ row }) => {
+      const loja = row.original.loja;
+      if (!loja) {
+        return <p>Sede</p>;
+      }
+      return (
+        <Link href="#">
+          <span className="">{loja.name}</span>
+        </Link>
+      );
+    }
   },
   {
-    accessorKey: "address",
+    accessorKey: "description",
     header: ({ column }) => {
       return (
         <p className="text-center hover:bg-accent inline-flex gap-2 items-center">
-          Endereço
+          Descrição
         </p>
       )
     },
-    cell: ({ row }) => <p>{row.getValue("address")}</p>,
+    cell: ({ row }) => <p>{row.getValue("description") ?? "N/A"}</p>,
   },
   {
-    accessorKey: "telefone",
+    accessorKey: "localidade",
     header: ({ column }) => {
       return (
         <p className="text-center hover:bg-accent inline-flex gap-2 items-center">
-          Telefone
+          Localidade
         </p>
       )
     },
-    cell: ({ row }) => <p>{row.getValue("telefone")}</p>,
+    cell: ({ row }) => <p>{row.getValue("localidade") ?? "N/A"}</p>,
   },
   {
-    accessorKey: "email",
+    accessorKey: "bloqueioEntrada",
     header: ({ column }) => {
       return (
         <p className="text-center hover:bg-accent inline-flex gap-2 items-center">
-          Email
+          Bloqueio Entrada
         </p>
       )
     },
-    cell: ({ row }) => <p>{row.getValue("email")}</p>,
+    cell: ({ row }) => <p>{row.getValue("bloqueioEntrada") ? "Sim" : "Não"}</p>,
   },
-
   {
-    accessorKey: "email",
+    accessorKey: "bloqueioSaida",
+    header: ({ column }) => {
+      return (
+        <p className="text-center hover:bg-accent inline-flex gap-2 items-center">
+          Bloqueio Saída
+        </p>
+      )
+    },
+    cell: ({ row }) => <p>{row.getValue("bloqueioSaida") ? "Sim" : "Não"}</p>,
+  },
+  {
+    id: "options",
     header: ({ column }) => {
       return (
         <p className="text-center hover:bg-accent inline-flex gap-2 items-center w-full">
@@ -81,8 +107,8 @@ export const columns: ColumnDef<Armazem>[] = [
       )
     },
     cell: ({ row }) => {
-      const val = row.original
-      return <Option id={val.id} name={val.name} />
+      const val = row.original;
+      return <Option id={val.id} name={val.name} />;
     }
   }
 ];

@@ -73,3 +73,22 @@ export async function createClienteWithEntidadeId({
   }
   redirect(`/settings/roles/${resId}`)
 }
+
+
+interface transformData{
+  id: number
+  entidadeId: number
+}
+
+
+export async function transformToFornecedor({ id, entidadeId }: transformData) {
+  try {
+    await api.post(`/cliente/${id}/transform`, { entidadeId })
+    revalidatePath('/comercial/entity/clients')
+  } catch (error) {
+    revalidatePath('/comercial/entity/clients')
+    return {
+      error: getErrorMessage(error),
+    }
+  }
+}

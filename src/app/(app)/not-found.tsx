@@ -28,11 +28,10 @@ import UserNav from "./components/user-nav";
 import NavSheet from "./components/nav-sheet";
 
 
-export default function Notfound() {
-
+export default function Page() {
   return (
     <div>
-dfsdf
+        dfsdf
     </div>
   )
 }

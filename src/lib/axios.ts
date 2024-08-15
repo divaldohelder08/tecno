@@ -35,7 +35,7 @@ api.interceptors.response.use(
           })
         : deleteCookie('authjs.session-token', { cookies: cookieStore })*/
         console.log("craxou", process.env.NEXT_PUBLIC_VERCEL_URL)
-            await signOut();
+        //    await signOut();
     }
 
     return Promise.reject(error)

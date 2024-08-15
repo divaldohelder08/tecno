@@ -115,9 +115,12 @@ export interface Country {
 }
 
 export interface Armazem {
-  id: number
+  id?: number
   name: string
-  lojaId: number
+  loja: {
+      id: number
+      name: string
+  } | null
   description: string | null
   localidade: string | null
   bloqueioEntrada: boolean

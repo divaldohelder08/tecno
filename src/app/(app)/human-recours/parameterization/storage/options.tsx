@@ -7,7 +7,7 @@ import DeleteAlert from "@/components/delete-alert";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/get-error-message";
 import { cn } from "@/lib/utils";
-import { deleteLoja  } from "@/http/loja"
+import { deleteArmazem  } from "@/http/armazem"
 
 import {
   Tooltip,
@@ -32,18 +32,18 @@ export default function Option({ id, name }: Props) {
                 className="!text-green-600 hover:border-green-600 hover:bg-green-600/10"
               >
                   <FilePen className="h-4 w-4" />
-                  <span className="sr-only">Editar perfis</span>
+                  <span className="sr-only">Editar armazem</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Editar Loja</p>
+              <p>Editar Armazem</p>
             </TooltipContent>
           </Tooltip>
           <DeleteAlert
             id={id}
             title={name}
-            deleteFunction={deleteLoja}
-            successMessage="Loja deletado com sucesso"
+            deleteFunction={deleteArmazem}
+            successMessage="Armazem deletado com sucesso"
           >
             <Button
               size="icon"
