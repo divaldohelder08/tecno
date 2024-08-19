@@ -43,7 +43,8 @@ export default function FormComponent() {
 
   async function login(data: FormData) {
     const { email, password } = data;
-    const result = await signIn("credentials", {
+    try{
+    await signIn("credentials", {
       email,
       password,
       redirect: false,
@@ -54,7 +55,14 @@ export default function FormComponent() {
         title: "Autenticado com sucesso!",
         description: "Será redirecionado dentro de momentos...",
       });
+  }catch(error){
+  console.log(error)
+  toast({
+        title: "Acontecu algum erro!",
+        description: "Será redirecionado dentro de momentos...",
+      });
   }
+    }
 
   return (
     <form className="grid gap-4" onSubmit={handleSubmit(login)} method="POST">

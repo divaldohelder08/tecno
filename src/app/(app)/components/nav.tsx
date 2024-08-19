@@ -10,7 +10,9 @@ import { AccordionItem } from "@radix-ui/react-accordion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Home, Building, KeyRound, Settings, UserCheck, Users, ShieldCheck, FileText, CalendarDays, Award, Lock,
-  Tag, Layers, Truck, SlidersVertical, Warehouse, Dock, Landmark, Store, Clock, Group
+  Tag, Layers, Truck, SlidersVertical, Warehouse, Dock, Landmark, Store, Clock, Group,
+  ShoppingBasket,
+  BriefcaseBusiness, Box
 } from "lucide-react";
 
 // Define an interface for the nav item structure
@@ -51,6 +53,13 @@ const comercialNavItems: NavItem[] = [
       { label: "Fornecedores", href: "suppliers", icon: Truck }
     ],
   },
+   {
+    label: "Productos / Serviços", icon: ShoppingBasket, href: "/comercial",
+    subLinks: [
+      { label: "Produto", href: "products", icon: Box },
+      { label: "Serviço", href: "service", icon: BriefcaseBusiness },
+    ],
+  },
   {
     label: "Parametrização", icon: SlidersVertical, href: "/comercial/parameterization",
     subLinks: [
@@ -63,7 +72,8 @@ const comercialNavItems: NavItem[] = [
       { label: "Classe", href: "class", icon: Lock },
       { label: "Conta", href: "account", icon: Dock }
     ],
-  }
+  },
+ 
 ];
 
 const rhNavItems: NavItem[] = [

@@ -47,7 +47,7 @@ const schema = z.object({
   limiteCredito: z.coerce.number().nonnegative(),
   efectuaRetencao: z.coerce.boolean(),
 });
-
+export type formData=z.infer<typeof schema>
 export default function Transform({ entidadeId, id }: ComponentProps) {
   const [opn, setOpn] = useState<boolean>(false);
   const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm<FormData>({

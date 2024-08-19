@@ -1,7 +1,7 @@
 'use client';
 
 import { formatFileSize } from '@edgestore/react/utils';
-import { UploadCloudIcon, X } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 import * as React from 'react';
 import { useDropzone, type DropzoneOptions } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
@@ -18,8 +18,8 @@ const variants = {
 };
 
 type InputProps = {
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   className?: string;
   value?: File | string;
   onChange?: (file?: File) => void | Promise<void>;
@@ -136,6 +136,7 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
 
           {imageUrl ? (
             // Image Preview
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               className="h-full w-full rounded-md object-cover"
               src={imageUrl}
@@ -144,7 +145,7 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
           ) : (
             // Upload Icon
             <div className="flex flex-col items-center justify-center text-xs text-gray-400">
-              <UploadCloudIcon className="mb-2 h-7 w-7" />
+              <Upload className="mb-2 h-7 w-7" />
               <div className="text-gray-400">Arraste e solte uma imagem</div>
               <div className="mt-3">
                 <Button type="button" disabled={disabled}>

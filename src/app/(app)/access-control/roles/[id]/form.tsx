@@ -41,7 +41,7 @@ export default function RoleForm({ id, name, description }: formData) {
     <form className="grid w-full items-start gap-6" onSubmit={handleSubmit(send)}>
       <fieldset className="grid gap-6 rounded-lg border p-4">
         <legend className="-ml-1 px-1 text-sm font-medium">
-          Perfil {name}
+          Perfil: {name}
         </legend>
         <div className="grid gap-3">
           <Label htmlFor="role">Perfil</Label>
@@ -53,7 +53,7 @@ export default function RoleForm({ id, name, description }: formData) {
           )}
         </div>
         <div className="grid gap-3">
-          <Label htmlFor="description">Descrição</Label>
+          <Label htmlFor="description" isReq={true}>Descrição</Label>
           <Textarea
             {...register("description")}
             placeholder="Descrição da role"
@@ -66,10 +66,7 @@ export default function RoleForm({ id, name, description }: formData) {
           )}
         </div>
         <div className="w-full h-full flex gap-4">
-          <Button type="submit" size="sm" className="ml-auto gap-1.5 flex" disabled={isSubmitting} >
-Button
-        </Button>
-        <Button type="submit" size="sm" className="ml-auto gap-1.5 flex" disabled={isSubmitting} >
+        <Button type="submit" size="sm" className="w-full gap-1.5 flex" disabled={isSubmitting} >
 
           {isSubmitting ? (
             <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />

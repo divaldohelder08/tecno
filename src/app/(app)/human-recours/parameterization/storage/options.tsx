@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/get-error-message";
 import { cn } from "@/lib/utils";
 import { deleteArmazem  } from "@/http/armazem"
-
+import EditForm from "./edit-form"
 import {
   Tooltip,
   TooltipContent,
@@ -24,8 +24,7 @@ interface Props {
 export default function Option({ id, name }: Props) {
   return (
     <>
-          <Tooltip>
-            <TooltipTrigger asChild>
+    <EditForm>
               <Button
                 size="icon"
                 variant="ghost"
@@ -34,11 +33,9 @@ export default function Option({ id, name }: Props) {
                   <FilePen className="h-4 w-4" />
                   <span className="sr-only">Editar armazem</span>
               </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Editar Armazem</p>
-            </TooltipContent>
-          </Tooltip>
+    </EditForm>
+
+   
           <DeleteAlert
             id={id}
             title={name}

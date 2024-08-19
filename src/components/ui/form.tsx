@@ -1,15 +1,15 @@
 import { cn } from "@/utils/utils";
-import { Label } from "./label";
 import React from "react";
-interface FormErrorProps  extends React.HtmlHTMLAttributes<HTMLLabelElement>  {
+import { Label, LabelProps } from "./label";
+interface FormErrorProps extends React.HtmlHTMLAttributes<HTMLLabelElement> {
   error?: string;
 }
-interface LabelFormProps extends React.HtmlHTMLAttributes<HTMLLabelElement> {
+interface LabelFormProps extends LabelProps {
   label: string;
   error?: string;
 }
 
-export function FormError({ error,className }: FormErrorProps) {
+export function FormError({ error, className }: FormErrorProps) {
   return (
     <>
       {error && (
@@ -19,8 +19,8 @@ export function FormError({ error,className }: FormErrorProps) {
   );
 }
 
-export function FormLabel({ label, error, className }: LabelFormProps) {
-  return <Label className={cn(error && "text-destructive", className)}>{label}</Label>;
+export function FormLabel({ label, error, className, ...props }: LabelFormProps) {
+  return <Label className={cn(error && "text-destructive", className)} {...props}>{label}</Label>;
 }
 
 export const Form = {

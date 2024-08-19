@@ -7,6 +7,9 @@ interface Props {
   name: string
 }
 
+export interface categories extends Props {
+  SubCategory: Props[]
+}
 export interface SubAccounts {
   id: number
   numero: string
@@ -27,5 +30,10 @@ export async function getProvincias() {
 
 export async function getSubAccounts() {
   const { data } = await api.get<SubAccounts[]>('/helpers/sub-accounts')
+  return data
+}
+
+export async function getCategories() {
+  const { data } = await api.get<categories[]>('/helpers/categories')
   return data
 }

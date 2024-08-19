@@ -103,10 +103,6 @@ export default function Form({ data, countries: before }: Props) {
   const [open, setOpen] = useState(false)
   const selectedCountryProvincia = watch(['countryId', 'provinciaId'])
   const selectedValue = `${selectedCountryProvincia[0]}-${selectedCountryProvincia[1]}`
-
-  const [image, setImage] = useState<string | null>(getValues('avatar') ?? null)
-  const ipt = useRef<HTMLInputElement | null>(null)
-  // const [file, setFile] = useState<File | null>(null)
   const [file, setFile] = useState<File>()
   const { edgestore } = useEdgeStore();
 
@@ -120,7 +116,7 @@ export default function Form({ data, countries: before }: Props) {
         })
     }
   }, [data?.avatar])
-  
+
   async function upsert(val: empresaData) {
     if (file && typeof file !== 'string') {
       try {
@@ -154,45 +150,45 @@ export default function Form({ data, countries: before }: Props) {
   }
   return (
     <form onSubmit={handleSubmit(upsert)}>
-        <div className="grid grid-cols-2 space-x-2 w-full">
-            <div className="space-y-2">
-                <Label htmlFor="avatar" isReq={true}>Avatar</Label>
-                <SingleImageDropzone
-                    width={200}
-                    height={200}
-                    value={file}
-                    onChange={(file) => {
-                      setFile(file);
-                    }}
-                />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="name">Nome</Label>
-              <Input {...register('name')} required id="name" placeholder="Digite o nome da loja." />
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="type">Tipo</Label>
-                <Select
-                  defaultValue={data?.type}
-                  onValueChange={(val: 'SEDE' | 'FILIAL') => setValue('type', val)}
-                >
-                  <SelectTrigger className="" aria-label="Select a value">
-                    <SelectValue placeholder="Informe o escopo da empresa" />
-                  </SelectTrigger>
-                  <SelectContent className="">
-                    <SelectItem value="SEDE" className="rounded-lg">SEDE</SelectItem>
-                    <SelectItem value="FILIAL" className="rounded-lg">FILIAL</SelectItem>
-                  </SelectContent>
-                </Select> 
-            </div>
-                
-               <div className="space-y-2">
-            
-            <div className="space-y-2">
+      <div className="grid grid-cols-2 space-x-2 w-full">
+        <div className="space-y-2">
+          <Label htmlFor="avatar" isReq={true}>Avatar</Label>
+          <SingleImageDropzone
+            width={200}
+            height={200}
+            value={file}
+            onChange={(file) => {
+              setFile(file);
+            }}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="name">Nome</Label>
+          <Input {...register('name')} required id="name" placeholder="Digite o nome da loja." />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="type">Tipo</Label>
+          <Select
+            defaultValue={data?.type}
+            onValueChange={(val: 'SEDE' | 'FILIAL') => setValue('type', val)}
+          >
+            <SelectTrigger className="" aria-label="Select a value">
+              <SelectValue placeholder="Informe o escopo da empresa" />
+            </SelectTrigger>
+            <SelectContent className="">
+              <SelectItem value="SEDE" className="rounded-lg">SEDE</SelectItem>
+              <SelectItem value="FILIAL" className="rounded-lg">FILIAL</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+
+          <div className="space-y-2">
             <Label htmlFor="nif">NIF</Label>
             <Input {...register('nif')} id="nif" placeholder="Digite o número de identificação fiscal da loja." required />
           </div>
-          </div>
+        </div>
         <div className="space-y-2">
           <Label htmlFor="cae" isReq={true}>CAE</Label>
           <Input {...register('cae')} id="cae" placeholder="Digite o código de atividade econômica da loja." />
@@ -256,7 +252,7 @@ export default function Form({ data, countries: before }: Props) {
           <Label htmlFor="telefone1" isReq={true}>Telefone 1</Label>
           <Input {...register('telefone1')} id="telefone1" placeholder="Digite o telefone 1." />
         </div>
-         <div className="space-y-2">
+        <div className="space-y-2">
           <Label htmlFor="email" isReq={true}>Email</Label>
           <Input {...register('email')} id="email" placeholder="Digite o email." />
         </div>
