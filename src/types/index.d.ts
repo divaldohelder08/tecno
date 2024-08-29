@@ -126,3 +126,10 @@ export interface Armazem {
   bloqueioEntrada: boolean
   bloqueioSaida: boolean
 }
+
+export interface unity {
+  id: number
+  name: string
+  artigos: number
+}
+

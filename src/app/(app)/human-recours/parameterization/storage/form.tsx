@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -72,7 +72,7 @@ export default function Form({ lojas: before }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues:{
         bloqueioEntrada: false,
-  bloqueioSaida: false,
+        bloqueioSaida: false,
     }
   });
 
@@ -101,7 +101,7 @@ console.log(formattedData)
     <Dialog open={opn} onOpenChange={setOpn}>
       <DialogTrigger asChild>
         <Button size="sm" className="gap-1">
-          <PlusIcon className="h-3.5 w-3.5" />
+          <PlusCircle className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
             Novo armazem
           </span>

@@ -1,35 +1,18 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
-  Bell,
-  Home,
-  LineChart,
-  Menu,
-  Package,
-  Package2,
-  ShoppingCart,
-  Users
+  Menu
 } from "lucide-react";
+import Image from 'next/image';
 import Link from "next/link";
 import { PropsWithChildren } from "react";
-import Image from 'next/image'
- 
 import { Nav } from "./components/nav";
-import UserNav from "./components/user-nav";
 import NavSheet from "./components/nav-sheet";
+import UserNav from "./components/user-nav";
 
 
 export default function Page({ children }: PropsWithChildren) {
-
   return (
     <ScrollArea>
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]  overflow-hidden">
@@ -37,14 +20,11 @@ export default function Page({ children }: PropsWithChildren) {
           <div className="flex h-full max-h-screen flex-col">
             <div className="flex h-14 items-center border-b px-4 lg:h-[60px]">
               <Link href="/" className="flex items-center gap-2 font-semibold">
-                <Image width={36} height={36}  alt="logo" src="/Tcn_Bantu_Modelo.png" className="h-9 w-9" />
+                <Image width={36} height={36} alt="logo" src="/Tcn_Bantu_Modelo.png" className="h-9 w-9" />
                 <span>{process.env.COMPANY}</span>
               </Link>
-              <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
-                <Bell className="h-4 w-4" />
-                <span className="sr-only">Toggle notificações</span>
-              </Button>
             </div>
+            {/* <ProfileButton /> */}
             <div className="flex-1">
               <Nav />
             </div>

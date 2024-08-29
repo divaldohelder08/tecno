@@ -1,10 +1,10 @@
 'use server'
+import { clienteData } from '@/app/(app)/comercial/entity/clients/new/form'
 import api from '@/lib/axios'
 import { Cliente, Role } from '@/types'
 import { getErrorMessage } from '@/utils/get-error-message'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { clienteData } from '@/app/(app)/comercial/entity/clients/new/form'
 interface props {
   id: number
   entidadeId: number
@@ -42,6 +42,21 @@ export async function createCliente(data: clienteData) {
   redirect('/comercial/entity/clients/new')
 }
 
+interface up extends clienteData {
+  id: string
+}
+export async function updateCliente({ id, ...data }: up) {
+  try {
+    await api.put(`/cliente/${id}`, { ...data })
+    revalidatePath(`comercial/entity/clients/${id}/edit`)
+  } catch (error) {
+    revalidatePath(`comercial/entity/clients/${id}/edit`)
+    return {
+      error: getErrorMessage(error),
+    }
+  }
+}
+
 export async function deleteCliente(id: number) {
   try {
     await api.delete(`/cliente/${id}`)
@@ -74,12 +89,10 @@ export async function createClienteWithEntidadeId({
   redirect(`/settings/roles/${resId}`)
 }
 
-
-interface transformData{
+interface transformData {
   id: number
   entidadeId: number
 }
-
 
 export async function transformToFornecedor({ id, entidadeId }: transformData) {
   try {

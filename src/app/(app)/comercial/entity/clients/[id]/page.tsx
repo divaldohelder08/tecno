@@ -1,20 +1,5 @@
-import {
-  ChevronLeft,
-  PlusCircle,
-  Upload
-} from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-
+'use client'
 import { Badge } from "@/components/ui/badge"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -46,6 +31,12 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/ui/toggle-group"
+import {
+  ChevronLeft,
+  PlusCircle,
+  Upload
+} from "lucide-react"
+import Image from "next/image"
 import { UserContent } from "./user-content"
 
 export default function Dashboard() {

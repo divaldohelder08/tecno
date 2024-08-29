@@ -1,6 +1,7 @@
 "use client"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -37,6 +38,8 @@ import { cn } from "@/lib/utils"
 import { Country } from "@/types"
 import { useEdgeStore } from '@/lib/edgestore';
 import { SingleImageDropzone } from "@/components/single-image-dropzone"
+import { Form as Fr } from "@/components/ui/form";
+
 const empresaSchema = z.object({
   codigo: z.string(),
   name: z.string(),
@@ -48,12 +51,10 @@ const empresaSchema = z.object({
   cidade: z.string().optional(),
   telefone: z.string(),
   telefone1: z.string().optional(),
-  email: z.string().email().optional().nullable(),
+  email: z.string().optional(), //colocar aqui um transform
   nif: z.string(),
   cae: z.string().optional(),
   alvara: z.string().optional(),
-  regimeIva: z.enum(['NAO_SUJEITO', 'SIMPLIFICADO', 'GERAL']),
-  indicadorFactura: z.string(),
 })
 
 export type empresaData = z.infer<typeof empresaSchema>
@@ -95,8 +96,6 @@ export default function Form({ data, countries: before }: Props) {
       nif: data?.nif ?? '',
       cae: data?.cae ?? '',
       alvara: data?.alvara ?? '',
-      regimeIva: data?.regimeIva ?? 'NAO_SUJEITO',
-      indicadorFactura: data?.indicadorFactura ?? '',
     }
   })
 
@@ -164,7 +163,7 @@ export default function Form({ data, countries: before }: Props) {
         </div>
         <div className="space-y-2">
           <Label htmlFor="name">Nome</Label>
-          <Input {...register('name')} required id="name" placeholder="Digite o nome da loja." />
+          <Input {...register('name')} required id="name" placeholder="Digite o nome da empresa." />
         </div>
         <div className="space-y-2">
           <Label htmlFor="type">Tipo</Label>
@@ -186,12 +185,12 @@ export default function Form({ data, countries: before }: Props) {
 
           <div className="space-y-2">
             <Label htmlFor="nif">NIF</Label>
-            <Input {...register('nif')} id="nif" placeholder="Digite o número de identificação fiscal da loja." required />
+            <Input {...register('nif')} id="nif" placeholder="Digite o número de identificação fiscal da empresa." required />
           </div>
         </div>
         <div className="space-y-2">
           <Label htmlFor="cae" isReq={true}>CAE</Label>
-          <Input {...register('cae')} id="cae" placeholder="Digite o código de atividade econômica da loja." />
+          <Input {...register('cae')} id="cae" placeholder="Digite o código de atividade econômica da empresa." />
         </div>
         <div className="space-y-2">
           <Label htmlFor="provinciaId">Pais e provincia</Label>
@@ -245,7 +244,7 @@ export default function Form({ data, countries: before }: Props) {
           <Input {...register('cidade')} id="cidade" placeholder="Digite a cidade." />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="telefone" isReq={true}>Telefone</Label>
+          <Label htmlFor="telefone">Telefone</Label>
           <Input {...register('telefone')} id="telefone" placeholder="Digite o telefone." />
         </div>
         <div className="space-y-2">
@@ -255,6 +254,7 @@ export default function Form({ data, countries: before }: Props) {
         <div className="space-y-2">
           <Label htmlFor="email" isReq={true}>Email</Label>
           <Input {...register('email')} id="email" placeholder="Digite o email." />
+          <Fr.error error={errors.email?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="endereco" isReq={true}>Endereço</Label>
@@ -264,28 +264,8 @@ export default function Form({ data, countries: before }: Props) {
           <Label htmlFor="alvara" isReq={true}>Alvara</Label>
           <Input {...register('alvara')} id="alvara" placeholder="Digite o alvara." />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="regimeIva" isReq={true}>Regime IVA</Label>
-          <Select
-            defaultValue={data?.regimeIva}
-            onValueChange={(val: 'NAO_SUJEITO' | 'SIMPLIFICADO' | 'GERAL') => setValue('regimeIva', val)}
-          >
-            <SelectTrigger className="" aria-label="Select a value">
-              <SelectValue placeholder="Informe o regime IVA da empresa" />
-            </SelectTrigger>
-            <SelectContent className="">
-              <SelectItem value="NAO_SUJEITO" className="rounded-lg">NAO_SUJEITO</SelectItem>
-              <SelectItem value="SIMPLIFICADO" className="rounded-lg">SIMPLIFICADO</SelectItem>
-              <SelectItem value="GERAL" className="rounded-lg">GERAL</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="indicadorFactura" isReq={true}>Indicador Factura</Label>
-          <Input {...register('indicadorFactura')} id="indicadorFactura" placeholder="Digite o indicador de factura." />
-        </div>
       </div>
-      <CardFooter className="flex justify-end">
+      <CardFooter className="flex justify-end pt-4">
         <Button type="submit" disabled={isSubmitting} >
           {isSubmitting && <CircleDashed className="mr-2 h-4 w-4 animate-spin" />}
           {isSubmitting ? "Aguarde" : "Salvar"}

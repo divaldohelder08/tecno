@@ -15,8 +15,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { CircleDashed } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Form as Fr } from "@/components/ui/form";
 import { toast } from "sonner"
+import { Form as Fr } from "@/components/ui/form";
 
 import { z } from "zod";
 
@@ -100,7 +100,15 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
     setValue: set,
     formState: { errors, isSubmitting }
   } = useForm<clienteData>({
-    resolver: zodResolver(clienteSchema)
+    resolver: zodResolver(clienteSchema),
+    defaultValues: {
+      valorDesconto: 0,
+      percentagemDesconto: 0,
+      saldo: 0,
+      limiteSaldo: 0,
+      limiteCredito: 0,
+      efectuaRetencao: false
+    }
   })
 
   async function send(data: clienteData) {
@@ -130,11 +138,12 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
               </SelectItem>
             </SelectContent>
           </Select>
+        <Fr.error error={errors.entidade?.tipo?.message} />
         </div>
         <div className="grid grid-cols-2 space-x-2 w-full">
           <div className="space-y-2">
             <Label htmlFor="tipodeIdentificacao">Tipo de identificação</Label>
-            <Select onValueChange={(val: "BI" | "NIF" | "PASSAPORTE" | "CARTAO_DE_RESIDENTE") => set('entidade.tipodeIdentificacao', val)} >
+            <Select onValueChange={(val: "BI" | "NIF" | "PASSAPORTE" | "CARTAO_DE_RESIDENTE") => set('entidade.tipodeIdentificacao', val)} required>
               <SelectTrigger
                 className=""
                 aria-label="Select a value"
@@ -156,15 +165,18 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
                 </SelectItem>
               </SelectContent>
             </Select>
+        <Fr.error error={errors.entidade?.tipodeIdentificacao?.message} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="identificacao">Identificacao</Label>
             <Input {...register('entidade.identificacao')} placeholder="Digite a identificação" required />
+        <Fr.error error={errors.entidade?.identificacao?.message} />
           </div>
         </div>
         <div className="space-y-2">
           <Label htmlFor="name">Nome</Label>
           <Input {...register('entidade.name')} required id="name" placeholder="Digite o nome da entidade." />
+        <Fr.error error={errors.entidade?.name?.message} />
         </div>
 
         <div className="space-y-2">
@@ -219,22 +231,27 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
               </Command>
             </PopoverContent>
           </Popover>
+        <Fr.error error={errors.countryId?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="telefone">Telefone</Label>
           <Input {...register('telefone')} required id="telefone" placeholder="Digite o número de telefone principal da loja." />
+        <Fr.error error={errors.telefone?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="telefone1" isReq={true}>Telefone 1</Label>
           <Input {...register('telefone2')} id="telefone1" placeholder="Digite o número de telefone secundário da loja." />
+        <Fr.error error={errors.telefone2?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="whatsapp" isReq={true}>whatsapp</Label>
           <Input {...register('whatsapp')} placeholder="Digite a cidade da loja." />
+        <Fr.error error={errors.whatsapp?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="endereco" isReq={true}>Endereço</Label>
           <Input {...register('endereco')} id="endereco" placeholder="Digite o endereço da loja." />
+        <Fr.error error={errors.endereco?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="email" isReq={true}>Email</Label>
@@ -294,6 +311,7 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
               </Command>
             </PopoverContent>
           </Popover>
+          <Fr.error error={errors.subAccountId?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="tipoDesconto">Tipo de desconto</Label>
@@ -316,42 +334,49 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
               </SelectItem>
             </SelectContent>
           </Select>
+          <Fr.error error={errors.tipoDesconto?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="valorDesconto" isReq={true}>Valor de desconto</Label>
           <Input {...register('valorDesconto')} type="number" placeholder="Informe o valor de desconto." />
+          <Fr.error error={errors.valorDesconto?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="percentagemDesconto" isReq={true}>Percentual de desconto</Label>
           <Input {...register('percentagemDesconto')} type="number" placeholder="Informe o percentual de desconto." />
+          <Fr.error error={errors.percentagemDesconto?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="saldo">Saldo</Label>
           <Input {...register('saldo', { valueAsNumber: true })} type="number" required placeholder="Digite o saldo." />
+          <Fr.error error={errors.saldo?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="limiteSaldo">limite de Saldo</Label>
           <Input {...register('limiteSaldo', { valueAsNumber: true })} type="number" required placeholder="Digite o saldo limite." />
+          <Fr.error error={errors.limiteSaldo?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="limiteCredito">limite de crédito</Label>
           <Input {...register('limiteCredito', { valueAsNumber: true })} type="number" required placeholder="Digite o crédito limite." />
+          <Fr.error error={errors.limiteCredito?.message} />
         </div>
         <div className="space-y-2 items-center">
           <Label htmlFor="isSuperAdmin">Efectuar Retenção</Label>
           <Switch
             className="flex"
+            defaultChecked={false}
             onCheckedChange={(checked: boolean) => {
               set("efectuaRetencao", checked)
             }}
             disabled={isSubmitting}
             {...register("efectuaRetencao")}
           />
+          <Fr.error error={errors.efectuaRetencao?.message} />
         </div>
-
       </div>
       <CardFooter className="px-0 py-4">
-        <Button size="lg" type="submit"
+        <Button type="submit"
           disabled={isSubmitting}
           onClick={() => console.log(errors)}
         >

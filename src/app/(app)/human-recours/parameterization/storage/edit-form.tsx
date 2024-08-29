@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, Loader2 } from "lucide-react";
 import { useState, ReactNode, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -18,11 +18,9 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon, CheckIcon } from "@radix-ui/react-icons";
-import { useForm, useWatch } from "react-hook-form"; // Importar useWatch
-import { toast } from "sonner";
+import { CheckIcon } from "@radix-ui/react-icons";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createArmazem } from "@/http/armazem";
 import {
   Command,
   CommandEmpty,
@@ -33,6 +31,11 @@ import {
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { getLoja } from "@/http/loja"
+import { getArmazem } from "@/http/armazem"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { Form as Fr } from "@/components/ui/form"
+import SkeletContainer from "@/components/skelet-container";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z.string().min(2, "Nome é obrigatório"),
@@ -44,218 +47,250 @@ const formSchema = z.object({
 });
 
 export type createLojaData = z.infer<typeof formSchema>;
-interface lojas{
-    value: number;
-    label: string;
-  }
-interface Props {
-  id:number,
-  children: ReactNode
+interface lojas {
+  value: number;
+  label: string;
 }
-
+interface Props {
+  id: number,
+  children: ReactNode
+  name: string;
+}
 
 export default function EditForm({
   id,
   children,
+  name
 }: Props) {
   const [opn, setOpn] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
   const [selectedLoja, setSelectedLoja] = useState<{ id: number | null; name: string } | null>(null);
-  const [lojas, setLojas]= useState<lojas | null>(null);
 
-  useEffect(()=>{
-      async function res () {
-        const res=await getLoja()
-        console.log(res,"res")
-        setLojas(res.map((loja) => ({
-         value: loja.id,
-         label: loja.name,
-        })))
-      }
-  },[])
-console.log(lojas)
+  const { data: lojas, isFetching: isLoadingLoja, isLoading, isPending: al } = useQuery<lojas[]>({
+    queryKey: ['lojas'],
+    queryFn: async () => {
+      const data = await getLoja()
+      const vals = data.map((loja) => ({
+        value: loja.id,
+        label: loja.name,
+      }))
+      return vals
+    }
+  });
+
   const {
-    watch, 
+    watch,
     reset,
     register,
     setValue,
     handleSubmit,
+
     formState: { errors, isSubmitting },
   } = useForm<createLojaData>({
     resolver: zodResolver(formSchema),
-    defaultValues:{
-        bloqueioEntrada: false,
-  bloqueioSaida: false,
-    }
   });
 
-  const bloqueioEntrada = watch("bloqueioEntrada"); // Obter valor atual do campo
-  const bloqueioSaida = watch("bloqueioSaida"); // Obter valor atual do campo
+  //return
+  const { mutateAsync: getData, data: armazem, isPending } = useMutation({
+    mutationFn: async () => { return await getArmazem(id) },
+    onSuccess: ({ name, lojaId, description, localidade, bloqueioEntrada, bloqueioSaida }) => {
+      setValue("name", name)
+      setValue("description", description)
+      setValue("localidade", localidade)
+      setValue("bloqueioEntrada", bloqueioEntrada)
+      setValue("bloqueioEntrada", bloqueioEntrada)
+      setValue("lojaId", lojaId)
+       /* {lojaId !== null
+            ? lojas.find((loja) => loja.value === lojaId)?.label
+            : setValue("lojaId", lojaId)
+        }*/
+    },
+    onError: (error: string) => toast.error(error)
+  })
+
+
+  const bloqueioEntrada = watch("bloqueioEntrada");
+  const bloqueioSaida = watch("bloqueioSaida");
 
   async function send(data: createLojaData) {
-    const formattedData = {
-      ...data,
-      description: data.description?.trim() === "" ? null : data.description,
-      localidade: data.localidade?.trim() === "" ? null : data.localidade,
-    };
-console.log(formattedData)
-    const result = await createArmazem(formattedData);
-    if (result?.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("Armazem criada com sucesso!");
-      reset();
-      setSelectedLoja(null);
-      setOpn(false);
-    }
+    // const formattedData = {
+    //   ...data,
+    //   description: data.description?.trim() === "" ? null : data.description,
+    //   localidade: data.localidade?.trim() === "" ? null : data.localidade,
+    // };
+    // console.log(formattedData)
+    // const result = await createArmazem(formattedData);
+    // if (result?.error) {
+    //   toast.error(result.error);
+    // } else {
+    //   toast.success("Armazem criada com sucesso!");
+    //   reset();
+    //   setSelectedLoja(null);
+    //   setOpn(false);
+    // }
   }
 
 
   return (
-    <Dialog open={opn} onOpenChange={setOpn}>
+    <Dialog open={opn} onOpenChange={(e) => {
+      e && getData()
+      setOpn(e)
+    }}>
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
- <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Cadastrar Armazem</DialogTitle>
+          <DialogTitle className="flex items-center gap-2 space-x-4">Editar Armazem:
+            {
+            isPending
+              ? <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              : name
+            }</DialogTitle>
           <DialogDescription>
-            Preencha os campos abaixo para adicionar uma nova loja.
+            Preencha os campos abaixo para atualizar o armazem.
           </DialogDescription>
         </DialogHeader>
         <form className="grid gap-4" onSubmit={handleSubmit(send)}>
           <div className="grid gap-2">
             <Label htmlFor="name">Nome</Label>
-            <Input
-              id="name"
-              placeholder="Digite o nome da loja"
-              {...register("name")}
-            />
-            {errors.name && (
-              <p className="text-red-500">{errors.name.message}</p>
-            )}
+            <SkeletContainer isLoading={isPending}>
+              <Input
+                id="name"
+                placeholder="Digite o nome do armazem"
+                {...register("name")}
+                disabled={isPending}
+              />
+              <Fr.error error={errors.name?.message} />
+            </SkeletContainer>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="lojaId">Loja</Label>
-            <Popover modal={true} open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-between"
-                  aria-expanded={open}
-                >
-                  {selectedLoja ? selectedLoja.name : "Selecione a Loja"}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="p-0">
-                <Command>
-                  <CommandInput placeholder="Procurar loja..." />
-                  <CommandList>
-                    <CommandEmpty>Nenhuma loja encontrada.</CommandEmpty>
-                    <CommandGroup>
-                      {/*lojas.map((loja) => (
+            <SkeletContainer isLoading={isLoadingLoja}>
+              <Popover modal={true} open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-between"
+                    aria-expanded={open}
+                    disabled={isPending}
+                  >
+                    {selectedLoja ? selectedLoja.name : "Selecione a Loja"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0">
+                  <Command>
+                    <CommandInput placeholder="Procurar loja..." />
+                    <CommandList>
+                      <CommandEmpty>Nenhuma loja encontrada.</CommandEmpty>
+                      <CommandGroup>
+                        {!isLoadingLoja && lojas &&
+                          lojas.map((loja) => (
+                            <CommandItem
+                              key={loja.value}
+                              onSelect={() => {
+                                if (selectedLoja?.id === loja.value) {
+                                  setValue("lojaId", null);
+                                  setSelectedLoja(null);
+                                } else {
+                                  setValue("lojaId", loja.value);
+                                  setSelectedLoja({ id: loja.value, name: loja.label });
+                                }
+                                setOpen(false);
+                              }}
+                            >
+                              {loja.label}
+                              {selectedLoja?.id === loja.value && (
+                                <CheckIcon className="ml-auto h-4 w-4" />
+                              )}
+                            </CommandItem>
+                          ))}
                         <CommandItem
-                          key={loja.value}
                           onSelect={() => {
-                            if (selectedLoja?.id === loja.value) {
+                            if (selectedLoja?.id === null) {
                               setValue("lojaId", null);
                               setSelectedLoja(null);
                             } else {
-                              setValue("lojaId", loja.value);
-                              setSelectedLoja({ id: loja.value, name: loja.label });
+                              setValue("lojaId", null);
+                              setSelectedLoja({ id: null, name: "Sede" });
                             }
                             setOpen(false);
                           }}
                         >
-                          {loja.label}
-                          {selectedLoja?.id === loja.value && (
+                          Sede
+                          {selectedLoja?.id === null && (
                             <CheckIcon className="ml-auto h-4 w-4" />
                           )}
                         </CommandItem>
-                      ))*/}
-                      <CommandItem
-                        onSelect={() => {
-                          if (selectedLoja?.id === null) {
-                            setValue("lojaId", null);
-                            setSelectedLoja(null);
-                          } else {
-                            setValue("lojaId", null);
-                            setSelectedLoja({ id: null, name: "Sede" });
-                          }
-                          setOpen(false);
-                        }}
-                      >
-                        Sede
-                        {selectedLoja?.id === null && (
-                          <CheckIcon className="ml-auto h-4 w-4" />
-                        )}
-                      </CommandItem>
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-            {errors.lojaId && (
-              <p className="text-red-500">{errors.lojaId.message}</p>
-            )}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </SkeletContainer>
+            <Fr.error error={errors.lojaId?.message} />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="description" isReq>Descrição</Label>
-            <Textarea
-              placeholder="Digite a identificação da loja"
-              {...register("description")}
-            />
-            {errors.description && (
-              <p className="text-red-500">{errors.description.message}</p>
-            )}
+            <SkeletContainer isLoading={isPending}>
+              <Textarea
+                placeholder="Digite a identificação da loja"
+                {...register("description")}
+                disabled={isPending}
+              />
+              <Fr.error error={errors.description?.message} />
+            </SkeletContainer>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="localidade" isReq>Localidade</Label>
-            <Textarea
-              placeholder="Digite o endereço da loja"
-              className="min-h-[100px]"
-              {...register("localidade")}
-            />
-            {errors.localidade && (
-              <p className="text-red-500">{errors.localidade.message}</p>
-            )}
+            <SkeletContainer isLoading={isPending}>
+              <Textarea
+                placeholder="Digite o endereço do armazem"
+                className="min-h-[100px]"
+                disabled={isPending}
+                {...register("localidade")}
+              />
+              <Fr.error error={errors.localidade?.message} />
+            </SkeletContainer>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-2 items-center">
               <Label htmlFor="bloqueioEntrada">Bloqueio Entrada</Label>
-              <Switch
-                className="flex"
-                checked={bloqueioEntrada} // Atualizar para usar o valor do watch
-                onCheckedChange={(checked: boolean) => {
-                  setValue("bloqueioEntrada", checked);
-                }}
-                disabled={isSubmitting}
-              />
+                <Switch
+                  className="flex"
+                  disabled={isPending || isSubmitting}
+                  checked={bloqueioEntrada} // Atualizar para usar o valor do watch
+                  onCheckedChange={(checked: boolean) => {
+                    setValue("bloqueioEntrada", checked);
+                  }}
+                />
             </div>
             <div className="space-y-2 items-center">
               <Label htmlFor="bloqueioSaida">Bloqueio Saída</Label>
-              <Switch
-                className="flex"
-                checked={bloqueioSaida} // Atualizar para usar o valor do watch
-                onCheckedChange={(checked: boolean) => {
-                  setValue("bloqueioSaida", checked);
-                }}
-                disabled={isSubmitting}
-              />
+                <Switch
+                  className="flex"
+                  disabled={isPending || isSubmitting}
+                  checked={bloqueioSaida} // Atualizar para usar o valor do watch
+                  onCheckedChange={(checked: boolean) => {
+                    setValue("bloqueioSaida", checked);
+                  }}
+                />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" className="mr-auto" onClick={() => setOpn(false)}>
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={isSubmitting} onClick={() => console.log(errors)}>
-              {isSubmitting ? "Salvando..." : "Salvar"}
-            </Button>
+          <DialogFooter className="justify-between">
+            <DialogClose asChild>
+              <Button variant="outline" type="reset" className="mr-auto">
+                Cancelar
+              </Button>
+            </DialogClose>
+              <Button type="submit" disabled={isSubmitting} onClick={() => console.log(errors)}>
+                {isSubmitting ? "Salvando..." : "Salvar"}
+              </Button>
           </DialogFooter>
         </form>
       </DialogContent>
- 
+
     </Dialog>
   );
 }

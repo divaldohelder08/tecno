@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleDashed } from "lucide-react";
+import { CircleDashed , PlusCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { z } from "zod";
@@ -83,7 +83,12 @@ function DrawerForm() {
    return (
     <Drawer open={opn} onOpenChange={setOpn}>
           <DrawerTrigger>
-        <Button size="sm" className="inline-flex xl:hidden">Nova carreira</Button>
+          <Button className="gap-1">
+          <PlusCircle className="h-3.5 w-3.5" />
+          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+            Nova carreira
+          </span>
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className="min-w-[400px] mx-auto">

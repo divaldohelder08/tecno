@@ -1,4 +1,4 @@
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getURL } from './utils/get-url'
 const SINGLE_PATHS = ['/', '/company']
 
@@ -32,6 +32,23 @@ export function middleware(request: NextRequest) {
   }
   if (pathname === '/company' && !token) {
     return NextResponse.redirect(new URL(getURL('/auth/sign-in')))
+  }
+
+  const comercioGeral = request.cookies.get('comercioGeral')?.value
+  if (pathname === '/comercial/general-trade' && comercioGeral === 'false') {
+    return NextResponse.redirect(new URL(getURL('/')))
+  }
+  const hotelaria = request.cookies.get('hotelaria')?.value
+  if (pathname === '/comercial/restaurant' && hotelaria === 'false') {
+    return NextResponse.redirect(new URL(getURL('/')))
+  }
+  const restaurante = request.cookies.get('restaurante')?.value
+  if (pathname === '/comercial/hospitality' && restaurante === 'false') {
+    return NextResponse.redirect(new URL(getURL('/')))
+  }
+  const oficina = request.cookies.get('oficina')?.value
+  if (pathname === '/comercial/workshop' && oficina === 'false') {
+    return NextResponse.redirect(new URL(getURL('/')))
   }
 }
 export const config = {

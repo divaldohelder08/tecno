@@ -24,7 +24,11 @@ interface Props {
 export default function Option({ id, name }: Props) {
   return (
     <>
-    <EditForm>
+        <EditForm  
+            id={id}
+            name={name}
+            
+            >
               <Button
                 size="icon"
                 variant="ghost"

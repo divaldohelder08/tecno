@@ -45,10 +45,26 @@ export async function deleteFornecedor(id: number) {
   }
 }
 
-export async function getCliente(id: string) {
-  const { data } = await api.get<Cliente>(`/cliente/${id}`)
+export async function getFornecedor(id: string) {
+  const { data } = await api.get(`/fornecedor/${id}`)
   return data
 }
+
+interface up extends fornecedorData {
+  id: string
+}
+export async function updateFornecedor({ id, ...data }: up) {
+  try {
+    await api.put(`/fornecedor/${id}`, { ...data })
+    revalidatePath(`comercial/entity/suppliers/${id}/edit`)
+  } catch (error) {
+    revalidatePath(`comercial/entity/suppliers/${id}/edit`)
+    return {
+      error: getErrorMessage(error),
+    }
+  }
+}
+
 
 export async function createFornecedor(data: fornecedorData) {
   try {

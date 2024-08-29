@@ -1,5 +1,5 @@
 "use server"
-import { ProfileButton } from "@/app/(app)/components/profile-button"
+import { NavIcons } from "./nav-icons"
 import {
   Search
 } from "lucide-react"
@@ -22,7 +22,7 @@ export default async function UserNav() {
           </div>
         </form>
       </div>
-      <ProfileButton />
+      <NavIcons />
     </>
   )
 }

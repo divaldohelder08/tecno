@@ -1,21 +1,17 @@
 "use client"
-import {
-  ColumnDef
-} from "@tanstack/react-table";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { Badge } from "@/components/ui/badge";
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
-import { Trash, FilePen, Upload } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import DeleteAlert from "@/components/delete-alert";
-import { deleteCliente } from "@/http/cliente";
+import {
+  ColumnDef
+} from "@tanstack/react-table";
 import Option from "./options";
-
+//@Spell:ignore forn
 interface props {
   id: number,
   entidadeId: number,
@@ -30,6 +26,7 @@ interface props {
     name: string,
     identificacao: string,
     tipodeIdentificacao: string
+    isFornecedor: boolean
   }
 }
 export const columns: ColumnDef<props>[] = [
@@ -58,7 +55,12 @@ export const columns: ColumnDef<props>[] = [
   },
   {
     accessorKey: "Saldo",
-    cell: ({ row }) => <p className="hidden md:table-cell">{row.original.saldo}</p>
+    cell: ({ row }) => <p className="hidden md:table-cell">{
+    row.original.saldo.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "AOA",
+      })
+    }</p>
   },
   {
     accessorKey: "Pais",
@@ -77,7 +79,7 @@ export const columns: ColumnDef<props>[] = [
     cell: ({ row }) => {
       const forn = row.original;
       return (
-        <Option 
+        <Option
           id={forn.id}
           name={forn.entidade.name}
           entidadeId={forn.entidadeId}
