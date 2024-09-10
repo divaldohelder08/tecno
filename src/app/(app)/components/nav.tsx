@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEmpresaAreas } from "@/store/empresa";
 import {
@@ -15,27 +16,31 @@ import {
   SlidersVertical,
   Store,
   Tag,
-  UtensilsCrossed
+  UtensilsCrossed,
+  Waypoints
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AccordionNav, comercialNavItems, getTabValue, NavItem, navItems, NavLink, rhNavItems } from "./nav-items";
+
 
 export function Nav() {
   const path = usePathname();
   const prefix = path.split('/')[1]?.toLowerCase();
   const [def, setDef] = useState(getTabValue(prefix));
   const { comercioGeral, restaurante, hotelaria, oficina } = useEmpresaAreas();
-  
+
   const [finalComercialNavItems, setFinalComercialNavItems] = useState<NavItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // Novo estado para carregamento
 
   useEffect(() => {
     setDef(getTabValue(prefix));
   }, [prefix]);
 
   useEffect(() => {
+    setIsLoading(true); // Inicia o carregamento
     const updatedComercialNavItems = [...comercialNavItems];
-    
+
     if (comercioGeral) {
       updatedComercialNavItems.push({
         label: "Comercio-geral", icon: HandCoins, href: "/comercial/general-trade",
@@ -72,14 +77,17 @@ export function Nav() {
         { label: "Unidade", href: "unit", icon: FileText },
         { label: "Categoria", href: "category", icon: Tag },
         { label: "Sub-categoria", href: "sub-category", icon: Layers },
+        { label: "Classe", href: "class", icon: Lock },
         { label: "Tipo de imposto", href: "tax-type", icon: FileText },
         { label: "Taxa de imposto", href: "tax-rate", icon: Lock },
-        { label: "Classe", href: "class", icon: Lock },
-        { label: "Conta", href: "account", icon: Dock }
+        { label: "Regime", href: "regime", icon: Waypoints },
+        { label: "Conta", href: "account", icon: Dock },
+
       ],
     });
 
     setFinalComercialNavItems(updatedComercialNavItems);
+    setIsLoading(false); // Termina o carregamento
   }, [comercioGeral, restaurante, hotelaria, oficina]);
 
   const renderNavItems = (items: NavItem[], currentPath: string) =>
@@ -97,7 +105,6 @@ export function Nav() {
         <NavLink key={index} {...item} currentPath={currentPath} href={item.href} />
       )
     );
-
   return (
     <div className="flex-1">
       <Tabs value={def} onValueChange={setDef} className="w-full max-w-md">
@@ -114,11 +121,14 @@ export function Nav() {
         </TabsContent>
         <TabsContent value="CM">
           <nav className="grid items-start text-sm font-medium lg:px-4">
-            {renderNavItems(finalComercialNavItems, path)}
+            {isLoading
+              ? new Array({ length: 2 }).map((_, i) => <Skeleton key={i} className="rounded-lg px-3 py-2 transition-all flex h-[35px] w-full mb-1.5" />)
+              : renderNavItems(finalComercialNavItems, path)
+            }
           </nav>
         </TabsContent>
         <TabsContent value="RH">
-          <nav className="grid items-start text-sm font-medium lg:px-4">
+          <nav className="grid items-start text-sm font-medium lg:px-2">
             {renderNavItems(rhNavItems, path)}
           </nav>
         </TabsContent>

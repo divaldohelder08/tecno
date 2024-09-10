@@ -1,19 +1,15 @@
 "use client"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { getNameInitials } from "@/utils/get-name-initials";
 import {
   ColumnDef
 } from "@tanstack/react-table";
-import { ArrowUpDown, KeySquare, User, CalendarDaysIcon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import Option from "./options";
-import { Departamento } from '@/types'
-import { getNameInitials } from "@/utils/get-name-initials";
-import { Badge } from "@/components/ui/badge";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 
 interface Funcionario {
   id: number,
@@ -25,59 +21,62 @@ interface Funcionario {
   telefone1: string,
   id_funcao: number,
   createdAt: Date,
-  Funcao: {
-    id: number,
-    nome_funcao: string,
-  }
 }
 
 
 export const columns: ColumnDef<Funcionario>[] = [
   {
     id: "select",
-    header: () => <p className="text-primary">#</p>,
-    cell: ({ row }) => <p>{row.original.id}</p>,
+    header: () => <p className="text-primary hidden w-[100px] sm:table-cell">#</p>,
+    cell: ({ row }) =>
+      <Avatar className="hidden sm:table-cell">
+        <AvatarImage alt="Product image"
+          className="aspect-square rounded-md object-cover"
+          src={row.original.avatar}
+        />
+        <AvatarFallback>{getNameInitials(row.original.nome_completo)}</AvatarFallback>
+      </Avatar>,
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "num_identificacao",
+    accessorKey: "nome_completo",
     header: ({ column }) => {
       return (
         <p className="text-center hover:bg-accent inline-flex gap-2 items-center">
-          num_identificacao
+          Nome
         </p>
       )
     },
-    cell: ({ row }) => <p>{row.getValue("num_identificacao")}</p>,
+    cell: ({ row }) => <p>{row.getValue("nome_completo")}</p>,
   },
   {
     accessorKey: "num_identificacao",
     header: ({ column }) => {
       return (
         <p className="text-center hover:bg-accent inline-flex gap-2 items-center">
-          num_identificacao
+          Identificação
         </p>
       )
     },
-    cell: ({ row }) => <p>{row.getValue("num_identificacao")}</p>,
-  },
-  {
-    accessorKey: "funcao",
-    header: ({ column }) => <p>Função</p>,
     cell: ({ row }) => {
-      const funcao = row.original.Funcao
-      return <p className="text-muted-foreground">
-        {funcao.nome_funcao}
-      </p>
-    }
+      const { num_identificacao, tipo_identificacao } = row.original;
+      return (
+        <Tooltip>
+          <TooltipTrigger>
+            {num_identificacao}
+          </TooltipTrigger>
+          <TooltipContent side="right">{tipo_identificacao}</TooltipContent>
+        </Tooltip>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
     header: ({ column }) => <p>Data de criação</p>,
     cell: ({ row }) =>
       <p className="lowercase text-muted-foreground">
-        {new Date(row.original.createdAt).toLocaleDateString()}
+        {row.original.createdAt}
       </p>
   },
   {
@@ -86,7 +85,7 @@ export const columns: ColumnDef<Funcionario>[] = [
     header: ({ column }) => <p>Opções</p>,
     cell: ({ row }) => {
       const fun = row.original
-      return <Option id={fun.id} name={fun.nome_completo}  />
+      return <Option id={fun.id} name={fun.nome_completo} />
     },
   },
 ];

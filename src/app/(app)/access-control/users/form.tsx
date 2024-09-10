@@ -13,8 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createUser } from "@/http/members";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon } from "@radix-ui/react-icons";
-import { CircleDashed, Eye, EyeOff } from "lucide-react";
+import { CircleDashed, Eye, EyeOff, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -61,7 +60,7 @@ export default function Form() {
     <Dialog open={opn} onOpenChange={setOpn}>
       <DialogTrigger asChild>
         <Button size="sm" className="gap-1">
-          <PlusIcon className="h-3.5 w-3.5" />
+          <PlusCircle className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
             Novo Utilizador
           </span>

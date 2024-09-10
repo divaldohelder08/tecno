@@ -49,7 +49,7 @@ export default function FormComponent() {
       password,
       redirect: false,
     });
-    console.log("Resultado do signIn:", result);
+    //console.log("Resultado do signIn:", result);
       router.push("/");
       toast({
         title: "Autenticado com sucesso!",

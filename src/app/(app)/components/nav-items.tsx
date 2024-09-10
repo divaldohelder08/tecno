@@ -23,7 +23,8 @@ import {
   SlidersVertical,
   Tag,
   Truck,
-  UserCheck, Users,
+  UserCheck,
+  Users,
   Warehouse
 } from "lucide-react";
 import Link from "next/link";
@@ -150,8 +151,9 @@ export const rhNavItems: NavItem[] = [
       { label: "Departamento", href: "department", icon: Tag },
       { label: "Função", href: "function", icon: Layers },
       { label: "Banco", href: "bank", icon: Landmark },
+      { label: "Categoria", href: "category", icon: Tag },
       { label: "Carreira", href: "career", icon: Lock },
-      { label: "Armazem", href: "storage", icon: Warehouse }
+      { label: "Armazem", href: "storage", icon: Warehouse },
     ],
   }
 ];

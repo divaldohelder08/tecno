@@ -21,3 +21,12 @@ export async function getFuncionario() {
   const { data } = await api.get<funcionario[]>('/funcionarios')
   return data
 }
+
+
+export async function createFuncionario(data:any) {
+  try {
+    await api.post("/funcionarios")
+  } catch (error) {
+    
+  }
+}

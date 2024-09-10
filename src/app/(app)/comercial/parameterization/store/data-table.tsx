@@ -13,6 +13,8 @@ import {
 } from "@tanstack/react-table";
 import * as React from "react";
 
+import { DataTablePagination } from "@/components/data-pagination";
+import { TableHeader } from "@/components/table";
 import {
   Table,
   TableBody,
@@ -20,8 +22,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTableHeader } from "./data-header";
-import { TableHeader } from "@/components/table";
-import { DataTablePagination } from "@/components/data-pagination";
 
 interface props<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -67,59 +67,59 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full">
-      <DataTableHeader table={table} prov={prov} func={func} filter={filter} set={setFilter}/>
-  { data[0] ? <>
+      <DataTableHeader table={table} prov={prov} func={func} filter={filter} set={setFilter} />
+      {data[0] ? <>
         <div className="rounded-md border">
-        <Table>
-          <TableHeader table={table} />
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+          <Table>
+            <TableHeader table={table} />
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <DataTablePagination table={table} />
-  </>
-            : <div
-              className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm  p-4 md:p-6"
-            >
-              <div className="flex flex-col items-center gap-1 text-center">
-                <h3 className="text-2xl font-bold tracking-tight">
-                  Não encontramos nenhuma loja
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Começe por criar novas lojas 
-                </p>
-              
-              </div>
-            </div>
-        }
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <DataTablePagination table={table} />
+      </>
+        : <div
+          className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm  p-4 md:p-6"
+        >
+          <div className="flex flex-col items-center gap-1 text-center">
+            <h3 className="text-2xl font-bold tracking-tight">
+              Não encontramos nenhuma loja
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Começe por criar novas lojas
+            </p>
 
-      
+          </div>
+        </div>
+      }
+
+
 
     </div>
   )

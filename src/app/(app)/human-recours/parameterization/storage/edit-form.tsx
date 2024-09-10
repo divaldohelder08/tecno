@@ -33,7 +33,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { getLoja } from "@/http/loja"
 import { getArmazem } from "@/http/armazem"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { Form as Fr } from "@/components/ui/form"
+import { Form as Fr } from "@/components/ui/form-components";
 import SkeletContainer from "@/components/skelet-container";
 import { toast } from "sonner";
 

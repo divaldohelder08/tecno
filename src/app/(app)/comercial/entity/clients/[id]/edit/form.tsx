@@ -11,7 +11,7 @@ import {
   CommandItem,
   CommandList
 } from "@/components/ui/command";
-import { Form as Fr } from "@/components/ui/form";
+import { Form as Fr } from "@/components/ui/form-components";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -126,7 +126,7 @@ export default function Form({ countries: before, subAccounts: subBefore, client
   })
 
   async function send(data: clienteData) {
-  console.log(data)
+    console.log(data)
     const result = await updateCliente({ id, ...data });
     if (result?.error) {
       toast.error(result.error);
@@ -140,7 +140,7 @@ export default function Form({ countries: before, subAccounts: subBefore, client
       <div className="grid gap-4 grid-cols-2" >
         <div className="space-y-2">
           <Label htmlFor="type">Tipo</Label>
-          <Select defaultValue={cliente?.entidade?.tipo ?? null}  onValueChange={(val: 'SINGULAR' | 'COLECTIVO') => set('entidade.tipo', val)} required>
+          <Select defaultValue={cliente?.entidade?.tipo ?? null} onValueChange={(val: 'SINGULAR' | 'COLECTIVO') => set('entidade.tipo', val)} required>
             <SelectTrigger            >
               <SelectValue placeholder="Informe o escopo do cliente" />
             </SelectTrigger>
@@ -320,9 +320,9 @@ export default function Form({ countries: before, subAccounts: subBefore, client
         </div>
         <div className="space-y-2">
           <Label htmlFor="tipoDesconto">Tipo de desconto</Label>
-          <Select defaultValue={cliente?.tipoDesconto ?? null} onValueChange={(val: 'COMERCIAL' | 'FINANCEIRO' | 'DIVERSO' | 'NENHUM') => set('tipoDesconto', val)} 
-          de
-          required>
+          <Select defaultValue={cliente?.tipoDesconto ?? null} onValueChange={(val: 'COMERCIAL' | 'FINANCEIRO' | 'DIVERSO' | 'NENHUM') => set('tipoDesconto', val)}
+            de
+            required>
             <SelectTrigger            >
               <SelectValue placeholder="Informe o tipo de desconto" />
             </SelectTrigger>

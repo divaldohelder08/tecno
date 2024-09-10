@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createSubCategoria } from "@/http/sub-category"
 import { toast } from "sonner";
-import { Form as Fr } from "@/components/ui/form";
+import { Form as Fr } from "@/components/ui/form-components";
 import {
   Dialog,
   DialogTrigger,
@@ -43,14 +43,14 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-interface cate{
-    id: number
-    name:string
+interface cate {
+  id: number
+  name: string
 }
-interface props{
-  categorias:cate[] 
+interface props {
+  categorias: cate[]
 }
-export default function Form({ categorias: before }:props) {
+export default function Form({ categorias: before }: props) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState<number | null>(null)
   const {
@@ -63,16 +63,16 @@ export default function Form({ categorias: before }:props) {
     resolver: zodResolver(formSchema),
   });
 
-    const categorias = before.map((cate) => ({
-        value: cate.id,
-        label: cate.name,
-    }))
+  const categorias = before.map((cate) => ({
+    value: cate.id,
+    label: cate.name,
+  }))
 
   async function send(data: FormData) {
     const result = await createSubCategoria(data);
     if (result?.error) {
       toast.error(result.error);
-    }else{
+    } else {
       toast.success('Sub-categoria criada com sucesso');
     }
     setValue(null)
@@ -93,60 +93,60 @@ export default function Form({ categorias: before }:props) {
             <Fr.error error={errors.name?.message} />
           </div>
           <div className="space-y-2">
-          <Label htmlFor="categoryId">Categoria</Label>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                size="default"
-                role="combobox"
-                aria-expanded={open}
-                className="flex w-full justify-between"
-              >
-                {value
-                  ? categorias.find((cate) => cate.value === value)?.label
-                  : "Selecione a categoria..."}
-                <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="p-0 w-[240px]">
-              <Command>
-                <CommandInput placeholder="Pesquise a categoria..." className="h-9" />
-                <CommandList>
-                  <CommandEmpty>Categorianão encontrada.</CommandEmpty>
-                  <CommandGroup>
-                    {categorias.map((cate) => (
-                      <CommandItem
-                        key={cate.value}
-                        value={cate.value.toString()}
-                        onSelect={(currentValue) => {
-                          if (Number(currentValue) === value) {
-                            setValue(null)
-                            set('categoryId', undefined)
-                          } else {
-                            setValue(Number(currentValue))
-                            set('categoryId', Number(currentValue))
-                          }
-                          setOpen(false)
-                        }}
-                      >
-                        {cate.label}
-                        <CheckIcon
-                          className={cn(
-                            "ml-auto h-4 w-4",
-                            value === cate.value ? "opacity-100" : "opacity-0"
-                          )}
-                        />
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-          <Fr.error error={errors.categoryId?.message} />
-        </div>
-        
+            <Label htmlFor="categoryId">Categoria</Label>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="default"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="flex w-full justify-between"
+                >
+                  {value
+                    ? categorias.find((cate) => cate.value === value)?.label
+                    : "Selecione a categoria..."}
+                  <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="p-0 w-[240px]">
+                <Command>
+                  <CommandInput placeholder="Pesquise a categoria..." className="h-9" />
+                  <CommandList>
+                    <CommandEmpty>Categorianão encontrada.</CommandEmpty>
+                    <CommandGroup>
+                      {categorias.map((cate) => (
+                        <CommandItem
+                          key={cate.value}
+                          value={cate.value.toString()}
+                          onSelect={(currentValue) => {
+                            if (Number(currentValue) === value) {
+                              setValue(null)
+                              set('categoryId', undefined)
+                            } else {
+                              setValue(Number(currentValue))
+                              set('categoryId', Number(currentValue))
+                            }
+                            setOpen(false)
+                          }}
+                        >
+                          {cate.label}
+                          <CheckIcon
+                            className={cn(
+                              "ml-auto h-4 w-4",
+                              value === cate.value ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+            <Fr.error error={errors.categoryId?.message} />
+          </div>
+
           <Button
             size="sm"
             type="submit"
@@ -194,28 +194,28 @@ export function DrawerForm() {
         <Button size="sm" className="inline-flex xl:hidden">Nova carreira</Button>
       </DialogTrigger>
       <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Nova unidade</DialogTitle>
-          </DialogHeader>
-          <DialogFooter>
-            <form className="grid w-full items-start gap-6" onSubmit={handleSubmit(send)}>
-              <div className="grid gap-3">
-                <Label htmlFor="name">Nome</Label>
-                <Input placeholder="Informe o nome da unidade" required {...register('name')} />
-                <Fr.error error={errors.name?.message} />
-              </div>
-              <Button
-                size="sm"
-                type="submit"
-                className="w-full gap-1.5 flex"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
-                ) : 'Salvar'}
-              </Button>
-            </form>
-          </DialogFooter>
+        <DialogHeader>
+          <DialogTitle>Nova unidade</DialogTitle>
+        </DialogHeader>
+        <DialogFooter>
+          <form className="grid w-full items-start gap-6" onSubmit={handleSubmit(send)}>
+            <div className="grid gap-3">
+              <Label htmlFor="name">Nome</Label>
+              <Input placeholder="Informe o nome da unidade" required {...register('name')} />
+              <Fr.error error={errors.name?.message} />
+            </div>
+            <Button
+              size="sm"
+              type="submit"
+              className="w-full gap-1.5 flex"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
+              ) : 'Salvar'}
+            </Button>
+          </form>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { CircleDashed } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Form as Fr } from "@/components/ui/form";
+import { Form as Fr } from "@/components/ui/form-components";
 import { toast } from "sonner"
 
 import { z } from "zod";
@@ -104,7 +104,7 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
   return (
     <form onSubmit={handleSubmit(send)}>
       <div className="grid gap-4 grid-cols-2" >
-            <div className="space-y-2">
+        <div className="space-y-2">
           <Label htmlFor="type">Tipo</Label>
           <Select onValueChange={(val: 'SINGULAR' | 'COLECTIVO') => set('entidade.tipo', val)} required>
             <SelectTrigger            >
@@ -120,9 +120,9 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
             </SelectContent>
           </Select>
         </div>
-   
+
         <div className="grid grid-cols-2 space-x-2 w-full">
-      
+
           <div className="space-y-2">
             <Label htmlFor="tipodeIdentificacao">Tipo de identificação</Label>
             <Select onValueChange={(val: "BI" | "NIF" | "PASSAPORTE" | "CARTAO_DE_RESIDENTE") => set('entidade.tipodeIdentificacao', val)} >
@@ -148,12 +148,12 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
               </SelectContent>
             </Select>
           </div>
-              <div className="space-y-2">
+          <div className="space-y-2">
             <Label htmlFor="identificacao">Identificacao</Label>
             <Input {...register('entidade.identificacao')} placeholder="Digite a identificação" required />
           </div>
         </div>
-       <div className="space-y-2">
+        <div className="space-y-2">
           <Label htmlFor="name">Nome</Label>
           <Input {...register('entidade.name')} required id="name" placeholder="Digite o nome da entidade." />
         </div>

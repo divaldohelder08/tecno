@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { CardFooter } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Form as Fr } from "@/components/ui/form";
+import { Form as Fr } from "@/components/ui/form-components";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {

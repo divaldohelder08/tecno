@@ -91,7 +91,7 @@ export default function Form() {
             </div>
           </div>
           <Button
-            size="sm"
+            size="lg"
             type="submit"
             className="w-full gap-1.5 flex"
             disabled={isSubmitting}

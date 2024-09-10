@@ -22,9 +22,9 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { PlusIcon } from "@radix-ui/react-icons"
-import { createLoja  } from "@/http/loja"
+import { createLoja } from "@/http/loja"
 import { cn } from "@/lib/utils"
-import { Form as Fr } from "@/components/ui/form";
+import { Form as Fr } from "@/components/ui/form-components";
 import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
 
 import {
@@ -49,11 +49,11 @@ import {
 } from "@/components/ui/popover"
 
 const formSchema = z.object({
-  name: z.string({ required_error:"Nome é obrigatório" }).min(2, "No minimo 2 caracteres"),
+  name: z.string({ required_error: "Nome é obrigatório" }).min(2, "No minimo 2 caracteres"),
   identificacao: z.string().nonempty("Identificação é obrigatória"),
   address: z.string().optional(),
-  provinciaId: z.number({ required_error:"A província é obrigatório" }).min(1, "Selecione uma província"),
-  funcionarioId: z.number({ required_error:"O supervisor é obrigatório" }).min(1, "Selecione uma funcionario"),
+  provinciaId: z.number({ required_error: "A província é obrigatório" }).min(1, "Selecione uma província"),
+  funcionarioId: z.number({ required_error: "O supervisor é obrigatório" }).min(1, "Selecione uma funcionario"),
   telefone: z.string().nonempty("Telefone é obrigatório"),
   telefone2: z.string().optional(),
   email: z.string().email("Email inválido").nonempty("Email é obrigatório"),
@@ -62,7 +62,7 @@ const formSchema = z.object({
 export type createLojaData = z.infer<typeof formSchema>;
 
 interface Props {
-func:{
+  func: {
     id: number,
     name: string
   }[],
@@ -124,72 +124,72 @@ export default function Form({ prov, func: before }: Props) {
             <Fr.error error={errors.name?.message} />
           </div>
           <div className="grid sm:grid-cols-2 gap-4 items-baseline">
-          
-           <div className="grid gap-2">
-            <Label htmlFor="lojaId">Loja</Label>
-            <Popover modal={true} open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-between h-9"
-                  aria-expanded={open}
-                >
-                  {selectedF ? selectedF.name : "Selecione o funcionario supervisor"}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="p-0">
-                <Command>
-                  <CommandInput placeholder="Procurar funcionario..." />
-                  <CommandList>
-                    <CommandEmpty>Nenhuma funcionario encontrada.</CommandEmpty>
-                    <CommandGroup>
-                      {func.map((f) => (
-                        <CommandItem
-                          key={f.value}
-                          onSelect={() => {
-                            if (selectedF?.id === f.value) {
-                              setValue("funcionarioId", null);
-                              setSelectedF(null);
-                            } else {
-                              setValue("funcionarioId", loja.value);
-                              setSelectedF({ id: loja.value, name: loja.label });
-                            }
-                            setOpen(false);
-                          }}
-                        >
-                          {loja.label}
-                          {selectedF?.id === loja.value && (
-                            <CheckIcon className="ml-auto h-4 w-4" />
-                          )}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-            {errors.funcionarioId && (
-              <p className="text-red-500">{errors.funcionarioId.message}</p>
-            )}
-          </div>
-          
-          
-          <div className="grid gap-2">
-            <Label htmlFor="identificacao">Identificação</Label>
-            <Input id="identificacao" placeholder="Digite a identificação da loja" {...register("identificacao")} />
-            <Fr.error error={errors.identificacao?.message} />
-          </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="lojaId">Loja</Label>
+              <Popover modal={true} open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-between h-9"
+                    aria-expanded={open}
+                  >
+                    {selectedF ? selectedF.name : "Selecione o funcionario supervisor"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0">
+                  <Command>
+                    <CommandInput placeholder="Procurar funcionario..." />
+                    <CommandList>
+                      <CommandEmpty>Nenhuma funcionario encontrada.</CommandEmpty>
+                      <CommandGroup>
+                        {func.map((f) => (
+                          <CommandItem
+                            key={f.value}
+                            onSelect={() => {
+                              if (selectedF?.id === f.value) {
+                                setValue("funcionarioId", null);
+                                setSelectedF(null);
+                              } else {
+                                setValue("funcionarioId", loja.value);
+                                setSelectedF({ id: loja.value, name: loja.label });
+                              }
+                              setOpen(false);
+                            }}
+                          >
+                            {loja.label}
+                            {selectedF?.id === loja.value && (
+                              <CheckIcon className="ml-auto h-4 w-4" />
+                            )}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              {errors.funcionarioId && (
+                <p className="text-red-500">{errors.funcionarioId.message}</p>
+              )}
+            </div>
+
+
+            <div className="grid gap-2">
+              <Label htmlFor="identificacao">Identificação</Label>
+              <Input id="identificacao" placeholder="Digite a identificação da loja" {...register("identificacao")} />
+              <Fr.error error={errors.identificacao?.message} />
+            </div>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="address" isReq={true}>Endereço</Label>
             <Textarea id="address" placeholder="Digite o endereço da loja" className="min-h-[100px]" {...register("address")} />
-              <Fr.error error={errors.address?.message} />
+            <Fr.error error={errors.address?.message} />
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="province">Província</Label>
-              <Select {...register("provinciaId")}  onValueChange={(val) => setValue('provinciaId', Number(val))}>
+              <Select {...register("provinciaId")} onValueChange={(val) => setValue('provinciaId', Number(val))}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione a província" />
                 </SelectTrigger>
@@ -208,7 +208,7 @@ export default function Form({ prov, func: before }: Props) {
             </div>
           </div>
           <div className="grid sm:grid-cols-2 gap-4 items-baseline">
-           <div className="grid gap-2">
+            <div className="grid gap-2">
               <Label htmlFor="telefone">Telefone</Label>
               <Input id="telefone" type="tel" placeholder="(00) 0000-0000" {...register("telefone")} />
               <Fr.error error={errors.telefone?.message} />
@@ -234,8 +234,8 @@ export default function Form({ prov, func: before }: Props) {
 }
 
 
-interface atualizarForm extends Props{
-    id:number
+interface atualizarForm extends Props {
+  id: number
 }
 export function EditForm({ prov, id }: atualizarForm) {
   const [opn, setOpn] = useState<boolean>(false);

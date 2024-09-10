@@ -12,7 +12,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import * as React from "react";
-
+import NoContent from "@/components/no-content";
 import {
   Table,
   TableBody,
@@ -97,19 +97,8 @@ export function DataTable<TData, TValue>({
               </TableBody>
             </Table>
           </div>
-          <DataTablePagination table={table} /></> :
-          <div
-            className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm  p-4 md:p-6 m-4 md:m-6"
-          >
-            <div className="flex flex-col items-center gap-1 text-center">
-              <h3 className="text-2xl font-bold tracking-tight">
-                Não encontramos nenhuma funcionario
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Comece por criar novos funcionario
-              </p>
-            </div>
-          </div>
+          <DataTablePagination table={table} />
+        </> : <NoContent title="Não encontramos nenhuma funcionario" description="Comece por criar novos funcionario" />
       }
     </div>
   )

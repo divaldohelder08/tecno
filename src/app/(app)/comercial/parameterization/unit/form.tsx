@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createUnidade } from "@/http/unity"
 import { toast } from "sonner";
-import { Form as Fr } from "@/components/ui/form";
+import { Form as Fr } from "@/components/ui/form-components";
 import {
   Dialog,
   DialogTrigger,
@@ -42,7 +42,7 @@ export default function Form() {
     const result = await createUnidade(name);
     if (result?.error) {
       toast.error(result.error);
-    }else{
+    } else {
       toast.success('Unidade criada com sucesso');
     }
     reset();
@@ -108,28 +108,28 @@ export function DrawerForm() {
         <Button size="sm" className="inline-flex xl:hidden">Nova carreira</Button>
       </DialogTrigger>
       <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Nova unidade</DialogTitle>
-          </DialogHeader>
-          <DialogFooter>
-            <form className="grid w-full items-start gap-6" onSubmit={handleSubmit(send)}>
-              <div className="grid gap-3">
-                <Label htmlFor="name">Nome</Label>
-                <Input placeholder="Informe o nome da unidade" required {...register('name')} />
-                <Fr.error error={errors.name?.message} />
-              </div>
-              <Button
-                size="sm"
-                type="submit"
-                className="w-full gap-1.5 flex"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
-                ) : 'Salvar'}
-              </Button>
-            </form>
-          </DialogFooter>
+        <DialogHeader>
+          <DialogTitle>Nova unidade</DialogTitle>
+        </DialogHeader>
+        <DialogFooter>
+          <form className="grid w-full items-start gap-6" onSubmit={handleSubmit(send)}>
+            <div className="grid gap-3">
+              <Label htmlFor="name">Nome</Label>
+              <Input placeholder="Informe o nome da unidade" required {...register('name')} />
+              <Fr.error error={errors.name?.message} />
+            </div>
+            <Button
+              size="sm"
+              type="submit"
+              className="w-full gap-1.5 flex"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
+              ) : 'Salvar'}
+            </Button>
+          </form>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

@@ -38,7 +38,7 @@ import { cn } from "@/lib/utils"
 import { Country } from "@/types"
 import { useEdgeStore } from '@/lib/edgestore';
 import { SingleImageDropzone } from "@/components/single-image-dropzone"
-import { Form as Fr } from "@/components/ui/form";
+import { Form as Fr } from "@/components/ui/form-components";
 
 const empresaSchema = z.object({
   codigo: z.string(),

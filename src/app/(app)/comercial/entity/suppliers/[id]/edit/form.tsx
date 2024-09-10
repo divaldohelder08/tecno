@@ -11,7 +11,7 @@ import {
   CommandItem,
   CommandList
 } from "@/components/ui/command";
-import { Form as Fr } from "@/components/ui/form";
+import { Form as Fr } from "@/components/ui/form-components";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -105,7 +105,7 @@ export default function Form({ countries: before, subAccounts: subBefore, fornec
       },
     }
   })
-  console.log(fornecedor,"zdfsd")
+  console.log(fornecedor, "zdfsd")
 
   async function send(data: clienteData) {
     const result = await updateFornecedor({ id, ...data });
@@ -117,13 +117,13 @@ export default function Form({ countries: before, subAccounts: subBefore, fornec
   }
 
   return (
- <form onSubmit={handleSubmit(send)}>
+    <form onSubmit={handleSubmit(send)}>
       <div className="grid gap-4 grid-cols-2" >
         <div className="space-y-2">
           <Label htmlFor="type">Tipo</Label>
-          <Select onValueChange={(val: 'SINGULAR' | 'COLECTIVO') => set('entidade.tipo', val)} 
-          defaultValue={fornecedor?.entidade?.tipo ?? null}
-          required>
+          <Select onValueChange={(val: 'SINGULAR' | 'COLECTIVO') => set('entidade.tipo', val)}
+            defaultValue={fornecedor?.entidade?.tipo ?? null}
+            required>
             <SelectTrigger>
               <SelectValue placeholder="Selecione o escopo do fornecedor" />
             </SelectTrigger>
@@ -142,7 +142,7 @@ export default function Form({ countries: before, subAccounts: subBefore, fornec
           <div className="space-y-2">
             <Label htmlFor="tipodeIdentificacao">Tipo de identificação</Label>
             <Select onValueChange={(val: "BI" | "NIF" | "PASSAPORTE" | "CARTAO_DE_RESIDENTE") => set('entidade.tipodeIdentificacao', val)}
-          defaultValue={fornecedor?.entidade?.tipodeIdentificacao ?? null}
+              defaultValue={fornecedor?.entidade?.tipodeIdentificacao ?? null}
             >
               <SelectTrigger
                 className=""
@@ -165,15 +165,15 @@ export default function Form({ countries: before, subAccounts: subBefore, fornec
                 </SelectItem>
               </SelectContent>
             </Select>
-          <Fr.error error={errors.entidade?.tipodeIdentificacao?.message} />
+            <Fr.error error={errors.entidade?.tipodeIdentificacao?.message} />
           </div>
-              <div className="space-y-2">
+          <div className="space-y-2">
             <Label htmlFor="identificacao">Identificacao</Label>
             <Input {...register('entidade.identificacao')} placeholder="Digite a identificação" required />
-          <Fr.error error={errors.entidade?.identificacao?.message} />
+            <Fr.error error={errors.entidade?.identificacao?.message} />
           </div>
         </div>
-       <div className="space-y-2">
+        <div className="space-y-2">
           <Label htmlFor="name">Nome</Label>
           <Input {...register('entidade.name')} required id="name" placeholder="Digite o nome da entidade." />
           <Fr.error error={errors.entidade?.name?.message} />
@@ -232,7 +232,7 @@ export default function Form({ countries: before, subAccounts: subBefore, fornec
           </Popover>
           <Fr.error error={errors.countryId?.message} />
         </div>
-         <div className="space-y-2">
+        <div className="space-y-2">
           <Label htmlFor="email" isReq={true}>Email</Label>
           <Input {...register('email')} type="email" placeholder="Digite o endereço de email." />
           <Fr.error error={errors.email?.message} />

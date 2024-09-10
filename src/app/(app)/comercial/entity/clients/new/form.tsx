@@ -16,7 +16,7 @@ import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { CircleDashed } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner"
-import { Form as Fr } from "@/components/ui/form";
+import { Form as Fr } from "@/components/ui/form-components";
 
 import { z } from "zod";
 
@@ -138,7 +138,7 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
               </SelectItem>
             </SelectContent>
           </Select>
-        <Fr.error error={errors.entidade?.tipo?.message} />
+          <Fr.error error={errors.entidade?.tipo?.message} />
         </div>
         <div className="grid grid-cols-2 space-x-2 w-full">
           <div className="space-y-2">
@@ -165,18 +165,18 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
                 </SelectItem>
               </SelectContent>
             </Select>
-        <Fr.error error={errors.entidade?.tipodeIdentificacao?.message} />
+            <Fr.error error={errors.entidade?.tipodeIdentificacao?.message} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="identificacao">Identificacao</Label>
             <Input {...register('entidade.identificacao')} placeholder="Digite a identificação" required />
-        <Fr.error error={errors.entidade?.identificacao?.message} />
+            <Fr.error error={errors.entidade?.identificacao?.message} />
           </div>
         </div>
         <div className="space-y-2">
           <Label htmlFor="name">Nome</Label>
           <Input {...register('entidade.name')} required id="name" placeholder="Digite o nome da entidade." />
-        <Fr.error error={errors.entidade?.name?.message} />
+          <Fr.error error={errors.entidade?.name?.message} />
         </div>
 
         <div className="space-y-2">
@@ -231,27 +231,27 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
               </Command>
             </PopoverContent>
           </Popover>
-        <Fr.error error={errors.countryId?.message} />
+          <Fr.error error={errors.countryId?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="telefone">Telefone</Label>
           <Input {...register('telefone')} required id="telefone" placeholder="Digite o número de telefone principal da loja." />
-        <Fr.error error={errors.telefone?.message} />
+          <Fr.error error={errors.telefone?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="telefone1" isReq={true}>Telefone 1</Label>
           <Input {...register('telefone2')} id="telefone1" placeholder="Digite o número de telefone secundário da loja." />
-        <Fr.error error={errors.telefone2?.message} />
+          <Fr.error error={errors.telefone2?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="whatsapp" isReq={true}>whatsapp</Label>
           <Input {...register('whatsapp')} placeholder="Digite a cidade da loja." />
-        <Fr.error error={errors.whatsapp?.message} />
+          <Fr.error error={errors.whatsapp?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="endereco" isReq={true}>Endereço</Label>
           <Input {...register('endereco')} id="endereco" placeholder="Digite o endereço da loja." />
-        <Fr.error error={errors.endereco?.message} />
+          <Fr.error error={errors.endereco?.message} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="email" isReq={true}>Email</Label>
