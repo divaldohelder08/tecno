@@ -8,6 +8,7 @@ import { PropsWithChildren } from "react";
 import { Toaster as Sonner } from "sonner";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import { useState } from "react"
+import { SessionProvider } from "next-auth/react";
 
 export function Provider({ children }: PropsWithChildren) {
   let displayedNetworkFailureError = false;
@@ -40,6 +41,7 @@ export function Provider({ children }: PropsWithChildren) {
     },
   }));
   return (
+  <SessionProvider>
       <QueryClientProvider client={queryClient}>
     <ThemeProvider
       attribute="class"
@@ -53,9 +55,11 @@ export function Provider({ children }: PropsWithChildren) {
             <Sonner richColors />
           </TooltipProvider>
         </EdgeStoreProvider>
-    </ThemeProvider >
+        
+    </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
+  </SessionProvider>
   )
 }
 
@@ -96,6 +100,7 @@ export default function Providers({ children }: PropsWithChildren) {
   }));
 
   return (
+  <SessionProvider>
    <ThemeProvider
       attribute="class"
       defaultTheme="system"
@@ -111,7 +116,7 @@ export default function Providers({ children }: PropsWithChildren) {
         </EdgeStoreProvider>
       <ReactQueryDevtools initialIsOpen={true} />
         </QueryClientProvider>
-    </ThemeProvider >
-    
+    </ThemeProvider>
+  </SessionProvider>
   );
-}
+      }

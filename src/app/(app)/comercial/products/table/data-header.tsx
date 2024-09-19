@@ -20,11 +20,16 @@ export function DataTableHeader<TData>({
           type="search"
           placeholder="Search..."
           className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
+           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("name")?.setFilterValue(event.target.value)
+          }
         />
       </div>
     </div>
   )
 }
+
 
 
 

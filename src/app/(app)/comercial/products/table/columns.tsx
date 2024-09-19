@@ -1,23 +1,8 @@
 "use client";
-import Image from "next/image";
-import { ColumnDef } from "@tanstack/react-table";
-import Option from "./options";
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import {
-  TableHead,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
+import { ColumnDef } from "@tanstack/react-table";
+import Image from "next/image";
+import Option from "./options";
 
 interface service {
   id: number;
@@ -65,7 +50,7 @@ export const columns: ColumnDef<service>[] = [
           ACTIVO
         </Badge>
       ) : (
-        <Badge variant="ghost" className="mx-auto">
+        <Badge variant="destructive" className="mx-auto">
           REMOVIDO
         </Badge>
       );

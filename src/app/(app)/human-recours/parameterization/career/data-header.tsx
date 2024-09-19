@@ -1,11 +1,7 @@
 "use client"
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
-import { PlusIcon } from "@radix-ui/react-icons";
-import { Table } from "@tanstack/react-table";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -14,14 +10,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createCareer } from "@/http/career";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Table } from "@tanstack/react-table";
 import { CircleDashed } from "lucide-react";
-import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { z } from "zod";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { createCareer } from "@/http/career"
-import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { z } from "zod";
 
 const formSchema = z.object({
   nome_carreira: z.string(),
@@ -80,9 +76,9 @@ function DrawerForm() {
   }
 
 
-   return (
+  return (
     <Drawer open={opn} onOpenChange={setOpn}>
-          <DrawerTrigger>
+      <DrawerTrigger>
         <Button size="sm" className="inline-flex xl:hidden">Nova carreira</Button>
       </DrawerTrigger>
       <DrawerContent>
@@ -92,52 +88,52 @@ function DrawerForm() {
           </DrawerHeader>
           <DrawerFooter>
             <form className="grid w-full items-start gap-6" onSubmit={handleSubmit(send)}>
-                <div className="grid gap-3">
-                    <Label htmlFor="nome_banco">Nome</Label>
-                    <Input placeholder="Informe o nome da carreira" required {...register('nome_carreira')} />
-                    {errors.nome_carreira && (
-                      <p className="text-sm font-medium text-red-500 dark:text-red-400">
-                        {errors.nome_carreira.message}
-                      </p>
-                    )}
-                </div>
-                <div className="grid gap-3">
-                    <Label htmlFor="regime">Regime</Label>
-                    <Select onValueChange={(val: "geral" | "especial") => setValue('regime',val)}>
-                      <SelectTrigger
-                        className=""
-                        aria-label="Select a value"
-                      >
-                        <SelectValue placeholder="Informe o regime" />
-                      </SelectTrigger>
-                      <SelectContent className="" >
-                        <SelectItem value="geral" className="rounded-lg">
-                          GERAL
-                        </SelectItem>
-                        <SelectItem value="especial" className="rounded-lg">
-                          ESPECIAL
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {errors.regime && (
-                      <p className="text-sm font-medium text-red-500 dark:text-red-400">
-                        {errors.regime.message}
-                      </p>
-                    )}
-                  </div>
-                  <Button
-                     size="sm"
-                     type="submit"
-                     className="w-full gap-1.5 flex"
-                     disabled={isSubmitting}
-                    >
-                    {isSubmitting ? (
-                      <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
-                      ) : 'Salvar'}
-                      </Button>
-                    </form>
-                  </DrawerFooter>
-                </div>
+              <div className="grid gap-3">
+                <Label htmlFor="nome_banco">Nome</Label>
+                <Input placeholder="Informe o nome da carreira" required {...register('nome_carreira')} />
+                {errors.nome_carreira && (
+                  <p className="text-sm font-medium text-red-500 dark:text-red-400">
+                    {errors.nome_carreira.message}
+                  </p>
+                )}
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="regime">Regime</Label>
+                <Select onValueChange={(val: "geral" | "especial") => setValue('regime', val)}>
+                  <SelectTrigger
+                    className=""
+                    aria-label="Select a value"
+                  >
+                    <SelectValue placeholder="Informe o regime" />
+                  </SelectTrigger>
+                  <SelectContent className="" >
+                    <SelectItem value="geral" className="rounded-lg">
+                      GERAL
+                    </SelectItem>
+                    <SelectItem value="especial" className="rounded-lg">
+                      ESPECIAL
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.regime && (
+                  <p className="text-sm font-medium text-red-500 dark:text-red-400">
+                    {errors.regime.message}
+                  </p>
+                )}
+              </div>
+              <Button
+                size="sm"
+                type="submit"
+                className="w-full gap-1.5 flex"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
+                ) : 'Salvar'}
+              </Button>
+            </form>
+          </DrawerFooter>
+        </div>
       </DrawerContent>
     </Drawer>
   )

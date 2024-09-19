@@ -25,7 +25,6 @@ import {
   Truck,
   UserCheck,
   Users,
-  Warehouse
 } from "lucide-react";
 import Link from "next/link";
 export interface NavItem {
@@ -37,9 +36,9 @@ export interface NavItem {
 
 export const navItems: NavItem[] = [
   { label: "Dashboard", icon: Home, href: "/" },
-  { label: "Empresa", icon: Building, href: "/company" },
+  { label: "Empresa", icon: Building, href: "/empresa" },
   {
-    label: "Controle de Acesso", icon: KeyRound, href: "/access-control",
+    label: "Controle de Acesso", icon: KeyRound, href: "/controle-acesso",
     subLinks: [
       { label: "Perfis", href: "roles", icon: UserCheck },
       { label: "Utilizadores", href: "users", icon: Users },
@@ -76,7 +75,8 @@ export const NavLink = ({ href, label, icon: Icon, count, currentPath, isInAccor
       href={href}
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-        isActive && !isInAccordion && "bg-muted text-primary"
+        iconClass,
+        isActive && !isInAccordion && "bg-muted text-primary",
       )}
     >
       <Icon className={cn("h-4 w-4", iconClass)} aria-hidden="true" />
@@ -153,7 +153,6 @@ export const rhNavItems: NavItem[] = [
       { label: "Banco", href: "bank", icon: Landmark },
       { label: "Categoria", href: "category", icon: Tag },
       { label: "Carreira", href: "career", icon: Lock },
-      { label: "Armazem", href: "storage", icon: Warehouse },
     ],
   }
 ];

@@ -1,19 +1,16 @@
 "use client";
 
-import {
-  ColumnDef
-} from "@tanstack/react-table";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Pen, Trash, FilePen, Upload } from "lucide-react";
-import DeleteAlert from "@/components/delete-alert";
-import { deleteFornecedor } from "@/http/fornecedores";
+import {
+  ColumnDef
+} from "@tanstack/react-table";
 import Option from "./options";
 
 interface Props {
@@ -43,8 +40,10 @@ export const columns: ColumnDef<Props>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "Entidade",
-    cell: ({ row }) => <p className="capitalize">{row.original.entidade.name}</p>,
+    id: "name",
+    accessorKey: "name",
+    header: () => <p>Entidade</p>,
+    cell: ({ row }) => <p>{row.original.entidade.name}</p>,
   },
   {
     accessorKey: "Identificação",
@@ -82,7 +81,7 @@ export const columns: ColumnDef<Props>[] = [
     cell: ({ row }) => {
       const forn = row.original;
       return (
-        <Option 
+        <Option
           id={forn.id}
           name={forn.entidade.name}
           entidadeId={forn.entidade.id}

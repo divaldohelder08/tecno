@@ -1,13 +1,6 @@
 "use client"
-import { LogOut } from 'lucide-react';
+import { LogOut, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { auth, signOut } from '@/services/auth';
 import Image from 'next/image';
 import { getNameInitials } from "@/utils/get-name-initials";
@@ -23,11 +16,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { handleSignOut } from './action'
+import { useServerAction } from "zsa-react"
 
 export  function NavIcons() {
-  async function handleSignOut() {
-    await signOut();
-  }
+  const { isPending, executeFormAction, isSuccess, data, isError, error } =
+    useServerAction(handleSignOut) 
 
   return (
   <div className="flex w-content w-fit-content gap-4 items-center">
@@ -35,10 +29,17 @@ export  function NavIcons() {
         <Bell className="h-4 w-4" />
         <span className="sr-only">Toggle notificações</span>
     </Button>
-    <Button onClick={() => handleSignOut()} variant="destructive"  size="icon"  className="h-8 w-8">
-        <LogOut className="h-4 w-4" />
+ <form  action={executeFormAction}>
+   <Button type="submit" variant="destructive"  size="icon"  className="h-8 w-8">
+        {isPending 
+            ? <Loader2 className="h-4 w-4 animate-spin" /> 
+            : <LogOut className="h-4 w-4" /> }
         <span className="sr-only">Sign out</span>
     </Button>
+    
+ </form>
+ 
+  
   </div>
   );
 }

@@ -33,8 +33,8 @@ const authConfig: NextAuthConfig = {
   ],
   trustHost: true,
   pages: {
-    signIn: '/auth/sign-in',
-    error: '/auth/sign-in',
+   // signIn: '/auth/sign-in',
+   // error: '/auth/sign-in',
   },
   callbacks: {
     async jwt({ token, user }) {

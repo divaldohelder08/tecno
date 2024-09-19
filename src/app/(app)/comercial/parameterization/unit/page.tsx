@@ -17,7 +17,7 @@ export default async function Component() {
               Não encontramos nenhuma unidade
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Começe por criar novas unidades
+              Comece por criar novas unidades
             </p>
             <DrawerForm />
           </div>

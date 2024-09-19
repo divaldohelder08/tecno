@@ -1,9 +1,10 @@
 "use client"
 import { Eye, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteCareer, updateCareer } from "@/http/career";
+import { deleteFuncionario } from "@/http/funcionarios";
 import DeleteAlert from "@/components/delete-alert";
 import Link from "next/link";
+
 
 interface Props {
   id: number;
@@ -27,7 +28,7 @@ export default function Option({ id, name }: Props) {
       <DeleteAlert
         id={id}
         title={name}
-        deleteFunction={deleteCareer}
+        deleteFunction={deleteFuncionario}
         successMessage="FUncionario deletado com sucesso"
       >
         <Button

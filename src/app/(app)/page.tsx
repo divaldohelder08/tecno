@@ -1,30 +1,22 @@
 "use client"
 
-import * as React from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { buttonVariants } from "@/components/ui/button";
+import * as React from "react";
 
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { CardLicenciados } from "./card-licensiados";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+  CardHeader
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { CardLicenciados } from "./card-licensiados";
 
 import {
+  BarChartBig,
   Calendar,
   Check,
   Shield,
-  Users,
-  BarChartBig,
-  TrendingUp
+  Users
 } from "lucide-react";
 
 import {
@@ -34,25 +26,26 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 import {
+  Area,
+  AreaChart,
+  CartesianGrid,
   Label,
   PolarGrid,
   PolarRadiusAxis,
   RadialBar,
   RadialBarChart,
-  Area, 
-  AreaChart,
-  Bar, BarChart, CartesianGrid, XAxis, YAxis
-} from "recharts"
+  XAxis
+} from "recharts";
 
 const chartData = [
   { browser: "safari", visitors: 73, fill: "var(--color-safari)" },
@@ -164,23 +157,23 @@ export default function Dashboard() {
           <h1 className="text-xl font-semibold md:text-2xl">Inventory</h1>
           <p className='text-sm text-muted-foreground'>Gerencie as pessoas que estão utilizando as licenças do contrato</p>
         </div>
-         <Select>
+        <Select>
           <SelectTrigger
             className="w-[180px] sm:ml-auto"
             aria-label="Select a value"
           >
             <Calendar className="h-4 w-4" />
-            <SelectValue placeholder="Ultimos 3 mêses" />
+            <SelectValue placeholder="Últimos 3 meses" />
           </SelectTrigger>
           <SelectContent className="">
             <SelectItem value="90d" className="rounded-lg">
-              Ultimos 3 mêses
+              Últimos 3 meses
             </SelectItem>
             <SelectItem value="30d" className="rounded-lg">
-              Ultimos 30 dias
+              Últimos 30 dias
             </SelectItem>
             <SelectItem value="7d" className="rounded-lg">
-              Ultimos 7 dias
+              Últimos 7 dias
             </SelectItem>
           </SelectContent>
         </Select>
@@ -252,24 +245,24 @@ export default function Dashboard() {
             <Users className="h-4 w-4" /> Usuários licenciados
           </p>
           <div className="grid items-center grid-cols-8 gap-4">
-              <CardLicenciados
-                avatarSrc="/image.png"
-                title="Ola mundo"
-                description="explorer"
-                buttonText="button"
-              />
-               <CardLicenciados
-                avatarSrc="/image.png"
-                title="Ola mundo"
-                description="explorer"
-                buttonText="button"
-              />
-              <CardLicenciados
-                avatarSrc="/image.png"
-                title="Ola mundo"
-                description="explorer"
-                buttonText="button"
-              />
+            <CardLicenciados
+              avatarSrc="/image.png"
+              title="Ola mundo"
+              description="explorer"
+              buttonText="button"
+            />
+            <CardLicenciados
+              avatarSrc="/image.png"
+              title="Ola mundo"
+              description="explorer"
+              buttonText="button"
+            />
+            <CardLicenciados
+              avatarSrc="/image.png"
+              title="Ola mundo"
+              description="explorer"
+              buttonText="button"
+            />
           </div>
         </Card>
 
@@ -330,94 +323,94 @@ export default function Dashboard() {
             </div>
           </Card>
         </div>
-              <Card className="col-span-7">
-            <CardHeader>
-                <CardDescription className="text-sm text-muted-foreground flex gap-1 items-center">
-                    <BarChartBig className="h-4 w-4"/> January - June 2024</CardDescription>
-            </CardHeader>
-            <div className="mx-auto aspect-square max-h-[250px] w-full">
-                    <ChartContainer
-          config={chartConfig1}
-          className="aspect-auto h-[250px] w-full"
-        >
-          <AreaChart data={filteredData}>
-            <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-mobile)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-mobile)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value)
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })
-              }}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
+        <Card className="col-span-7">
+          <CardHeader>
+            <CardDescription className="text-sm text-muted-foreground flex gap-1 items-center">
+              <BarChartBig className="h-4 w-4" /> January - June 2024</CardDescription>
+          </CardHeader>
+          <div className="mx-auto aspect-square max-h-[250px] w-full">
+            <ChartContainer
+              config={chartConfig1}
+              className="aspect-auto h-[250px] w-full"
+            >
+              <AreaChart data={filteredData}>
+                <defs>
+                  <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-desktop)"
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-desktop)"
+                      stopOpacity={0.1}
+                    />
+                  </linearGradient>
+                  <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-mobile)"
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-mobile)"
+                      stopOpacity={0.1}
+                    />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  minTickGap={32}
+                  tickFormatter={(value) => {
+                    const date = new Date(value)
+                    return date.toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                     })
                   }}
-                  indicator="dot"
                 />
-              }
-            />
-            <Area
-              dataKey="mobile"
-              type="natural"
-              fill="url(#fillMobile)"
-              stroke="var(--color-mobile)"
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
-              type="natural"
-              fill="url(#fillDesktop)"
-              stroke="var(--color-desktop)"
-              stackId="a"
-            />
-            <ChartLegend content={<ChartLegendContent />} />
-          </AreaChart>
-        </ChartContainer>
-              </div>
-            </Card>
+                <ChartTooltip
+                  cursor={false}
+                  content={
+                    <ChartTooltipContent
+                      labelFormatter={(value) => {
+                        return new Date(value).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })
+                      }}
+                      indicator="dot"
+                    />
+                  }
+                />
+                <Area
+                  dataKey="mobile"
+                  type="natural"
+                  fill="url(#fillMobile)"
+                  stroke="var(--color-mobile)"
+                  stackId="a"
+                />
+                <Area
+                  dataKey="desktop"
+                  type="natural"
+                  fill="url(#fillDesktop)"
+                  stroke="var(--color-desktop)"
+                  stackId="a"
+                />
+                <ChartLegend content={<ChartLegendContent />} />
+              </AreaChart>
+            </ChartContainer>
+          </div>
+        </Card>
 
 
-        </div>
+      </div>
     </main>
   );
 }

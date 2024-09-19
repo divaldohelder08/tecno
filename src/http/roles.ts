@@ -5,10 +5,8 @@ import { getErrorMessage } from '@/utils/get-error-message'
 import { revalidatePath } from 'next/cache'
 
 export async function getPermissions() {
-  const { data } = await api.get<{
-    permissions: Permission[]
-  }>('/permissions')
-  return data.permissions
+  const { data } = await api.get<Permission[]>('/permissions')
+  return data
 }
 
 export async function getRoles() {
@@ -27,7 +25,7 @@ export async function updateRole({ id, name, description }: Role) {
       name,
       description,
     })
-    revalidatePath(`/access-control/roles/${id}`)
+    revalidatePath(`/controle-acesso/roles/${id}`)
   } catch (error) {
     return {
       error: getErrorMessage(error),
@@ -38,9 +36,9 @@ export async function updateRole({ id, name, description }: Role) {
 export async function deleteRole(id: number) {
   try {
     await api.delete(`/role/${id}`)
-    revalidatePath('/access-control/roles')
+    revalidatePath('/controle-acesso/roles')
   } catch (error) {
-    revalidatePath('/access-control/roles')
+    revalidatePath('/controle-acesso/roles')
     throw new Error(getErrorMessage(error))
   }
 }
@@ -62,7 +60,7 @@ export async function createRole({
       error: getErrorMessage(error),
     }
   }
-  revalidatePath('/access-control/roles')
+  revalidatePath('/controle-acesso/roles')
 }
 
 interface props {
@@ -74,7 +72,7 @@ interface props {
 export async function updateRolePermission({ roleId, ...rest }: props) {
   try {
     await api.patch(`/role/${roleId}/permission`, { ...rest })
-    revalidatePath(`/access-control/roles${roleId}`)
+    revalidatePath(`/controle-acesso/roles${roleId}`)
   } catch (error) {
     return {
       error: getErrorMessage(error),

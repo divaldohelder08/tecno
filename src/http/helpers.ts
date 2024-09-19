@@ -8,7 +8,7 @@ interface Props {
 }
 
 export interface categories extends Props {
-  SubCategory: Props[]
+  subCategoria: Props[]
 }
 export interface SubAccounts {
   id: number
@@ -23,6 +23,11 @@ export async function getCountries() {
   return data.countries
 }
 
+export async function getRegimes() {
+  const { data } = await api.get<Props[]>('/helpers/regimes')
+  return data
+}
+
 export async function getProvincias() {
   const { data } = await api.get<Props[]>('/helpers/provincias')
   return data
@@ -35,5 +40,26 @@ export async function getSubAccounts() {
 
 export async function getCategories() {
   const { data } = await api.get<categories[]>('/helpers/categories')
+  return data
+}
+
+interface props {
+  id: number
+  mencaoConstarDoc: string
+}
+
+export async function getIsencoes() {
+  const { data } = await api.get<props[]>('/helpers/insencoes')
+  return data
+}
+
+export async function getTaxas() {
+  const { data } = await api.get<
+    {
+      id: number
+      value: number
+      name: string
+    }[]
+  >('/helpers/taxas')
   return data
 }

@@ -17,6 +17,7 @@ import {
   Store,
   Tag,
   UtensilsCrossed,
+  Warehouse,
   Waypoints
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -30,15 +31,16 @@ export function Nav() {
   const [def, setDef] = useState(getTabValue(prefix));
   const { comercioGeral, restaurante, hotelaria, oficina } = useEmpresaAreas();
 
-  const [finalComercialNavItems, setFinalComercialNavItems] = useState<NavItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // Novo estado para carregamento
+  const [finalComercialNavItems, setFinalComercialNavItems] = useState<NavItem[]>([...comercialNavItems]);
+  const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
     setDef(getTabValue(prefix));
   }, [prefix]);
 
   useEffect(() => {
-    setIsLoading(true); // Inicia o carregamento
+    setIsLoading(true);
     const updatedComercialNavItems = [...comercialNavItems];
 
     if (comercioGeral) {
@@ -74,9 +76,10 @@ export function Nav() {
       subLinks: [
         { label: "Turno", href: "shift", icon: Clock },
         { label: "Loja", href: "store", icon: Store },
+        { label: "Armazem", href: "storage", icon: Warehouse },
         { label: "Unidade", href: "unit", icon: FileText },
-        { label: "Categoria", href: "category", icon: Tag },
-        { label: "Sub-categoria", href: "sub-category", icon: Layers },
+        { label: "Categoria", href: "categoria", icon: Tag },
+        { label: "Sub-categoria", href: "sub-categoria", icon: Layers },
         { label: "Classe", href: "class", icon: Lock },
         { label: "Tipo de imposto", href: "tax-type", icon: FileText },
         { label: "Taxa de imposto", href: "tax-rate", icon: Lock },
@@ -87,7 +90,7 @@ export function Nav() {
     });
 
     setFinalComercialNavItems(updatedComercialNavItems);
-    setIsLoading(false); // Termina o carregamento
+    setIsLoading(false);
   }, [comercioGeral, restaurante, hotelaria, oficina]);
 
   const renderNavItems = (items: NavItem[], currentPath: string) =>
@@ -121,9 +124,13 @@ export function Nav() {
         </TabsContent>
         <TabsContent value="CM">
           <nav className="grid items-start text-sm font-medium lg:px-4">
-            {isLoading
-              ? new Array({ length: 2 }).map((_, i) => <Skeleton key={i} className="rounded-lg px-3 py-2 transition-all flex h-[35px] w-full mb-1.5" />)
-              : renderNavItems(finalComercialNavItems, path)
+            {
+              renderNavItems(finalComercialNavItems, path)
+            }
+            {isLoading && (<div className="space-y-2 mt-2">
+              <Skeleton className="rounded-lg px-3 py-2 transition-all flex h-[35px] w-full" />
+              <Skeleton className="rounded-lg px-3 py-2 transition-all flex h-[35px] w-full" />
+            </div>)
             }
           </nav>
         </TabsContent>

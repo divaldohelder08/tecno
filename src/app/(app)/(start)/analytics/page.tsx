@@ -1,6 +1,6 @@
 "use client"
 
-import { Bar, BarChart, CartesianGrid, LineChart, XAxis, Line } from "recharts"
+import { Bar, CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
 import {
   ChartConfig,
@@ -9,7 +9,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
 
 const data = [
@@ -70,24 +70,24 @@ const chartConfig = {
 
 export default function Component() {
   return (
-  <div className="w-full h-full items-center justify-center place-center h-[500px] w-[500px]">
-    <ChartContainer config={chartConfig} className="min-h-[20px] w-full">
-      <LineChart accessibilityLayer data={data}>
-        <CartesianGrid vertical={false} />
-        <XAxis
-          dataKey="name"
-          tickLine={false}
-          tickMargin={10}
-          axisLine={false}
-          tickFormatter={(value) => value.slice(0, 3)}
-        />
-        <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeWidth={2} />
-        <ChartTooltip content={<ChartTooltipContent indicator="dashed"/>} />
-        <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-      </LineChart>
-    </ChartContainer>
+    <div className="items-center justify-center place-center h-[500px] w-[500px]">
+      <ChartContainer config={chartConfig} className="min-h-[20px] w-full">
+        <LineChart accessibilityLayer data={data}>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="name"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value.slice(0, 3)}
+          />
+          <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeWidth={2} />
+          <ChartTooltip content={<ChartTooltipContent indicator="dashed" />} />
+          <ChartLegend content={<ChartLegendContent />} />
+          <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+          <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+        </LineChart>
+      </ChartContainer>
     </div>
   )
 }

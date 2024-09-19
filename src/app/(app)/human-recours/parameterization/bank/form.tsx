@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Form as Fr } from "@/components/ui/form-components";
 
 const formSchema = z.object({
   nome_banco: z.string(),
@@ -153,11 +154,7 @@ export function DrawerForm() {
               <div className="grid gap-3">
                 <Label htmlFor="nome_banco">Nome</Label>
                 <Input placeholder="Informe o nome do banco" required {...register('nome_banco')} />
-                {errors.nome_banco && (
-                  <p className="text-sm font-medium text-red-500 dark:text-red-400">
-                    {errors.nome_banco.message}
-                  </p>
-                )}
+                <Fr.error error={errors.nome_banco?.message} />
               </div>
               <div className="grid grid-cols-2 gap-2 items-center">
                 <div className="grid gap-2 relative">
@@ -168,20 +165,12 @@ export function DrawerForm() {
                       <Sparkles className="h-4 w-4" />
                     </Button>
                   </div>
-                  {errors.sigla && (
-                    <p className="text-sm font-medium text-red-500 dark:text-red-400">
-                      {errors.sigla.message}
-                    </p>
-                  )}
+                <Fr.error error={errors.sigla?.message} />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="codigo">Código</Label>
                   <Input placeholder="Informe o código" required {...register('codigo')} />
-                  {errors.codigo && (
-                    <p className="text-sm font-medium text-red-500 dark:text-red-400">
-                      {errors.codigo.message}
-                    </p>
-                  )}
+                  <Fr.error error={errors.codigo?.message} />
                 </div>
               </div>
               <Button

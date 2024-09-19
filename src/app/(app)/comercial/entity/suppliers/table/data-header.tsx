@@ -2,22 +2,11 @@
 import { Input } from "@/components/ui/input";
 import { Table } from "@tanstack/react-table";
 import {
-  File,
-  ListFilter,
   Search
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
 
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
 
 interface props<TData> {
   table: Table<TData>
@@ -35,12 +24,13 @@ export function DataTableHeader<TData>({
           type="search"
           placeholder="Search..."
           className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-          value={(table.getColumn("Entidade")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("Entidade")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
         />
       </div>
+      {/*
       <div className="ml-auto flex items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -73,6 +63,7 @@ export function DataTableHeader<TData>({
           </span>
         </Button>
       </div>
+      */}
     </div>
   )
 }

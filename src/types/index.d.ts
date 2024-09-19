@@ -114,12 +114,17 @@ export interface Country {
   provincias: provincia[]
 }
 
+export interface maper {
+  value: number;
+  label: string;
+}
+
 export interface Armazem {
   id?: number
   name: string
   loja: {
-      id: number
-      name: string
+    id: number
+    name: string
   } | null
   description: string | null
   localidade: string | null
@@ -133,3 +138,10 @@ export interface unity {
   artigos: number
 }
 
+export type Typer<T extends (...args: any) => any> = T extends (
+  ...args: any
+) => Promise<infer U>
+  ? U
+  : never
+
+export type areas = 'COMERCIO_GERAL' | 'RESTAURANTE' | 'HOTELARIA' | 'OFICINA'

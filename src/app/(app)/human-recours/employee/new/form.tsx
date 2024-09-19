@@ -1,4 +1,6 @@
 "use client";
+// cSpell:disable 
+
 import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import {
@@ -26,12 +28,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createFuncionario } from "@/http/funcionarios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeft, ChevronRight, ChevronsUpDown } from "lucide-react";
+import { CheckIcon, ChevronLeft, ChevronRight, ChevronsUpDown, CircleDashed } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
-// cSpell:disable 
+
 const employeeSchema = z.object({
   nome_completo: z.string().min(1, "Nome completo é obrigatório"),
   nome_mae: z.string().min(1, "Nome da mãe é obrigatório"),
@@ -75,8 +79,6 @@ interface Props {
   carreiras: any[];
 }
 
-type sele = { id: string | null; name: string } | null
-
 export default function Form({ bancos, fcns: before, carreiras }: Props) {
   const [step, setStep] = useState(1);
   const [currentCarr, setCurrentCarr] = useState<string | null>(null);
@@ -89,7 +91,7 @@ export default function Form({ bancos, fcns: before, carreiras }: Props) {
   const [selectedCat, setSelectedCat] = useState<string | null>(null);
 
   const {
-    register, handleSubmit, watch, setValue, getValues, trigger, formState: { errors, isSubmitting }
+    control, register, handleSubmit, setValue, getValues, trigger, reset, formState: { errors, isSubmitting }
   } = useForm<formData>({
     resolver: zodResolver(employeeSchema),
     mode: "onChange",
@@ -108,15 +110,25 @@ export default function Form({ bancos, fcns: before, carreiras }: Props) {
     label: f.nome_banco,
   }));
 
-  const onSubmit = (data: formData) => {
-    console.log("Form submitted:", data);
+  const onSubmit = async (data: formData) => {
+    const result = await createFuncionario(data)
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Funcionario cadastrado com sucesso");
+      setSelectedBank(null)
+      setSelectedCat(null)
+      setCurrentCarr(null)
+      setSelectedF(null)
+      reset()
+    }
   };
 
   const handleNext = async () => {
     const fieldsToValidate = getFieldsForStep(step);
     const isStepValid = await trigger(fieldsToValidate);
     if (isStepValid) {
-        setStep((prev) => Math.min(prev + 1, 4));
+      setStep((prev) => Math.min(prev + 1, 4));
     }
   };
 
@@ -146,34 +158,6 @@ export default function Form({ bancos, fcns: before, carreiras }: Props) {
     { title: "Informações Profissionais", description: "Dados funcionais e bancários" },
   ];
 
-  const tipoIdentificacao = watch("tipo_identificacao");
-  const numIdentificacao = watch("num_identificacao");
-
-  /*const validateNumIdentificacao = (value: string) => {
-    let regex;
-    switch (tipoIdentificacao) {
-      case "BI":
-        regex = /^\d{9}[A-Z]{2}\d{3}$/;
-        break;
-      case "Passaporte":
-        regex = /^[A-Z]{2}\d{6}$/;
-        break;
-      default:
-        regex = /.*/;
-  /* break;
-}
-
-if (!regex.test(value)) {
- setError("num_identificacao", { type: "manual", message: "Número de identificação inválido para o tipo selecionado" });
-} else {
- clearErrors("num_identificacao");
-}
-};
-*/
-  /*useEffect(() => {
-    validateNumIdentificacao(numIdentificacao);
-  }, [numIdentificacao, tipoIdentificacao]);
-*/
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -198,7 +182,7 @@ if (!regex.test(value)) {
                     {...register(field.id as any)}
                     className="mt-1"
                   />
-                <Fr.error error={errors[field.id as keyof formData]?.message} />
+                  <Fr.error error={errors[field.id as keyof formData]?.message} />
                 </div>
               ))}
               <div className="space-y-2">
@@ -350,6 +334,9 @@ if (!regex.test(value)) {
                               }}
                             >
                               {label}
+                              {selectedF === label && (
+                                <CheckIcon className="ml-auto h-4 w-4" />
+                              )}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -378,32 +365,29 @@ if (!regex.test(value)) {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="id_categoria">Categoria</Label>
-                <Select onValueChange={(value) => {
-                  carreiras.map((e) => {
-                    return e.nome_carreira === currentCarr &&
-                      e.categoria.map((c: { nome_categoria: string; id: any; }) => {
-                        if (c.nome_categoria === value) {
-                          setValue("id_categoria", c.id)
-                          setSelectedCat(c.nome_categoria)
-                        }
-                        return
-                      })
-                  })
-                }}>
-                  <SelectTrigger>
-                    {selectedCat ? selectedCat : "Selecione a categoria"}
-                  </SelectTrigger>
-                  <SelectContent>
-                    {
-                      carreiras.map((e) => {
-                        return e.nome_carreira === currentCarr &&
-                          e.categoria.map((b: { id: number; nome_categoria: string }) => {
-                            return <SelectItem key={b.id} value={b.nome_categoria}>{b.nome_categoria}</SelectItem>
-                          })
-                      })
-                    }
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="id_categoria"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value ? String(field.value) : undefined}  // Converte o número para string
+                      onValueChange={(value) => field.onChange(Number(value))}  // Converte de volta para número ao selecionar
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione a categoria" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {carreiras.map((e) => {
+                          return e.nome_carreira === currentCarr &&
+                            e.categoria.map((b: { id: number; nome_categoria: string }) => {
+                              return <SelectItem key={b.id} value={String(b.id)}>{b.nome_categoria}</SelectItem>;  // Converte `id` para string
+                            })
+                        })}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+
                 <Fr.error error={errors.id_categoria?.message} />
               </div>
               <div className="space-y-2">
@@ -488,7 +472,16 @@ if (!regex.test(value)) {
             Próximo <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         ) : (
-          <Button type="submit" disabled={isSubmitting}>Enviar</Button>
+          <Button type="submit" disabled={isSubmitting}
+
+            className="gap-1.5 flex"
+
+          >
+            {isSubmitting ? (
+              <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
+            ) : 'Salvar'}
+
+          </Button>
         )}
       </CardFooter>
     </form>

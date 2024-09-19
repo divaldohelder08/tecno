@@ -1,10 +1,6 @@
-"use client"
+"use server"
 
-import { Search } from "lucide-react"
-import Image from "next/image"
-import { useState } from "react"
-
-import { Button } from "@/components/ui/button"
+import NoContent from "@/components/no-content"
 import {
   Card,
   CardContent,
@@ -14,62 +10,55 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { AddPriceForm } from "./add-price-form"
+import { getArmazens } from "@/http/armazem"
+import { getFamiliaArea } from "@/http/article"
+import { getIsencoes, getTaxas } from "@/http/helpers"
+import { getLoja } from "@/http/loja"
+import { Search } from "lucide-react"
+import { TablePriced, TableUnPriced } from "./components/tables"
 
-export default function Component() {
-  const [unpriced, setUnpriced] = useState([
-    { id: 1, name: "Produto A", category: "Eletrônicos", image: "https://files.edgestore.dev/ba7nhwhqent6h77c/artigoAvatar/_public/avatar/911cc366-c04b-4168-84ef-5f1fdc465d94.jpg" },
-    { id: 2, name: "Produto B", category: "Roupas", image: "/placeholder.svg" },
-    { id: 3, name: "Produto C", category: "Casa & Jardim", image: "/placeholder.svg" },
-  ])
+export default async function Component() {
+  const unpriced = await getFamiliaArea({ area: "COMERCIO_GERAL", familia: "PRODUCT", hasPrice: false })
+  const priced = await getFamiliaArea({ area: "COMERCIO_GERAL", familia: "PRODUCT", hasPrice: true })
+  const armazens = await getArmazens().then((e) => {
+    return e.map((ar) => (
+      {
+        value: Number(ar.id),
+        label: ar.name,
+      }
+    ))
+  })
+  const lojas = await getLoja().then((e) => {
+    return e.map((loja) => (
+      {
+        value: Number(loja.id),
+        label: loja.name,
+      }
+    ))
+  })
 
-  const [priced, setPriced] = useState([
-    { id: 4, name: "Produto D", category: "Eletrônicos", price: 99.99, stock: 50, image: "/placeholder.svg" },
-    { id: 5, name: "Produto E", category: "Roupas", price: 29.99, stock: 100, image: "/placeholder.svg" },
-    { id: 6, name: "Produto F", category: "Casa & Jardim", price: 49.99, stock: 75, image: "/placeholder.svg" },
-  ])
-
-  const [selectedProduct, setSelectedProduct] = useState<any>(null)
-  const [isImageMaximized, setIsImageMaximized] = useState(false)
-  const [controloStock, setControloStock] = useState(1)
-
-  const handleAddPrice = (formData: any) => {
-    const product = unpriced.find(p => p.id === parseInt(formData.id_artigo))
-    if (product) {
-      setUnpriced(unpriced.filter(p => p.id !== parseInt(formData.id_artigo)))
-      setPriced([...priced, {
-        ...product,
-        price: parseFloat(formData.preco),
-        stock: parseInt(formData.stock_min),
-        taxRate: parseFloat(formData.id_taxa_imposto) / 100
-      }])
-    }
-  }
-
-  const handleUpdateStock = (id: number, newStock: number) => {
-    setPriced(priced.map(p => p.id === id ? { ...p, stock: p.stock + newStock } : p))
-  }
-
-  const calculatePriceWithTax = (price: string, taxRate: string) => {
-    const priceValue = parseFloat(price)
-    const taxRateValue = parseFloat(taxRate) / 100
-    return isNaN(priceValue) || isNaN(taxRateValue)
-      ? ""
-      : (priceValue * (1 + taxRateValue)).toFixed(2)
-  }
+  const insen = await getIsencoes().then((e) => {
+    return e.map((isen) => (
+      {
+        value: isen.id,
+        label: isen.mencaoConstarDoc,
+      }
+    ))
+  })
+  const taxas = await getTaxas().then((e) => {
+    return e.map((taxa) => (
+      {
+        id: taxa.id,
+        value: taxa.value,
+        label: `${taxa.name} (${taxa.value}%)`
+      }
+    ))
+  })
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -94,101 +83,36 @@ export default function Component() {
         <main className="flex-1 p-4 sm:px-6 sm:py-0">
           <Tabs defaultValue="unpriced" className="space-y-4">
             <TabsList>
-              <TabsTrigger value="unpriced">Produtos Sem Preço</TabsTrigger>
-              <TabsTrigger value="priced">Produtos Com Preço</TabsTrigger>
+              <TabsTrigger value="unpriced">Produtos sem Preço</TabsTrigger>
+              <TabsTrigger value="priced">Produtos com Preço</TabsTrigger>
             </TabsList>
-            <TabsContent value="unpriced" className="space-y-4">
+            <TabsContent value="unpriced">
               <Card>
                 <CardHeader>
                   <CardTitle>Produtos Sem Preço</CardTitle>
                   <CardDescription>Adicione preços a estes produtos para torná-los disponíveis para venda.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Imagem</TableHead>
-                        <TableHead>Nome do Produto</TableHead>
-                        <TableHead>Categoria</TableHead>
-                        <TableHead>Ação</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {unpriced.map((product) => (
-                        <TableRow key={product.id}>
-                          <TableCell>
-                            <div className="relative w-12 h-12 cursor-pointer group">
-                              <Image
-                                src={product.image}
-                                alt={product.name}
-                                layout="fill"
-                                objectFit="cover"
-                                className="rounded-md"
-                              />
-                            </div>
-                          </TableCell>
-                          <TableCell>{product.name}</TableCell>
-                          <TableCell>{product.category}</TableCell>
-                          <TableCell>
-                            <AddPriceForm img={product.image} name={product.name} category={product.category} />
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                  {
+                    unpriced[0]
+                      ? <TableUnPriced products={unpriced} armazens={armazens} lojas={lojas} insencao={insen} taxas={taxas} />
+                      : <NoContent title="Não encontramos nenhum produto" description="Comece por criar novos produtos" />
+                  }
                 </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value="priced" className="space-y-4">
+            <TabsContent value="priced">
               <Card>
                 <CardHeader>
                   <CardTitle>Produtos Com Preço</CardTitle>
                   <CardDescription>Gerencie os produtos que já têm preços definidos.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Imagem</TableHead>
-                        <TableHead>Nome do Produto</TableHead>
-                        <TableHead>Categoria</TableHead>
-                        <TableHead>Preço</TableHead>
-                        <TableHead>Estoque</TableHead>
-                        <TableHead>Ação</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {priced.map((product) => (
-                        <TableRow key={product.id}>
-                          <TableCell>
-                            <div className="relative w-12 h-12 cursor-pointer group"
-                              onMouseEnter={() => setSelectedProduct(product)}
-                              onMouseLeave={() => setSelectedProduct(null)}>
-                              <Image
-                                src={product.image}
-                                alt={product.name}
-                                layout="fill"
-                                objectFit="cover"
-                                className="rounded-md"
-                              />
-                            </div>
-                          </TableCell>
-                          <TableCell>{product.name}</TableCell>
-                          <TableCell>{product.category}</TableCell>
-                          <TableCell>{product.price.toFixed(2)}</TableCell>
-                          <TableCell>{product.stock}</TableCell>
-                          <TableCell>
-                            <Button
-                              size="sm"
-                              onClick={() => handleUpdateStock(product.id, 10)}
-                            >
-                              Adicionar Estoque
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                  {
+                    priced[0]
+                      ? <TablePriced products={priced} />
+                      : <NoContent title="Não encontramos nenhum produto" description="Comece por criar novos preços aos produtos" />
+                  }
                 </CardContent>
               </Card>
             </TabsContent>

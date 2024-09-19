@@ -1,39 +1,28 @@
 "use client"
-import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogTrigger,
   DialogClose,
   DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
   DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
 } from "@/components/ui/dialog";
-import { Switch } from "@/components/ui/switch";
+import { Form as Fr } from "@/components/ui/form-components";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { createLoja } from "@/http/loja";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
-import { CircleDashed, Sparkles, Eye, EyeOff, FilePenIcon } from "lucide-react";
+import { CheckIcon } from "@radix-ui/react-icons";
+import { ChevronsUpDown, PlusCircle } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { PlusIcon } from "@radix-ui/react-icons"
-import { createLoja } from "@/http/loja"
-import { cn } from "@/lib/utils"
-import { Form as Fr } from "@/components/ui/form-components";
-import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import {
   Command,
   CommandEmpty,
@@ -41,22 +30,29 @@ import {
   CommandInput,
   CommandItem,
   CommandList
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
-  name: z.string({ required_error: "Nome é obrigatório" }).min(2, "No minimo 2 caracteres"),
-  identificacao: z.string().nonempty("Identificação é obrigatória"),
+  name: z.string({ required_error: "Nome é obrigatório" }).min(2, "No mínimo 2 caracteres"),
+  identificacao: z.string({ required_error: "Identificação é obrigatória" }),
   address: z.string().optional(),
   provinciaId: z.number({ required_error: "A província é obrigatório" }).min(1, "Selecione uma província"),
   funcionarioId: z.number({ required_error: "O supervisor é obrigatório" }).min(1, "Selecione uma funcionario"),
-  telefone: z.string().nonempty("Telefone é obrigatório"),
+  telefone: z.string({ required_error: "Telefone é obrigatório" }).min(9, "O número de telefone precisa ter no mínimo 9 caracteres!"),
   telefone2: z.string().optional(),
-  email: z.string().email("Email inválido").nonempty("Email é obrigatório"),
+  email: z.string().email("Email inválido")
 });
 
 export type createLojaData = z.infer<typeof formSchema>;
@@ -64,7 +60,7 @@ export type createLojaData = z.infer<typeof formSchema>;
 interface Props {
   func: {
     id: number,
-    name: string
+    nome_completo: string
   }[],
   prov: {
     id: number,
@@ -73,13 +69,14 @@ interface Props {
 }
 
 export default function Form({ prov, func: before }: Props) {
+  const [selectedF, setSelectedF] = useState<string | null>(null);
   const [opn, setOpn] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
-  const [selectedF, setSelectedF] = useState<{ id: number | null; name: string } | null>(null);
+
 
   const func = before.map((f) => ({
     value: f.id,
-    label: f.name,
+    label: f.nome_completo,
   }));
   const {
     reset,
@@ -97,9 +94,10 @@ export default function Form({ prov, func: before }: Props) {
       toast.error(result.error);
     } else {
       toast.success("Loja criada com sucesso!");
+      setSelectedF(null)
       reset();
-      setOpn(false);
     }
+    setOpn(false);
   }
 
   return (
@@ -120,21 +118,20 @@ export default function Form({ prov, func: before }: Props) {
         <form className="grid gap-4" onSubmit={handleSubmit(send)}>
           <div className="grid gap-2">
             <Label htmlFor="name">Nome</Label>
-            <Input id="name" placeholder="Digite o nome da loja" {...register("name")} />
+            <Input id="name" required placeholder="Digite o nome da loja" {...register("name")} />
             <Fr.error error={errors.name?.message} />
           </div>
           <div className="grid sm:grid-cols-2 gap-4 items-baseline">
-
             <div className="grid gap-2">
               <Label htmlFor="lojaId">Loja</Label>
-              <Popover modal={true} open={open} onOpenChange={setOpen}>
+              <Popover modal={true} open={open} onOpenChange={setOpen} >
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
                     className="w-full justify-between h-9"
                     aria-expanded={open}
                   >
-                    {selectedF ? selectedF.name : "Selecione o funcionario supervisor"}
+                    {selectedF ? selectedF : "Selecione o funcionario supervisor"}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -144,22 +141,17 @@ export default function Form({ prov, func: before }: Props) {
                     <CommandList>
                       <CommandEmpty>Nenhuma funcionario encontrada.</CommandEmpty>
                       <CommandGroup>
-                        {func.map((f) => (
+                        {func.map(({ value, label }) => (
                           <CommandItem
-                            key={f.value}
+                            key={value}
                             onSelect={() => {
-                              if (selectedF?.id === f.value) {
-                                setValue("funcionarioId", null);
-                                setSelectedF(null);
-                              } else {
-                                setValue("funcionarioId", loja.value);
-                                setSelectedF({ id: loja.value, name: loja.label });
-                              }
+                              setValue("funcionarioId", value);
+                              setSelectedF(label);
                               setOpen(false);
                             }}
                           >
-                            {loja.label}
-                            {selectedF?.id === loja.value && (
+                            {label}
+                            {selectedF === label && (
                               <CheckIcon className="ml-auto h-4 w-4" />
                             )}
                           </CommandItem>
@@ -169,27 +161,23 @@ export default function Form({ prov, func: before }: Props) {
                   </Command>
                 </PopoverContent>
               </Popover>
-              {errors.funcionarioId && (
-                <p className="text-red-500">{errors.funcionarioId.message}</p>
-              )}
+              <Fr.error error={errors.funcionarioId?.message} />
             </div>
-
-
             <div className="grid gap-2">
               <Label htmlFor="identificacao">Identificação</Label>
-              <Input id="identificacao" placeholder="Digite a identificação da loja" {...register("identificacao")} />
+              <Input id="identificacao" required placeholder="Digite a identificação da loja" {...register("identificacao")} />
               <Fr.error error={errors.identificacao?.message} />
             </div>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="address" isReq={true}>Endereço</Label>
+            <Label htmlFor="address" isReq={false}>Endereço</Label>
             <Textarea id="address" placeholder="Digite o endereço da loja" className="min-h-[100px]" {...register("address")} />
             <Fr.error error={errors.address?.message} />
           </div>
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 gap-4 items-baseline">
             <div className="grid gap-2">
               <Label htmlFor="province">Província</Label>
-              <Select {...register("provinciaId")} onValueChange={(val) => setValue('provinciaId', Number(val))}>
+              <Select  {...register("provinciaId")} onValueChange={(val) => setValue('provinciaId', Number(val))} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione a província" />
                 </SelectTrigger>
@@ -210,19 +198,21 @@ export default function Form({ prov, func: before }: Props) {
           <div className="grid sm:grid-cols-2 gap-4 items-baseline">
             <div className="grid gap-2">
               <Label htmlFor="telefone">Telefone</Label>
-              <Input id="telefone" type="tel" placeholder="(00) 0000-0000" {...register("telefone")} />
+              <Input id="telefone" required type="tel" placeholder="(00) 0000-0000" {...register("telefone")} />
               <Fr.error error={errors.telefone?.message} />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="telefone2" isReq>Telefone 2</Label>
+              <Label htmlFor="telefone2" isReq={false}>Telefone 2</Label>
               <Input id="telefone2" type="tel" placeholder="(00) 0000-0000" {...register("telefone2")} />
               <Fr.error error={errors.telefone2?.message} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" className="mr-auto" onClick={() => setOpn(false)}>
-              Cancelar
-            </Button>
+            <DialogClose asChild>
+              <Button variant="outline" type="reset" className="mr-auto">
+                Cancelar
+              </Button>
+            </DialogClose>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Salvando..." : "Salvar"}
             </Button>

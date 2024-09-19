@@ -99,7 +99,7 @@ export function DataTable<TData, TValue>({
             </Table>
           </div>
           <DataTablePagination table={table} />
-        </> : <NoContent title="Não encontramos nenhuma função" description="Começe por criar novas funções" />
+        </> : <NoContent title="Não encontramos nenhuma função" description="Comece por criar novas funções" />
       }
     </div>
   )

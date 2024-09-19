@@ -100,7 +100,7 @@ export function DataTable<TData, TValue>({
           </div>
           <DataTablePagination table={table} />
         </> :
-        <NoContent title="Não encontramos nenhuma categoria" description="Começe por criar novas categorias" />
+        <NoContent title="Não encontramos nenhuma categoria" description="Comece por criar novas categorias" />
       }
     </div>
   )

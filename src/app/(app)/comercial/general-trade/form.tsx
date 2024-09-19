@@ -1,46 +1,28 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronLeft, Upload, ScanBarcode, CheckIcon, CircleDashed } from 'lucide-react';
-import * as z from "zod"
-import { useState, ReactNode } from "react";
 import { SingleImageDropzone } from "@/components/single-image-dropzone";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form as Fr } from "@/components/ui/form-components";
-import { categories } from "@/http/helpers";
-import { createProduct } from "@/http/article";
-import { unity } from "@/types";
+import { Button } from "@/components/ui/button";
+import { CardContent } from "@/components/ui/card";
 import {
   Dialog,
-  DialogTrigger,
-  DialogClose,
   DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
   DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
 } from "@/components/ui/dialog";
+import { Form as Fr } from "@/components/ui/form-components";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { createProduct } from "@/http/article";
+import { categories } from "@/http/helpers";
+import { unity } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CircleDashed } from 'lucide-react';
+import { ReactNode, useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from "@/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { CaretSortIcon } from "@radix-ui/react-icons";
-import { cn } from "@/lib/utils";
 import { useEdgeStore } from "@/lib/edgestore";
 import { toast } from "sonner";
 const formSchema = z.object({
@@ -82,14 +64,6 @@ export function Form({ categories, children, unidades }: props) {
     formState: { errors, isSubmitting }
   } = useForm<formData>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      stock_min: 0,
-      stock_max: 0,
-      comercio_geral: false,
-      restaurante: false,
-      hotelaria: false,
-      oficina: false,
-    }
   })
 
 

@@ -1,4 +1,3 @@
-import NotThing from "@/components/no-thing"
 import { buttonVariants } from "@/components/ui/button"
 import { getClientes } from "@/http/cliente"
 import { cn } from "@/lib/utils"
@@ -30,25 +29,7 @@ export default async function Cliente() {
         </Link>
       </div>
       <div>
-
-        {
-          clientes[0] ?
-            <DataTable columns={columns} data={clientes} />
-            : <div
-              className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm  p-4 md:p-6 m-4 md:m-6"
-            >
-              <div className="flex flex-col items-center gap-1 text-center">
-                <h3 className="text-2xl font-bold tracking-tight">
-                  Não encontramos nenhum cliente
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Comece por criar novos clientes
-                </p>
-
-              </div>
-            </div>
-
-        }
+        <DataTable columns={columns} data={clientes} />
       </div>
     </>
   )

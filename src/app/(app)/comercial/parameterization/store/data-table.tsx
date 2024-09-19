@@ -37,7 +37,6 @@ export function DataTable<TData, TValue>({
   func
 }: props<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [filter, setFilter] = React.useState('');
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
@@ -61,13 +60,12 @@ export function DataTable<TData, TValue>({
       columnFilters,
       columnVisibility,
       rowSelection,
-      globalFilter: filter,
     },
   })
 
   return (
     <div className="w-full">
-      <DataTableHeader table={table} prov={prov} func={func} filter={filter} set={setFilter} />
+      <DataTableHeader table={table} prov={prov} func={func} />
       {data[0] ? <>
         <div className="rounded-md border">
           <Table>
@@ -112,7 +110,7 @@ export function DataTable<TData, TValue>({
               Não encontramos nenhuma loja
             </h3>
             <p className="text-sm text-muted-foreground">
-              Começe por criar novas lojas
+              Comece por criar novas lojas
             </p>
 
           </div>

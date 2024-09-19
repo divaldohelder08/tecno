@@ -29,6 +29,7 @@ export default function Form() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting: isPending }
   } = useForm<restData>({
     resolver: zodResolver(restSchema)
@@ -42,14 +43,13 @@ export default function Form() {
       router.replace('/')
     }
   }
-  //{...register('')}
   return (
     <form className="grid gap-4" onSubmit={handleSubmit(send)}>
       <div className="grid gap-2">
         <Label htmlFor="email">Código de verificação</Label>
         <InputOTP 
             maxLength={6} 
-           // onChange={val => setValue('code', val)}
+           onChange={val => setValue('code', val)}
         >
           <InputOTPGroup>
             <InputOTPSlot index={0} className="w-12" />

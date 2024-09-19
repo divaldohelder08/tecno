@@ -19,11 +19,12 @@ interface props {
     name: string
     identificacao: string
     tipodeIdentificacao: string
+    isFornecedor: boolean
   }
 }
 export async function getClientes() {
-  const { data } = await api.get<{ clientes: props[] }>('/clientes')
-  return data.clientes
+  const { data } = await api.get<props[]>('/clientes')
+  return data
 }
 
 export async function getCliente(id: string) {

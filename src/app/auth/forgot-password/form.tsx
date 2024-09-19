@@ -33,9 +33,9 @@ export default function ForgotPasswordForm() {
     if (result?.error) {
       toast.error(result.error)
     }
-    //  else {
-    //   router.replace('/auth/forgot-password/reset')
-    // }
+    else {
+       router.replace('/auth/forgot-password/reset')
+    }
   }
   return (
     <form className="grid gap-4" onSubmit={handleSubmit(Send)}>

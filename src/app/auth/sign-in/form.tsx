@@ -3,18 +3,16 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
+import { toast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, LogIn } from "lucide-react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { toast } from "@/components/ui/use-toast";
-import { toast as sonner } from "sonner";
+import { useServerAction } from "zsa-react";
+import { Login } from "./actions";
 
-const formSchema = z.object({
+export const formSchema = z.object({
   email: z
     .string()
     .min(1, "O e-mail é obrigatório")
@@ -30,39 +28,23 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export default function FormComponent() {
-  const router = useRouter();
-  const [isRedirecting, setIsRedirecting] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<FormData>({
+  const { isPending, execute, data, error } = useServerAction(Login)
+  const { register, formState: { errors }, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(formSchema),
-  });
+  })
+  async function login(values: FormData) {
 
-  async function login(data: FormData) {
-    const { email, password } = data;
-    try{
-    await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-    //console.log("Resultado do signIn:", result);
-      router.push("/");
+    const [data, err] = await execute(values)
+
+    if (err) {
+      console.log(err, `err`)
       toast({
-        title: "Autenticado com sucesso!",
+        title: "Aconteceu algum erro!",
         description: "Será redirecionado dentro de momentos...",
       });
-  }catch(error){
-  console.log(error)
-  toast({
-        title: "Acontecu algum erro!",
-        description: "Será redirecionado dentro de momentos...",
-      });
-  }
+      return
     }
+  }
 
   return (
     <form className="grid gap-4" onSubmit={handleSubmit(login)} method="POST">
@@ -94,8 +76,8 @@ export default function FormComponent() {
         />
         {errors.password && <span className="text-red-500">{errors.password.message}</span>}
       </div>
-      <Button type="submit" className="w-full" disabled={isSubmitting || isRedirecting}>
-        {isSubmitting ? (
+      <Button type="submit" className="w-full" disabled={isPending}>
+        {isPending ? (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (
           <LogIn className="mr-2 h-4 w-4" />

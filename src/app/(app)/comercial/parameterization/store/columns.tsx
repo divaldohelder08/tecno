@@ -3,18 +3,7 @@
 import {
   ColumnDef
 } from "@tanstack/react-table";
-import { ArrowUpDown, KeySquare, User, CalendarDaysIcon, FilePenIcon, EyeIcon, TrashIcon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Departamento } from '@/types'
-import { getNameInitials } from "@/utils/get-name-initials";
-import { Badge } from "@/components/ui/badge";
 import Option from "./options";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 
 interface Loja {
   id: number;
@@ -36,6 +25,7 @@ export const columns: ColumnDef<Loja>[] = [
     enableHiding: false,
   },
   {
+    id: 'name',
     accessorKey: "name",
     header: ({ column }) => {
       return (
@@ -57,7 +47,7 @@ export const columns: ColumnDef<Loja>[] = [
     },
     cell: ({ row }) => <p>{row.getValue("identificacao")}</p>,
   },
- {
+  {
     accessorKey: "email",
     header: ({ column }) => {
       return (
@@ -90,21 +80,19 @@ export const columns: ColumnDef<Loja>[] = [
     },
     cell: ({ row }) => <p>{row.getValue("telefone")}</p>,
   },
-
-
   {
     accessorKey: "email",
     header: ({ column }) => {
       return (
-        <p className="text-center hover:bg-accent inline-flex gap-2 items-center text-center w-full">
+        <p className="hover:bg-accent inline-flex gap-2 items-center text-center w-full">
           Opções
         </p>
       )
     },
     cell: ({ row }) => {
-        const val=row.original
-        return <Option id={val.id} name={val.name}/>
+      const val = row.original
+      return <Option id={val.id} name={val.name} />
     }
-    
+
   }
 ];

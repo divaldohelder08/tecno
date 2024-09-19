@@ -46,7 +46,7 @@ const forneceSchema = z.object({
   whatsapp: z.string().optional().nullable(),
   endereco: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
-  subAccountId: z.number(),
+  subContaId: z.number(),
   entidade: z.object({
     id: z.number(),
     name: z.string(),
@@ -80,7 +80,7 @@ export default function Form({ countries: before, subAccounts: subBefore, fornec
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState<number | null>(fornecedor?.countryId ?? null)
   const [open1, setOpen1] = useState(false)
-  const [subValue, setSubValue] = useState<number | null>(fornecedor?.subAccountId ?? null)
+  const [subValue, setSubValue] = useState<number | null>(fornecedor?.subContaId ?? null)
   const {
     register,
     handleSubmit,
@@ -95,7 +95,7 @@ export default function Form({ countries: before, subAccounts: subBefore, fornec
       whatsapp: fornecedor?.whatsapp ?? null,
       endereco: fornecedor?.endereco ?? null,
       email: fornecedor?.email ?? null,
-      subAccountId: fornecedor?.subAccountId,
+      subContaId: fornecedor?.subContaId,
       entidade: {
         id: fornecedor?.entidadeId,
         name: fornecedor?.entidade.name ?? "",
@@ -233,7 +233,7 @@ export default function Form({ countries: before, subAccounts: subBefore, fornec
           <Fr.error error={errors.countryId?.message} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email" isReq={true}>Email</Label>
+          <Label htmlFor="email" isReq={false}>Email</Label>
           <Input {...register('email')} type="email" placeholder="Digite o endereço de email." />
           <Fr.error error={errors.email?.message} />
         </div>
@@ -268,10 +268,10 @@ export default function Form({ countries: before, subAccounts: subBefore, fornec
                         onSelect={(currentValue) => {
                           if (Number(currentValue) === subValue) {
                             setSubValue(null)
-                            set('subAccountId', 0)
+                            set('subContaId', 0)
                           } else {
                             setSubValue(Number(currentValue))
-                            set('subAccountId', Number(currentValue))
+                            set('subContaId', Number(currentValue))
                           }
                           setOpen1(false)
                         }}
@@ -290,25 +290,25 @@ export default function Form({ countries: before, subAccounts: subBefore, fornec
               </Command>
             </PopoverContent>
           </Popover>
-          <Fr.error error={errors.subAccountId?.message} />
+          <Fr.error error={errors.subContaId?.message} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="telefone">Telefone</Label>
+          <Label htmlFor="telefone">Telefone (Principal)</Label>
           <Input {...register('telefone')} required id="telefone" placeholder="Digite o número de telefone principal da loja." />
           <Fr.error error={errors.telefone?.message} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="telefone1" isReq={true}>Telefone 1</Label>
+          <Label htmlFor="telefone1" isReq={false}>Telefone (Secundario)</Label>
           <Input {...register('telefone2')} id="telefone1" placeholder="Digite o número de telefone secundário da loja." />
           <Fr.error error={errors.telefone2?.message} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="whatsapp" isReq={true}>whatsapp</Label>
+          <Label htmlFor="whatsapp" isReq={false}>whatsapp</Label>
           <Input {...register('whatsapp')} placeholder="Digite a cidade da loja." />
           <Fr.error error={errors.whatsapp?.message} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="endereco" isReq={true}>Endereço</Label>
+          <Label htmlFor="endereco" isReq={false}>Endereço</Label>
           <Input {...register('endereco')} id="endereco" placeholder="Digite o endereço da loja." />
           <Fr.error error={errors.endereco?.message} />
         </div>

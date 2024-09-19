@@ -27,6 +27,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 import { updateCliente } from "@/http/cliente";
 import { SubAccounts } from "@/http/helpers";
 import { cn } from "@/lib/utils";
@@ -46,7 +52,7 @@ const clienteSchema = z.object({
   whatsapp: z.string().optional().nullable(),
   endereco: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
-  subAccountId: z.number(),
+  subContaId: z.number(),
   entidade: z.object({
     id: z.number(),
     name: z.string(),
@@ -74,10 +80,13 @@ const clienteSchema = z.object({
 })
 
 export type clienteData = z.infer<typeof clienteSchema>
+interface cliente extends clienteData {
+  entidadeId: number
+}
 interface props {
   countries: Country[]
   subAccounts: SubAccounts[]
-  cliente: clienteData
+  cliente: cliente
   id: string
 }
 export default function Form({ countries: before, subAccounts: subBefore, cliente, id }: props) {
@@ -92,7 +101,7 @@ export default function Form({ countries: before, subAccounts: subBefore, client
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState<number | null>(cliente?.countryId ?? null)
   const [open1, setOpen1] = useState(false)
-  const [subValue, setSubValue] = useState<number | null>(cliente?.subAccountId ?? null)
+  const [subValue, setSubValue] = useState<number | null>(cliente?.subContaId ?? null)
   const {
     register,
     handleSubmit,
@@ -107,7 +116,7 @@ export default function Form({ countries: before, subAccounts: subBefore, client
       whatsapp: cliente?.whatsapp ?? null,
       endereco: cliente?.endereco ?? null,
       email: cliente?.email ?? null,
-      subAccountId: cliente?.subAccountId,
+      subContaId: cliente?.subContaId,
       entidade: {
         id: cliente?.entidadeId,
         name: cliente?.entidade.name ?? "",
@@ -137,254 +146,260 @@ export default function Form({ countries: before, subAccounts: subBefore, client
 
   return (
     <form onSubmit={handleSubmit(send)}>
-      <div className="grid gap-4 grid-cols-2" >
-        <div className="space-y-2">
-          <Label htmlFor="type">Tipo</Label>
-          <Select defaultValue={cliente?.entidade?.tipo ?? null} onValueChange={(val: 'SINGULAR' | 'COLECTIVO') => set('entidade.tipo', val)} required>
-            <SelectTrigger            >
-              <SelectValue placeholder="Informe o escopo do cliente" />
-            </SelectTrigger>
-            <SelectContent className="">
-              <SelectItem value="SINGULAR" className="rounded-lg">
-                SINGULAR
-              </SelectItem>
-              <SelectItem value="COLECTIVO" className="rounded-lg">
-                COLECTIVO
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="grid grid-cols-2 space-x-2 w-full">
-          <div className="space-y-2">
-            <Label htmlFor="tipodeIdentificacao">Tipo de identificação</Label>
-            <Select defaultValue={cliente?.entidade?.tipodeIdentificacao ?? null} onValueChange={(val: "BI" | "NIF" | "PASSAPORTE" | "CARTAO_DE_RESIDENTE") => set('entidade.tipodeIdentificacao', val)} >
-              <SelectTrigger
-                className=""
-                aria-label="Select a value"
-              >
-                <SelectValue placeholder="Selecione o tipo de identificação" />
-              </SelectTrigger>
-              <SelectContent className="">
-                <SelectItem value="BI" className="rounded-lg">
-                  BI
-                </SelectItem>
-                <SelectItem value="NIF" className="rounded-lg">
-                  NIF
-                </SelectItem>
-                <SelectItem value="PASSAPORTE" className="rounded-lg">
-                  PASSAPORTE
-                </SelectItem>
-                <SelectItem value="CARTAO_DE_RESIDENTE" className="rounded-lg">
-                  CARTÃO DE RESIDENTE
-                </SelectItem>
-              </SelectContent>
-            </Select>
+      <Tabs defaultValue="start">
+        <TabsList className="grid grid-cols-2 w-[400px] rounded-bl-none">
+          <TabsTrigger value="pess">Informações Pessoais</TabsTrigger>
+          <TabsTrigger value="fi">Informações Fiscais</TabsTrigger>
+        </TabsList>
+        <TabsContent value="start">
+          <div className="grid gap-4 grid-cols-2 mt-2" >
+            <div className="space-y-2">
+              <Label htmlFor="type">Tipo</Label>
+              <Select
+                defaultValue={cliente?.entidade?.tipo}
+                onValueChange={(val: 'SINGULAR' | 'COLECTIVO') => set('entidade.tipo', val)} required>
+                <SelectTrigger            >
+                  <SelectValue placeholder="Informe o escopo do cliente" />
+                </SelectTrigger>
+                <SelectContent className="">
+                  <SelectItem value="SINGULAR" className="rounded-lg">
+                    SINGULAR
+                  </SelectItem>
+                  <SelectItem value="COLECTIVO" className="rounded-lg">
+                    COLECTIVO
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              <Fr.error error={errors.entidade?.tipo?.message} />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="name">Nome</Label>
+              <Input {...register('entidade.name')} required id="name" placeholder="Digite o nome da entidade." />
+              <Fr.error error={errors.entidade?.name?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="tipodeIdentificacao">Tipo de identificação</Label>
+              <Select defaultValue={cliente?.entidade?.tipodeIdentificacao} onValueChange={(val: "BI" | "NIF" | "PASSAPORTE" | "CARTAO_DE_RESIDENTE") => set('entidade.tipodeIdentificacao', val)} required>
+                <SelectTrigger
+                  className=""
+                  aria-label="Select a value"
+                >
+                  <SelectValue placeholder="Selecione o tipo de identificação" />
+                </SelectTrigger>
+                <SelectContent>
+                  {['BI', "NIF", "PASSAPORTE", "CARTÃO DE RESIDENTE"]
+                    .map(e => <SelectItem key={e} value={e} className="rounded-lg">{e}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <Fr.error error={errors.entidade?.tipodeIdentificacao?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="identificacao">Identificacao</Label>
+              <Input {...register('entidade.identificacao')} placeholder="Digite a identificação" required />
+              <Fr.error error={errors.entidade?.identificacao?.message} />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="Pais">Pais</Label>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="default"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="flex w-full justify-between"
+                  >
+                    {value
+                      ? countries.find((country) => country.value === value)?.label
+                      : "Selecione o Pais..."}
+                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0">
+                  <Command>
+                    <CommandInput placeholder="Pesquise Pais..." className="h-9" />
+                    <CommandList>
+                      <CommandEmpty>País encontrado.</CommandEmpty>
+                      <CommandGroup>
+                        {countries.map((country) => (
+                          <CommandItem
+                            key={country.value}
+                            value={country.value.toString()}
+                            onSelect={(currentValue) => {
+                              if (Number(currentValue) === value) {
+                                setValue(null)
+                                set('countryId', 0)
+                              } else {
+                                setValue(Number(currentValue))
+                                set('countryId', Number(currentValue))
+                              }
+                              setOpen(false)
+                            }}
+                          >
+                            {country.label}
+                            <CheckIcon
+                              className={cn(
+                                "ml-auto h-4 w-4",
+                                value === country.value ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <Fr.error error={errors.countryId?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="telefone">Telefone (principal)</Label>
+              <Input {...register('telefone')} required id="telefone" placeholder="Digite o número de telefone principal da loja." />
+              <Fr.error error={errors.telefone?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="telefone1" isReq={false}>Telefone (secundário)</Label>
+              <Input {...register('telefone2')} id="telefone1" placeholder="Digite o número de telefone secundário da loja." />
+              <Fr.error error={errors.telefone2?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="whatsapp" isReq={false}>whatsapp</Label>
+              <Input {...register('whatsapp')} placeholder="Digite a cidade da loja." />
+              <Fr.error error={errors.whatsapp?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="endereco" isReq={false}>Endereço</Label>
+              <Input {...register('endereco')} id="endereco" placeholder="Digite o endereço da loja." />
+              <Fr.error error={errors.endereco?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email" isReq={false}>Email</Label>
+              <Input {...register('email')} type="email" placeholder="Digite o endereço de email." />
+              <Fr.error error={errors.email?.message} />
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="identificacao">Identificacao</Label>
-            <Input {...register('entidade.identificacao')} placeholder="Digite a identificação" required />
+        </TabsContent>
+        <TabsContent value="fi">
+          <div className="grid gap-4 grid-cols-2  mt-2" >
+            <div className="space-y-2">
+              <Label htmlFor="subValue">sub-conta</Label>
+              <Popover open={open1} onOpenChange={setOpen1}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="default"
+                    role="combobox"
+                    aria-expanded={open1}
+                    className="flex w-full justify-between"
+                  >
+
+                    {subValue
+                      ? subAccounts.find((sub) => sub.id === subValue)?.label
+                      : "Selecione a sub-conta..."}
+                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command>
+                    <CommandInput placeholder="Pesquise a sub conta..." className="h-9" />
+                    <CommandEmpty>sub-conta encontrada.</CommandEmpty>
+                    <CommandGroup className="w-full">
+                      <CommandList>
+                        {subAccounts.map((sub) => (
+                          <CommandItem
+                            key={sub.id}
+                            value={sub.id.toString()}
+                            onSelect={(currentValue) => {
+                              if (Number(currentValue) === subValue) {
+                                setSubValue(null)
+                                set('subContaId', 0)
+                              } else {
+                                setSubValue(Number(currentValue))
+                                set('subContaId', Number(currentValue))
+                              }
+                              setOpen1(false)
+                            }}
+                          >
+                            {sub.label}
+                            <CheckIcon
+                              className={cn(
+                                "ml-auto h-4 w-4",
+                                subValue === sub.id ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandList>
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <Fr.error error={errors.subContaId?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="tipoDesconto">Tipo de desconto</Label>
+              <Select defaultValue={cliente?.tipoDesconto} onValueChange={(val: 'COMERCIAL' | 'FINANCEIRO' | 'DIVERSO' | 'NENHUM') => set('tipoDesconto', val)} required>
+                <SelectTrigger            >
+                  <SelectValue placeholder="Informe o tipo de desconto" />
+                </SelectTrigger>
+                <SelectContent className="">
+                  {['COMERCIAL', "FINANCEIRO", "DIVERSO", "NENHUM"]
+                    .map(e => <SelectItem key={e} value={e} className="rounded-lg">{e}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <Fr.error error={errors.tipoDesconto?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="valorDesconto" isReq={false}>Valor de desconto</Label>
+              <Input {...register('valorDesconto')} type="number" placeholder="Informe o valor de desconto." />
+              <Fr.error error={errors.valorDesconto?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="percentagemDesconto" isReq={false}>Percentual de desconto</Label>
+              <Input {...register('percentagemDesconto')} type="number" placeholder="Informe o percentual de desconto." />
+              <Fr.error error={errors.percentagemDesconto?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="saldo">Saldo</Label>
+              <Input {...register('saldo', { valueAsNumber: true })} type="number" required placeholder="Digite o saldo." />
+              <Fr.error error={errors.saldo?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="limiteSaldo">limite de Saldo</Label>
+              <Input {...register('limiteSaldo', { valueAsNumber: true })} type="number" required placeholder="Digite o saldo limite." />
+              <Fr.error error={errors.limiteSaldo?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="limiteCredito">limite de crédito</Label>
+              <Input {...register('limiteCredito', { valueAsNumber: true })} type="number" required placeholder="Digite o crédito limite." />
+              <Fr.error error={errors.limiteCredito?.message} />
+            </div>
+            <div className="space-y-2 items-center">
+              <Label htmlFor="isSuperAdmin">Efectuar Retenção</Label>
+              <Switch
+                className="flex"
+                defaultChecked={cliente?.efectuaRetencao}
+                onCheckedChange={(checked: boolean) => {
+                  set("efectuaRetencao", checked)
+                }}
+                disabled={isSubmitting}
+                {...register("efectuaRetencao")}
+              />
+              <Fr.error error={errors.efectuaRetencao?.message} />
+            </div>
           </div>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="name">Nome</Label>
-          <Input {...register('entidade.name')} required id="name" placeholder="Digite o nome da entidade." />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="Pais">Pais</Label>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                size="default"
-                role="combobox"
-                aria-expanded={open}
-                className="flex w-full justify-between"
-              >
-                {value
-                  ? countries.find((country) => country.value === value)?.label
-                  : "Selecione o Pais..."}
-                <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="p-0">
-              <Command>
-                <CommandInput placeholder="Pesquise Pais..." className="h-9" />
-                <CommandList>
-                  <CommandEmpty>País encontrado.</CommandEmpty>
-                  <CommandGroup>
-                    {countries.map((country) => (
-                      <CommandItem
-                        key={country.value}
-                        value={country.value.toString()}
-                        onSelect={(currentValue) => {
-                          if (Number(currentValue) === value) {
-                            setValue(null)
-                            set('countryId', 0)
-                          } else {
-                            setValue(Number(currentValue))
-                            set('countryId', Number(currentValue))
-                          }
-                          setOpen(false)
-                        }}
-                      >
-                        {country.label}
-                        <CheckIcon
-                          className={cn(
-                            "ml-auto h-4 w-4",
-                            value === country.value ? "opacity-100" : "opacity-0"
-                          )}
-                        />
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="telefone">Telefone</Label>
-          <Input {...register('telefone')} required id="telefone" placeholder="Digite o número de telefone principal da loja." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="telefone1" isReq={true}>Telefone 1</Label>
-          <Input {...register('telefone2')} id="telefone1" placeholder="Digite o número de telefone secundário da loja." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="whatsapp" isReq={true}>whatsapp</Label>
-          <Input {...register('whatsapp')} placeholder="Digite a cidade da loja." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="endereco" isReq={true}>Endereço</Label>
-          <Input {...register('endereco')} id="endereco" placeholder="Digite o endereço da loja." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="email" isReq={true}>Email</Label>
-          <Input {...register('email')} type="email" placeholder="Digite o endereço de email." />
-          <Fr.error error={errors.email?.message} />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="subValue">sub-conta</Label>
-          <Popover open={open1} onOpenChange={setOpen1}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                size="default"
-                role="combobox"
-                aria-expanded={open1}
-                className="flex w-full justify-between"
-              >
-
-                {subValue
-                  ? subAccounts.find((sub) => sub.id === subValue)?.label
-                  : "Selecione a sub-conta..."}
-                <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-full p-0">
-              <Command>
-                <CommandInput placeholder="Pesquise a sub conta..." className="h-9" />
-                <CommandEmpty>sub-conta encontrada.</CommandEmpty>
-                <CommandGroup className="w-full">
-                  <CommandList>
-                    {subAccounts.map((sub) => (
-                      <CommandItem
-                        key={sub.id}
-                        value={sub.id.toString()}
-                        onSelect={(currentValue) => {
-                          if (Number(currentValue) === subValue) {
-                            setSubValue(null)
-                            set('subAccountId', 0)
-                          } else {
-                            setSubValue(Number(currentValue))
-                            set('subAccountId', Number(currentValue))
-                          }
-                          setOpen1(false)
-                        }}
-                      >
-                        {sub.label}
-                        <CheckIcon
-                          className={cn(
-                            "ml-auto h-4 w-4",
-                            subValue === sub.id ? "opacity-100" : "opacity-0"
-                          )}
-                        />
-                      </CommandItem>
-                    ))}
-                  </CommandList>
-                </CommandGroup>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="tipoDesconto">Tipo de desconto</Label>
-          <Select defaultValue={cliente?.tipoDesconto ?? null} onValueChange={(val: 'COMERCIAL' | 'FINANCEIRO' | 'DIVERSO' | 'NENHUM') => set('tipoDesconto', val)}
-            de
-            required>
-            <SelectTrigger            >
-              <SelectValue placeholder="Informe o tipo de desconto" />
-            </SelectTrigger>
-            <SelectContent className="">
-              <SelectItem value="COMERCIAL" className="rounded-lg">
-                COMERCIAL
-              </SelectItem>
-              <SelectItem value="FINANCEIRO" className="rounded-lg">
-                FINANCEIRO
-              </SelectItem>
-              <SelectItem value="DIVERSO" className="rounded-lg">
-                DIVERSO
-              </SelectItem>
-              <SelectItem value="NENHUM" className="rounded-lg">
-                NENHUM
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="valorDesconto" isReq={true}>Valor de desconto</Label>
-          <Input {...register('valorDesconto')} type="number" placeholder="Informe o valor de desconto." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="percentagemDesconto" isReq={true}>Percentual de desconto</Label>
-          <Input {...register('percentagemDesconto')} type="number" placeholder="Informe o percentual de desconto." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="saldo">Saldo</Label>
-          <Input {...register('saldo', { valueAsNumber: true })} type="number" required placeholder="Digite o saldo." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="limiteSaldo">limite de Saldo</Label>
-          <Input {...register('limiteSaldo', { valueAsNumber: true })} type="number" required placeholder="Digite o saldo limite." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="limiteCredito">limite de crédito</Label>
-          <Input {...register('limiteCredito', { valueAsNumber: true })} type="number" required placeholder="Digite o crédito limite." />
-        </div>
-        <div className="space-y-2 items-center">
-          <Label htmlFor="isSuperAdmin">Efectuar Retenção</Label>
-          <Switch
-            className="flex"
-            defaultChecked={cliente?.efectuaRetencao ?? false}
-            onCheckedChange={(checked: boolean) => {
-              set("efectuaRetencao", checked)
-            }}
-            disabled={isSubmitting}
-            {...register("efectuaRetencao")}
-          />
-        </div>
-
-      </div>
-      <CardFooter className="px-0 py-4">
-        <Button type="submit"
-          disabled={isSubmitting}
-          onClick={() => console.log(errors)}
+        </TabsContent>
+      </Tabs>
+      <CardFooter className="flex  py-6 px-0">
+        <Button type="submit" disabled={isSubmitting}
+          className="gap-1.5 flex"
         >
           {isSubmitting ? (
             <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
-          ) : 'Salvar informações'
-          }
+          ) : 'Salvar alterações'}
+
         </Button>
       </CardFooter>
     </form>

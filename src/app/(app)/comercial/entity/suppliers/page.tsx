@@ -29,25 +29,7 @@ export default async function Fornecedores() {
         </Link>
       </div>
       <div>
-
-        {
-          forn[0] ?
-            <DataTable columns={columns} data={forn} />
-            : <div
-              className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm  p-4 md:p-6 m-4 md:m-6"
-            >
-              <div className="flex flex-col items-center gap-1 text-center">
-                <h3 className="text-2xl font-bold tracking-tight">
-                  Não encontramos nenhum cliente
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Comece por criar novos clientes
-                </p>
-
-              </div>
-            </div>
-
-        }
+        <DataTable columns={columns} data={forn} />
       </div>
     </>
   )

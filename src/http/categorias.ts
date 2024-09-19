@@ -24,7 +24,7 @@ export async function updateCategoria({
 }) {
   try {
     await api.put(`/category/${id}`, { name })
-    revalidatePath('/human-recours/parameterization/category')
+    revalidatePath('/comercial/parameterization/categoria')
   } catch (error) {
     return {
       error: getErrorMessage(error),
@@ -35,9 +35,9 @@ export async function updateCategoria({
 export async function deleteCategoria(id: number) {
   try {
     await api.delete(`/category/${id}`)
-    revalidatePath('/human-recours/parameterization/category')
+    revalidatePath('/comercial/parameterization/categoria')
   } catch (error) {
-    revalidatePath('/human-recours/parameterization/category')
+    revalidatePath('/comercial/parameterization/categoria')
     throw new Error(getErrorMessage(error))
   }
 }
@@ -45,7 +45,7 @@ export async function deleteCategoria(id: number) {
 export async function createCategoria(name: string) {
   try {
     await api.post('/category', { name })
-    revalidatePath('/human-recours/parameterization/category')
+    revalidatePath('/comercial/parameterization/categoria')
   } catch (error) {
     return {
       error: getErrorMessage(error),

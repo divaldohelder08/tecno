@@ -1,8 +1,9 @@
 'use server'
+import type { updateLoja } from '@/app/(app)/comercial/parameterization/store/edit-form'
+import { createLojaData } from '@/app/(app)/comercial/parameterization/store/form'
 import api from '@/lib/axios'
 import { getErrorMessage } from '@/utils/get-error-message'
 import { revalidatePath } from 'next/cache'
-import { createLojaData } from '@/app/(app)/human-recours/parameterization/store/form'
 
 interface Loja {
   id: number
@@ -20,12 +21,17 @@ export async function getLoja() {
   return data
 }
 
+export async function getLojaById(id: number) {
+  const { data } = await api.get<createLojaData>(`/loja/${id}`)
+  return data
+}
+
 export async function deleteLoja(id: number) {
   try {
     await api.delete(`/loja/${id}`)
-    revalidatePath('/human-recours/parameterization/store')
+    revalidatePath('/comercial/parameterization/store')
   } catch (error) {
-    revalidatePath('/human-recours/parameterization/store')
+    revalidatePath('/comercial/parameterization/store')
     throw new Error(getErrorMessage(error))
   }
 }
@@ -33,7 +39,18 @@ export async function deleteLoja(id: number) {
 export async function createLoja(data: createLojaData) {
   try {
     await api.post('/loja', data)
-    revalidatePath('/human-recours/parameterization/store')
+    revalidatePath('/comercial/parameterization/store')
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    }
+  }
+}
+
+export async function updateLoja(data: updateLoja, id: number) {
+  try {
+    await api.put(`/loja/${id}`, data)
+    revalidatePath('/comercial/parameterization/store')
   } catch (error) {
     return {
       error: getErrorMessage(error),

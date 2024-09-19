@@ -1,5 +1,5 @@
 'use server'
-import { editUserData } from '@/app/(app)/access-control/users/components/edit-user'
+import { editUserData } from '@/app/(app)/controle-acesso/users/components/edit-user'
 import api from '@/lib/axios'
 import { member } from '@/types'
 import { getErrorMessage } from '@/utils/get-error-message'
@@ -60,7 +60,7 @@ interface props {
 export async function updateUserRole({ userId, value, roleId: id }: props) {
   try {
     await api.patch(`/user/${userId}`, { value, id })
-    revalidatePath(`/access-control/users/${userId}/roles`)
+    revalidatePath(`/controle-acesso/users/${userId}/roles`)
   } catch (error) {
     return {
       error: getErrorMessage(error),
@@ -80,7 +80,7 @@ export async function createUser(data: {
       error: getErrorMessage(error),
     }
   }
-  revalidatePath(`/access-control/users`)
+  revalidatePath(`/controle-acesso/users`)
 }
 
 export async function editUser({ id, ...rest }: editUserData) {
@@ -91,15 +91,15 @@ export async function editUser({ id, ...rest }: editUserData) {
       error: getErrorMessage(error),
     }
   }
-  revalidatePath(`/access-control/users`)
+  revalidatePath(`/controle-acesso/users`)
 }
 
 export async function deleteUser(id: number) {
   try {
     await api.delete(`/user/${id}`)
-    revalidatePath('/access-control/users')
+    revalidatePath('/controle-acesso/users')
   } catch (error) {
-    revalidatePath('/access-control/users')
+    revalidatePath('/controle-acesso/users')
     throw new Error(getErrorMessage(error))
   }
 }
@@ -115,9 +115,9 @@ export async function updateUserStatus({
     await api.patch(`/user/${id}/status`, {
       value,
     })
-    revalidatePath('/access-control/users')
+    revalidatePath('/controle-acesso/users')
   } catch (error) {
-    revalidatePath('/access-control/users')
+    revalidatePath('/controle-acesso/users')
     throw new Error(getErrorMessage(error))
   }
 }

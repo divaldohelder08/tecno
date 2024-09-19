@@ -1,26 +1,27 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogFooter
+  DialogTrigger
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Form as Fr } from "@/components/ui/form-components";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { z } from "zod";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { Upload } from "lucide-react";
 import { transformToCliente } from "@/http/fornecedores";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Upload } from "lucide-react";
 import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 interface ComponentProps {
   id: number;
@@ -47,7 +48,7 @@ const schema = z.object({
   limiteCredito: z.coerce.number().nonnegative(),
   efectuaRetencao: z.coerce.boolean(),
 });
-export type formData=z.infer<typeof schema>
+export type formData = z.infer<typeof schema>
 export default function Transform({ entidadeId, id }: ComponentProps) {
   const [opn, setOpn] = useState<boolean>(false);
   const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm<FormData>({
@@ -106,43 +107,43 @@ export default function Transform({ entidadeId, id }: ComponentProps) {
                 <SelectItem value="NENHUM">Nenhum</SelectItem>
               </SelectContent>
             </Select>
-            {errors.tipoDesconto && <p className="text-red-600">{errors.tipoDesconto.message}</p>}
+            <Fr.error error={errors.tipoDesconto?.message} />
           </div>
 
           <div className="grid gap-2 items-baseline">
             <Label htmlFor="valorDesconto">Valor do Desconto</Label>
             <Input id="valorDesconto" type="number" {...register('valorDesconto')} placeholder="Digite o valor do desconto" />
-            {errors.valorDesconto && <p className="text-red-600">{errors.valorDesconto.message}</p>}
+            <Fr.error error={errors.valorDesconto?.message} />
           </div>
 
           <div className="grid gap-2 items-baseline">
             <Label htmlFor="percentagemDesconto">Percentagem de Desconto</Label>
             <Input id="percentagemDesconto" type="number" {...register('percentagemDesconto')} placeholder="Digite a percentagem de desconto" />
-            {errors.percentagemDesconto && <p className="text-red-600">{errors.percentagemDesconto.message}</p>}
+            <Fr.error error={errors.percentagemDesconto?.message} />
           </div>
 
           <div className="grid gap-2 items-baseline">
             <Label htmlFor="saldo">Saldo</Label>
             <Input id="saldo" type="number" {...register('saldo')} placeholder="Digite o saldo" />
-            {errors.saldo && <p className="text-red-600">{errors.saldo.message}</p>}
+            <Fr.error error={errors.saldo?.message} />
           </div>
 
           <div className="grid gap-2 items-baseline">
             <Label htmlFor="limiteSaldo">Limite de Saldo</Label>
             <Input id="limiteSaldo" type="number" {...register('limiteSaldo')} placeholder="Digite o limite de saldo" />
-            {errors.limiteSaldo && <p className="text-red-600">{errors.limiteSaldo.message}</p>}
+            <Fr.error error={errors.limiteSaldo?.message} />
           </div>
 
           <div className="grid gap-2 items-baseline">
             <Label htmlFor="limiteCredito">Limite de Crédito</Label>
             <Input id="limiteCredito" type="number" {...register('limiteCredito')} placeholder="Digite o limite de crédito" />
-            {errors.limiteCredito && <p className="text-red-600">{errors.limiteCredito.message}</p>}
+            <Fr.error error={errors.limiteCredito?.message} />
           </div>
 
           <div className="grid gap-2 items-baseline">
             <Label htmlFor="efectuaRetencao">Efetua Retenção</Label>
             <Switch id="efectuaRetencao" {...register('efectuaRetencao')} defaultChecked={true} />
-            {errors.efectuaRetencao && <p className="text-red-600">{errors.efectuaRetencao.message}</p>}
+            <Fr.error error={errors.efectuaRetencao?.message} />
           </div>
 
           <DialogFooter>

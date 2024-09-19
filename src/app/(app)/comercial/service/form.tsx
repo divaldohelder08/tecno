@@ -12,14 +12,14 @@ import { useEdgeStore } from "@/lib/edgestore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleDashed } from 'lucide-react';
 import { ReactNode, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
 const formSchema = z.object({
   name: z.string().min(1, "Nome do artigo é obrigatório"),
   imagem: z.string().nullable().optional(),
-  categoryId: z.number().optional(),
+  categoriaId: z.number().optional(),
   subCategoriaId: z.number().optional(),
 });
 
@@ -39,15 +39,15 @@ interface props {
 
 export function Form({ categories, children }: props) {
   const [file, setFile] = useState<File | undefined>();
-  const [currentCategory, setCurrentCategory] = useState<number | undefined>(undefined);
+  const [currentCategory, setCurrentCategory] = useState<number | undefined | null>(undefined);
   const [opn, setOpn] = useState<boolean>(false);
   const { edgestore } = useEdgeStore();
 
   const {
     register,
     handleSubmit,
-    setValue,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<formData>({
     resolver: zodResolver(formSchema),
@@ -111,7 +111,7 @@ export function Form({ categories, children }: props) {
               />
               <Fr.error error={errors.imagem?.message} />
             </div>
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="space-y-2">
                 <Fr.label error={errors.name?.message} htmlFor="name" label="Nome" />
                 <Input
@@ -128,30 +128,38 @@ export function Form({ categories, children }: props) {
                 <Fr.label
                   htmlFor="category"
                   label="Categoria"
-                  error={errors.categoryId?.message}
+                  error={errors.categoriaId?.message}
                   isReq={true}
                 />
-                <Select
-                  onValueChange={(value) => {
-                    const categoriaId = value === "none" ? undefined : Number(value);
-                    setCurrentCategory(categoriaId);
-                    setValue("categoryId", categoriaId);
-                  }}
-                  name="category"
-                >
-                  <SelectTrigger id="category" aria-label="Seleciona a categoria">
-                    <SelectValue placeholder="Seleciona a categoria" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">Nenhuma</SelectItem>
-                    {categories.map((e) => (
-                      <SelectItem value={String(e.id)} key={e.id}>
-                        {e.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Fr.error error={errors.categoryId?.message} />
+                <Controller
+                  name="categoriaId"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value ? String(field.value) : undefined}
+                      onValueChange={(value) => {
+                        const categoriaId = value === "none" ? null : Number(value)
+                        setCurrentCategory(categoriaId);
+                        field.onChange(categoriaId)
+                      }
+                      }
+                      name="categoriaId"
+                    >
+                      <SelectTrigger id="categoriaId" aria-label="Seleciona a categoria">
+                        <SelectValue placeholder="Seleciona a categoria" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Nenhuma</SelectItem>
+                        {categories.map((e) => (
+                          <SelectItem value={String(e.id)} key={e.id}>
+                            {e.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                <Fr.error error={errors.categoriaId?.message} />
               </div>
               <div className="space-y-2">
                 <Fr.label
@@ -160,28 +168,32 @@ export function Form({ categories, children }: props) {
                   error={errors.subCategoriaId?.message}
                   isReq={true}
                 />
-                <Select
-                  onValueChange={(value) => {
-                    const subId = value === "none" ? undefined : Number(value);
-                    setValue("subCategoriaId", subId);
-                  }}
-                >
-                  <SelectTrigger id="subcategory" aria-label="Selecione a subcategoria">
-                    <SelectValue placeholder="Selecione a subcategoria" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">Nenhuma</SelectItem>
-                    {categories.map((e) => {
-                      if (e.id === currentCategory) {
-                        return e.SubCategory.map((b) => (
-                          <SelectItem value={String(b.id)} key={b.id}>
-                            {b.name}
-                          </SelectItem>
-                        ));
-                      }
-                    })}
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="subCategoriaId"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value ? String(field.value) : undefined}
+                      onValueChange={(value) => field.onChange(value === "none" ? null : Number(value))}
+                    >
+                      <SelectTrigger id="subcategory" aria-label="Selecione a subcategoria">
+                        <SelectValue placeholder="Selecione a subcategoria" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Nenhuma</SelectItem>
+                        {categories.map((e) => {
+                          if (e.id === currentCategory) {
+                            return e.subCategoria.map((b) => (
+                              <SelectItem value={String(b.id)} key={b.id}>
+                                {b.name}
+                              </SelectItem>
+                            ));
+                          }
+                        })}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
                 <Fr.error error={errors.subCategoriaId?.message} />
               </div>
               <Button type="submit" className="w-full !mt-4 gap-1" disabled={isSubmitting}>
@@ -191,7 +203,7 @@ export function Form({ categories, children }: props) {
                       <CircleDashed className="motion-reduce:hidden animate-spin" size="20" />
                       Salvando
                     </>
-                    : 'Salvar Produto'
+                    : 'Salvar Serviço'
                 }
 
               </Button>

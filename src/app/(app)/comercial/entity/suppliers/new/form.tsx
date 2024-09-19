@@ -47,7 +47,7 @@ const fornecedorSchema = z.object({
   whatsapp: z.string().optional().nullable(),
   endereco: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
-  subAccountId: z.number(),
+  subContaId: z.number(),
   entidade: z.object({
     name: z.string(),
     tipo: z.enum(['SINGULAR', 'COLECTIVO']),
@@ -211,27 +211,6 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
           </Popover>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="telefone">Telefone</Label>
-          <Input {...register('telefone')} required id="telefone" placeholder="Digite o número de telefone principal da loja." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="telefone1" isReq={true}>Telefone 1</Label>
-          <Input {...register('telefone2')} id="telefone1" placeholder="Digite o número de telefone secundário da loja." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="whatsapp" isReq={true}>whatsapp</Label>
-          <Input {...register('whatsapp')} placeholder="Digite a cidade da loja." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="endereco" isReq={true}>Endereço</Label>
-          <Input {...register('endereco')} id="endereco" placeholder="Digite o endereço da loja." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="email" isReq={true}>Email</Label>
-          <Input {...register('email')} type="email" placeholder="Digite o endereço de email." />
-          <Fr.error error={errors.email?.message} />
-        </div>
-        <div className="space-y-2">
           <Label htmlFor="subValue">sub-conta</Label>
           <Popover open={open1} onOpenChange={setOpen1}>
             <PopoverTrigger asChild>
@@ -262,10 +241,10 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
                         onSelect={(currentValue) => {
                           if (Number(currentValue) === subValue) {
                             setSubValue(null)
-                            set('subAccountId', 0)
+                            set('subContaId', 0)
                           } else {
                             setSubValue(Number(currentValue))
-                            set('subAccountId', Number(currentValue))
+                            set('subContaId', Number(currentValue))
                           }
                           setOpen1(false)
                         }}
@@ -284,7 +263,33 @@ export default function Form({ countries: before, subAccounts: subBefore }: prop
               </Command>
             </PopoverContent>
           </Popover>
+          <Fr.error error={errors.subContaId?.message} />
+          
         </div>
+                <div className="space-y-2">
+          <Label htmlFor="email" isReq={false}>Email</Label>
+          <Input {...register('email')} type="email" placeholder="Digite o endereço de email." />
+          <Fr.error error={errors.email?.message} />
+        </div>
+              <div className="space-y-2">
+          <Label htmlFor="endereco" isReq={false}>Endereço</Label>
+          <Input {...register('endereco')} id="endereco" placeholder="Digite o endereço da loja." />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="telefone">Telefone (Principal)</Label>
+          <Input {...register('telefone')} required id="telefone" placeholder="Digite o número de telefone principal da loja." />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="telefone1" isReq={false}>Telefone (secundario)</Label>
+          <Input {...register('telefone2')} id="telefone1" placeholder="Digite o número de telefone secundário da loja." />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="whatsapp" isReq={false}>whatsapp</Label>
+          <Input {...register('whatsapp')} placeholder="Digite a cidade da loja." />
+        </div>
+  
+        
       </div>
       <CardFooter className="px-0 py-4">
         <Button type="submit"

@@ -1,10 +1,37 @@
 'use server'
-import { empresaData } from '@/app/(app)/(start)/company/form'
-import { empresaDataConfig } from '@/app/(app)/(start)/company/form-config'
+import { empresaData as pry } from '@/app/(app)/(start)/empresa/form'
+
+import { empresaDataConfig } from '@/app/(app)/(start)/empresa/form-config'
 import api from '@/lib/axios'
 import { getErrorMessage } from '@/utils/get-error-message'
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
+
+type empresaData = {
+  codigo: string
+  name: string
+  type: 'SEDE' | 'FILIAL'
+  countryId: number
+  provinciaId: number
+  avatar?: string | null | undefined
+  endereco?: string | undefined
+  cidade: string | undefined
+  telefone: string
+  telefone1: string | undefined
+  email: string | undefined //colocar aqui um transform
+  nif: string
+  cae: string | undefined
+  alvara?: string | undefined
+  regimeId: number
+  indicadorFactura: string
+  comercioGeral: boolean
+  restaurante: boolean
+  hotelaria: boolean
+  oficina: boolean
+  valorInicialRetencaoFonte: number
+  retencaoFonteServico: boolean
+  percentagemRetencaoFonte: number
+}
 
 export async function getEmpresa() {
   try {
@@ -17,7 +44,7 @@ export async function getEmpresa() {
     }
   }
 }
-export async function upsertEmpresa(data: empresaData) {
+export async function upsertEmpresa(data: pry) {
   try {
     await api.post<empresaData>('/empresa', data)
     revalidatePath('/company')

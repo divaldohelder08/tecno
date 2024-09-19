@@ -7,12 +7,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import {
-  ColumnDef
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import Option from "./options";
 //@Spell:ignore forn
-interface props {
+interface cliente {
   id: number,
   entidadeId: number,
   tipoDesconto: 'COMERCIAL' | 'FINANCEIRO' | 'DIVERSO' | 'NENHUM',
@@ -29,7 +27,8 @@ interface props {
     isFornecedor: boolean
   }
 }
-export const columns: ColumnDef<props>[] = [
+
+export const columns: ColumnDef<cliente>[] = [
   {
     id: "select",
     header: () => <p className="text-primary">#</p>,
@@ -38,7 +37,8 @@ export const columns: ColumnDef<props>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "Entidade",
+    id: "name",
+    accessorKey: "name",
     cell: ({ row }) => <p className="capitalize">{row.original.entidade.name}</p>,
   },
   {
@@ -56,7 +56,7 @@ export const columns: ColumnDef<props>[] = [
   {
     accessorKey: "Saldo",
     cell: ({ row }) => <p className="hidden md:table-cell">{
-    row.original.saldo.toLocaleString("pt-BR", {
+      row.original.saldo.toLocaleString("pt-BR", {
         style: "currency",
         currency: "AOA",
       })
@@ -89,16 +89,3 @@ export const columns: ColumnDef<props>[] = [
     },
   },
 ]
-
-
-
-
-
-
-
-
-
-
-
-
-

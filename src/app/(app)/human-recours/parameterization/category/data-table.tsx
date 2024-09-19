@@ -1,4 +1,5 @@
 "use client"
+import NoContent from "@/components/no-content";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,8 +13,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import * as React from "react";
-import NoContent from "@/components/no-content";
 
+import { DataTablePagination } from "@/components/data-pagination";
+import { TableHeader } from "@/components/table";
 import {
   Table,
   TableBody,
@@ -21,8 +23,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTableHeader } from "./data-header";
-import { TableHeader } from "@/components/table";
-import { DataTablePagination } from "@/components/data-pagination";
 
 interface props<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -62,44 +62,44 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full">
-      <DataTableHeader table={table}/>
-            {data[0] ?
+      <DataTableHeader table={table} />
+      {data[0] ?
         <>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader table={table} />
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader table={table} />
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      No results.
                     </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <DataTablePagination table={table} />
-       </> : <NoContent title="Não encontramos nenhuma categoria" description="Começe por criar novas categoria" />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          <DataTablePagination table={table} />
+        </> : <NoContent title="Não encontramos nenhuma categoria" description="Comece por criar novas categoria" />
       }
     </div>
   )
