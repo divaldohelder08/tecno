@@ -13,8 +13,6 @@ export function PermissionContent({ permissions: OldPermissions, has, roleId }: 
     !has.some(h => h.id === permission.id)
   );
 
-  console.log(OldPermissions.length, uniquePermissions.length);
-
   // Corrigindo a criação dos objetos no `map`
   const newHas = has.map((e) => ({
     description: e.description,
