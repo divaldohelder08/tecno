@@ -75,6 +75,27 @@ export function AddPriceForm({ id, img, name, lojas, armazens, insencao, taxas }
     }
   })
 
+  const filtraCampoValor = (inputValue: string): string => {
+    return inputValue.replace(/[^\d]/g, '')
+  }
+
+  const formataValor = (inputValue: string): string => {
+    let vr = filtraCampoValor(inputValue)
+    let tam = vr.length
+
+    if (tam <= 2) return vr
+    if (tam > 2 && tam <= 5) return `${vr.slice(0, -2)},${vr.slice(-2)}`
+    if (tam >= 6 && tam <= 8) return `${vr.slice(0, -5)}.${vr.slice(-5, -2)},${vr.slice(-2)}`
+    if (tam >= 9 && tam <= 11) return `${vr.slice(0, -8)}.${vr.slice(-8, -5)}.${vr.slice(-5, -2)},${vr.slice(-2)}`
+    if (tam >= 12 && tam <= 14) return `${vr.slice(0, -11)}.${vr.slice(-11, -8)}.${vr.slice(-8, -5)}.${vr.slice(-5, -2)},${vr.slice(-2)}`
+    if (tam >= 15 && tam <= 18) return `${vr.slice(0, -14)}.${vr.slice(-14, -11)}.${vr.slice(-11, -8)}.${vr.slice(-8, -5)}.${vr.slice(-5, -2)},${vr.slice(-2)}`
+    return vr
+  }
+
+
+
+
+
   // Watching fields
   const controloStock = watch("controloStock")
   const taxa = watch("taxaImpostoId")
@@ -87,7 +108,7 @@ export function AddPriceForm({ id, img, name, lojas, armazens, insencao, taxas }
     if (taxa) {
       setValue("isencaoId", null)
     }
-  }, [taxa, setValue, , setOpn, opn])
+  }, [taxa, setValue, setOpn, opn])
 
   useEffect(() => {
     if (ise) {
@@ -108,8 +129,10 @@ export function AddPriceForm({ id, img, name, lojas, armazens, insencao, taxas }
   useEffect(() => {
     const taxaValor = taxas.find((t) => t.id == taxa)?.value as number
     const iva = (Number(preco) * taxaValor) / 100
-    const precoComImposto = Number(preco) + Number(iva.toFixed(2))
-    setValue("precoImposto", Number(precoComImposto))
+    const precoComImposto = preco + iva
+
+        const formattedValue = formataValor(precoComImposto.toFixed(2));
+    setValue("precoImposto", Number(formattedValue));
 
   }, [preco, taxa, setValue, taxas])
 
@@ -209,9 +232,20 @@ export function AddPriceForm({ id, img, name, lojas, armazens, insencao, taxas }
                       </div>
                       <div>
                         <Label htmlFor="preco">Preço</Label>
-                        <Input id="preco" type="number" step="0.01" placeholder="0,00" {...register("preco")} />
+<Input 
+  id="preco" 
+  type="text" 
+  placeholder="0,00" 
+  {...register("preco")}
+  onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
+    const formattedValue = formataValor(e.currentTarget.value);
+    setValue("preco", formattedValue);
+  }} 
+/>
                         <Fr.error error={errors.preco?.message} />
                       </div>
+
+
                       <div>
                         <Label htmlFor="precoImposto">Preço com Imposto</Label>
                         <Input id="precoImposto" type="number" step="0.01" readOnly placeholder="0,00" disabled {...register("precoImposto")} />

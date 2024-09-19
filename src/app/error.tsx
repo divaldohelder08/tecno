@@ -1,8 +1,6 @@
 "use client";
-import { BackgroundBeams } from "@/components/ui/background-beams";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { cleanCookies } from "./cookies"
 export default function ErrorBoundary({
   error,
   reset,
@@ -16,7 +14,6 @@ export default function ErrorBoundary({
     action: {
       label: "Tentar novamente",
       onClick: async() => {
-          await cleanCookies()
           reset();
       },
     },
@@ -41,7 +38,6 @@ export default function ErrorBoundary({
           </Button>
         </div>
       </div>
-      <BackgroundBeams />
     </div>
   );
 }

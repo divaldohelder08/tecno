@@ -1,5 +1,3 @@
-import { NavigateBack } from "@/components/client-components";
-import { BackgroundBeams } from "@/components/ui/background-beams";
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "404",
@@ -15,14 +13,10 @@ export default function NotFound() {
         <div className="inline-block">
           <h2 className="text-sm font-normal m-0 text-accent-foreground ">
             Essa pagina não pode ser encontrada,{" "}
-            <NavigateBack
-              className="text-sky-500 dark:text-sky-400"
-              label="voltar"
-            />
+           
           </h2>
         </div>
       </div>
-      <BackgroundBeams />
     </div>
   );
 }
